@@ -1,100 +1,100 @@
 name: jQuery update check
 
 on:
-  schedule:
-    - cron: '0 6 * * 1'        # Mondays 06:00 UTC
-  workflow_dispatch:
-    inputs:
-      force_version:
-        description: 'Override current version for testing (e.g. 3.6.0). Blank for normal run.'
-        required: false
-        default: ''
+    schedule:
+        - cron: '0 6 * * 1' # Mondays 06:00 UTC
+    workflow_dispatch:
+        inputs:
+            force_version:
+                description: 'Override current version for testing (e.g. 3.6.0). Blank for normal run.'
+                required: false
+                default: ''
 
 permissions:
-  contents: write
-  pull-requests: write
+    contents: write
+    pull-requests: write
 
 concurrency:
-  group: jquery-update
-  cancel-in-progress: false
+    group: jquery-update
+    cancel-in-progress: false
 
 jobs:
-  check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
+    check:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
 
-      - name: Detect versions
-        id: ver
-        env:
-          FORCE: ${{ github.event.inputs.force_version }}
-        run: |
-          set -euo pipefail
-          if [ -n "${FORCE:-}" ]; then
-            CURRENT="$FORCE"
-          else
-            CURRENT=$(grep -o 'jQuery v[0-9][0-9.]*' src/jquery.min.js | head -1 | sed 's/jQuery v//')
-          fi
-          LATEST=$(curl -fsSL https://registry.npmjs.org/jquery/latest | jq -r .version)
-          [ -n "$CURRENT" ] && [ -n "$LATEST" ] || { echo "::error::could not resolve versions"; exit 1; }
-          NEWEST=$(printf '%s\n%s\n' "$CURRENT" "$LATEST" | sort -V | tail -1)
-          UPDATE=false
-          if [ "$CURRENT" != "$LATEST" ] && [ "$NEWEST" = "$LATEST" ]; then UPDATE=true; fi
-          echo "current=$CURRENT" >> "$GITHUB_OUTPUT"
-          echo "latest=$LATEST"   >> "$GITHUB_OUTPUT"
-          echo "update=$UPDATE"   >> "$GITHUB_OUTPUT"
-          echo "Current=$CURRENT Latest=$LATEST Update=$UPDATE"
+            - name: Detect versions
+              id: ver
+              env:
+                  FORCE: ${{ github.event.inputs.force_version }}
+              run: |
+                  set -euo pipefail
+                  if [ -n "${FORCE:-}" ]; then
+                    CURRENT="$FORCE"
+                  else
+                    CURRENT=$(grep -o 'jQuery v[0-9][0-9.]*' src/jquery.min.js | head -1 | sed 's/jQuery v//')
+                  fi
+                  LATEST=$(curl -fsSL https://registry.npmjs.org/jquery/latest | jq -r .version)
+                  [ -n "$CURRENT" ] && [ -n "$LATEST" ] || { echo "::error::could not resolve versions"; exit 1; }
+                  NEWEST=$(printf '%s\n%s\n' "$CURRENT" "$LATEST" | sort -V | tail -1)
+                  UPDATE=false
+                  if [ "$CURRENT" != "$LATEST" ] && [ "$NEWEST" = "$LATEST" ]; then UPDATE=true; fi
+                  echo "current=$CURRENT" >> "$GITHUB_OUTPUT"
+                  echo "latest=$LATEST"   >> "$GITHUB_OUTPUT"
+                  echo "update=$UPDATE"   >> "$GITHUB_OUTPUT"
+                  echo "Current=$CURRENT Latest=$LATEST Update=$UPDATE"
 
-      - name: Download & verify new jQuery
-        if: steps.ver.outputs.update == 'true'
-        id: dl
-        env:
-          LATEST: ${{ steps.ver.outputs.latest }}
-        run: |
-          set -euo pipefail
-          curl -fsSL "https://code.jquery.com/jquery-${LATEST}.min.js" -o jquery-new.min.js
-          test -s jquery-new.min.js
-          grep -q "jQuery v${LATEST}" jquery-new.min.js
-          sha_cdn=$(shasum -a 256 jquery-new.min.js | awk '{print $1}')
-          curl -fsSL "https://registry.npmjs.org/jquery/-/jquery-${LATEST}.tgz" -o jq.tgz
-          tar -xzf jq.tgz package/dist/jquery.min.js -O > jquery-npm.min.js
-          sha_npm=$(shasum -a 256 jquery-npm.min.js | awk '{print $1}')
-          [ "$sha_cdn" = "$sha_npm" ] || { echo "::error::SHA mismatch CDN vs npm ($sha_cdn != $sha_npm)"; exit 1; }
-          echo "sha256=$sha_cdn" >> "$GITHUB_OUTPUT"
+            - name: Download & verify new jQuery
+              if: steps.ver.outputs.update == 'true'
+              id: dl
+              env:
+                  LATEST: ${{ steps.ver.outputs.latest }}
+              run: |
+                  set -euo pipefail
+                  curl -fsSL "https://code.jquery.com/jquery-${LATEST}.min.js" -o jquery-new.min.js
+                  test -s jquery-new.min.js
+                  grep -q "jQuery v${LATEST}" jquery-new.min.js
+                  sha_cdn=$(shasum -a 256 jquery-new.min.js | awk '{print $1}')
+                  curl -fsSL "https://registry.npmjs.org/jquery/-/jquery-${LATEST}.tgz" -o jq.tgz
+                  tar -xzf jq.tgz package/dist/jquery.min.js -O > jquery-npm.min.js
+                  sha_npm=$(shasum -a 256 jquery-npm.min.js | awk '{print $1}')
+                  [ "$sha_cdn" = "$sha_npm" ] || { echo "::error::SHA mismatch CDN vs npm ($sha_cdn != $sha_npm)"; exit 1; }
+                  echo "sha256=$sha_cdn" >> "$GITHUB_OUTPUT"
 
-      - name: Apply update
-        if: steps.ver.outputs.update == 'true'
-        env:
-          LATEST: ${{ steps.ver.outputs.latest }}
-        run: |
-          set -euo pipefail
-          mv jquery-new.min.js src/jquery.min.js
-          # Replace whatever "jQuery X.Y.Z" the README currently carries with the
-          # new version. Keyed off the README's own token (not $CURRENT) so a
-          # force_version test run still bumps the README correctly.
-          sed -i -E "s/jQuery [0-9]+(\.[0-9]+)+/jQuery ${LATEST}/g" README.md
-          if ! grep -q "jQuery ${LATEST}" README.md; then
-            echo "::warning::README has no 'jQuery X.Y.Z' token to bump — version note may be drifting."
-          fi
-          rm -f jquery-npm.min.js jq.tgz
+            - name: Apply update
+              if: steps.ver.outputs.update == 'true'
+              env:
+                  LATEST: ${{ steps.ver.outputs.latest }}
+              run: |
+                  set -euo pipefail
+                  mv jquery-new.min.js src/jquery.min.js
+                  # Replace whatever "jQuery X.Y.Z" the README currently carries with the
+                  # new version. Keyed off the README's own token (not $CURRENT) so a
+                  # force_version test run still bumps the README correctly.
+                  sed -i -E "s/jQuery [0-9]+(\.[0-9]+)+/jQuery ${LATEST}/g" README.md
+                  if ! grep -q "jQuery ${LATEST}" README.md; then
+                    echo "::warning::README has no 'jQuery X.Y.Z' token to bump — version note may be drifting."
+                  fi
+                  rm -f jquery-npm.min.js jq.tgz
 
-      - name: Create Pull Request
-        if: steps.ver.outputs.update == 'true'
-        uses: peter-evans/create-pull-request@v8
-        with:
-          branch: chore/jquery-${{ steps.ver.outputs.latest }}
-          base: main
-          commit-message: "chore(deps): update jQuery ${{ steps.ver.outputs.current }} -> ${{ steps.ver.outputs.latest }}"
-          title: "chore(deps): update jQuery to ${{ steps.ver.outputs.latest }}"
-          delete-branch: true
-          labels: dependencies
-          body: |
-            Automated jQuery update.
+            - name: Create Pull Request
+              if: steps.ver.outputs.update == 'true'
+              uses: peter-evans/create-pull-request@v8
+              with:
+                  branch: chore/jquery-${{ steps.ver.outputs.latest }}
+                  base: main
+                  commit-message: 'chore(deps): update jQuery ${{ steps.ver.outputs.current }} -> ${{ steps.ver.outputs.latest }}'
+                  title: 'chore(deps): update jQuery to ${{ steps.ver.outputs.latest }}'
+                  delete-branch: true
+                  labels: dependencies
+                  body: |
+                      Automated jQuery update.
 
-            - Current: `${{ steps.ver.outputs.current }}`
-            - Latest:  `${{ steps.ver.outputs.latest }}`
-            - Source:  https://code.jquery.com/jquery-${{ steps.ver.outputs.latest }}.min.js
-            - SHA-256: `${{ steps.dl.outputs.sha256 }}` (verified CDN == npm tarball)
+                      - Current: `${{ steps.ver.outputs.current }}`
+                      - Latest:  `${{ steps.ver.outputs.latest }}`
+                      - Source:  https://code.jquery.com/jquery-${{ steps.ver.outputs.latest }}.min.js
+                      - SHA-256: `${{ steps.dl.outputs.sha256 }}` (verified CDN == npm tarball)
 
-            Verify the extension still loads on emscharts pages before merging.
-            jQuery upgrade notes: https://jquery.com/upgrade-guide/
+                      Verify the extension still loads on emscharts pages before merging.
+                      jQuery upgrade notes: https://jquery.com/upgrade-guide/

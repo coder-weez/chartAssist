@@ -82,7 +82,7 @@
     white-space: normal;
 }
 .ca-toast::before {
-    content: "⚠ ";
+    content: '⚠ ';
 }
 .ca-toast.ca-toast-show {
     opacity: 1;

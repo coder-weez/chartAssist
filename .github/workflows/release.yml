@@ -6,40 +6,40 @@ name: Tag & release on version bump
 # mechanical tagging/release once that change lands on main.
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'src/manifest.json'
+    push:
+        branches: [main]
+        paths:
+            - 'src/manifest.json'
 
 permissions:
-  contents: write
+    contents: write
 
 concurrency:
-  group: release
-  cancel-in-progress: false
+    group: release
+    cancel-in-progress: false
 
 jobs:
-  release:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
+    release:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+              with:
+                  fetch-depth: 0
 
-      - name: Read version and release if new
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          VERSION=$(jq -r .version src/manifest.json)
-          [ -n "$VERSION" ] && [ "$VERSION" != "null" ] || { echo "::error::no version in manifest"; exit 1; }
-          TAG="v${VERSION}"
-          if git rev-parse "$TAG" >/dev/null 2>&1; then
-            echo "Tag $TAG already exists — nothing to do."
-            exit 0
-          fi
-          echo "Creating release $TAG at ${GITHUB_SHA}"
-          gh release create "$TAG" \
-            --title "$TAG" \
-            --target "$GITHUB_SHA" \
-            --generate-notes
+            - name: Read version and release if new
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  set -euo pipefail
+                  VERSION=$(jq -r .version src/manifest.json)
+                  [ -n "$VERSION" ] && [ "$VERSION" != "null" ] || { echo "::error::no version in manifest"; exit 1; }
+                  TAG="v${VERSION}"
+                  if git rev-parse "$TAG" >/dev/null 2>&1; then
+                    echo "Tag $TAG already exists — nothing to do."
+                    exit 0
+                  fi
+                  echo "Creating release $TAG at ${GITHUB_SHA}"
+                  gh release create "$TAG" \
+                    --title "$TAG" \
+                    --target "$GITHUB_SHA" \
+                    --generate-notes

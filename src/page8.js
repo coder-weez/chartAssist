@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     caToolbar().append('<button class="atref ca-btn">On Scene</button>');
     caToolbar().append('<button class="lvref ca-btn">Transport</button>');
     caToolbar().append('<button class="atrec ca-btn">At Hospital</button>');
@@ -6,44 +6,45 @@ $(document).ready(function() {
     caToolbar().append('<button class="can2 ca-btn">Custom</button>');
     caToolbar().append('<button class="ca-clear ca-btn ca-btn-danger">Clear Fields</button>');
 
-    $('.ca-clear').click(function() {
+    $('.ca-clear').click(function () {
         if (!chrome.runtime || !chrome.runtime.id) return;
-        if (!window.confirm('Clear all auto-filled fields on this page? This cannot be undone.')) return;
+        if (!window.confirm('Clear all auto-filled fields on this page? This cannot be undone.'))
+            return;
         caClrField('textarea[name=vs_comment]');
     });
 
-    $('.atref').click(function() {
+    $('.atref').click(function () {
         if (!chrome.runtime || !chrome.runtime.id) return;
-        chrome.storage.sync.get(null, function(s) {
-            caFill('textarea[name=vs_comment]', s["pg8_at_ref"], 'On Scene Comment');
+        chrome.storage.sync.get(null, function (s) {
+            caFill('textarea[name=vs_comment]', s['pg8_at_ref'], 'On Scene Comment');
         });
     });
 
-    $('.lvref').click(function() {
+    $('.lvref').click(function () {
         if (!chrome.runtime || !chrome.runtime.id) return;
-        chrome.storage.sync.get(null, function(s) {
-            caFill('textarea[name=vs_comment]', s["pg8_lv_ref"], 'Transport Comment');
+        chrome.storage.sync.get(null, function (s) {
+            caFill('textarea[name=vs_comment]', s['pg8_lv_ref'], 'Transport Comment');
         });
     });
 
-    $('.atrec').click(function() {
+    $('.atrec').click(function () {
         if (!chrome.runtime || !chrome.runtime.id) return;
-        chrome.storage.sync.get(null, function(s) {
-            caFill('textarea[name=vs_comment]', s["pg8_at_rec"], 'At Hospital Comment');
+        chrome.storage.sync.get(null, function (s) {
+            caFill('textarea[name=vs_comment]', s['pg8_at_rec'], 'At Hospital Comment');
         });
     });
 
-    $('.can1').click(function() {
+    $('.can1').click(function () {
         if (!chrome.runtime || !chrome.runtime.id) return;
-        chrome.storage.sync.get(null, function(s) {
-            caFill('textarea[name=vs_comment]', s["pg8_can_1"], 'Refusal Comment');
+        chrome.storage.sync.get(null, function (s) {
+            caFill('textarea[name=vs_comment]', s['pg8_can_1'], 'Refusal Comment');
         });
     });
 
-    $('.can2').click(function() {
+    $('.can2').click(function () {
         if (!chrome.runtime || !chrome.runtime.id) return;
-        chrome.storage.sync.get(null, function(s) {
-            caFill('textarea[name=vs_comment]', s["pg8_can_2"], 'Custom Comment');
+        chrome.storage.sync.get(null, function (s) {
+            caFill('textarea[name=vs_comment]', s['pg8_can_2'], 'Custom Comment');
         });
     });
 });

@@ -18,82 +18,38 @@
         "page": "options.html",
         "open_in_tab": true
     },
-    "permissions": [
-        "storage"
-    ],
-    "host_permissions": [
-        "https://*.emscharts.com/pr/*"
-    ],
+    "permissions": ["storage"],
+    "host_permissions": ["https://*.emscharts.com/pr/*"],
     "content_scripts": [
         {
-            "matches": [
-                "https://*.emscharts.com/pr/page2.cfm*"
-            ],
-            "js": [
-                "jquery.min.js",
-                "chartassist.js",
-                "page2.js"
-            ],
+            "matches": ["https://*.emscharts.com/pr/page2.cfm*"],
+            "js": ["jquery.min.js", "chartassist.js", "page2.js"],
             "run_at": "document_start",
-            "css": [
-                "chartassist.css"
-            ]
+            "css": ["chartassist.css"]
         },
         {
-            "matches": [
-                "https://*.emscharts.com/pr/page3.cfm*"
-            ],
-            "js": [
-                "jquery.min.js",
-                "chartassist.js",
-                "page3.js"
-            ],
+            "matches": ["https://*.emscharts.com/pr/page3.cfm*"],
+            "js": ["jquery.min.js", "chartassist.js", "page3.js"],
             "run_at": "document_start",
-            "css": [
-                "chartassist.css"
-            ]
+            "css": ["chartassist.css"]
         },
         {
-            "matches": [
-                "https://*.emscharts.com/pr/page4.cfm*"
-            ],
-            "js": [
-                "jquery.min.js",
-                "chartassist.js",
-                "page4.js"
-            ],
+            "matches": ["https://*.emscharts.com/pr/page4.cfm*"],
+            "js": ["jquery.min.js", "chartassist.js", "page4.js"],
             "run_at": "document_start",
-            "css": [
-                "chartassist.css"
-            ]
+            "css": ["chartassist.css"]
         },
         {
-            "matches": [
-                "https://*.emscharts.com/pr/page5.cfm*"
-            ],
-            "js": [
-                "jquery.min.js",
-                "chartassist.js",
-                "page5.js"
-            ],
+            "matches": ["https://*.emscharts.com/pr/page5.cfm*"],
+            "js": ["jquery.min.js", "chartassist.js", "page5.js"],
             "run_at": "document_start",
-            "css": [
-                "chartassist.css"
-            ]
+            "css": ["chartassist.css"]
         },
         {
-            "matches": [
-                "https://*.emscharts.com/pr/page8.cfm*"
-            ],
-            "js": [
-                "jquery.min.js",
-                "chartassist.js",
-                "page8.js"
-            ],
+            "matches": ["https://*.emscharts.com/pr/page8.cfm*"],
+            "js": ["jquery.min.js", "chartassist.js", "page8.js"],
             "run_at": "document_start",
-            "css": [
-                "chartassist.css"
-            ]
+            "css": ["chartassist.css"]
         }
     ],
     "action": {

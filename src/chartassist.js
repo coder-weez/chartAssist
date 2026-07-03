@@ -11,13 +11,18 @@ function caToolbar() {
         var handle = jQuery('<div id="ca-drag" title="Drag to move">⠿</div>').appendTo(bar);
         caMakeDraggable(bar, handle);
         caRestorePosition(bar);
-        setTimeout(function() {
-            jQuery('<button class="ca-btn" style="font-size:11px;padding:3px 8px;opacity:0.85">Page Defaults</button>')
+        setTimeout(function () {
+            jQuery(
+                '<button class="ca-btn" style="font-size:11px;padding:3px 8px;opacity:0.85">Page Defaults</button>',
+            )
                 .appendTo(bar)
-                .on('click', function() {
+                .on('click', function () {
                     if (chrome.runtime && chrome.runtime.id) {
                         var m = window.location.pathname.match(/page(\d+)\.cfm/i);
-                        chrome.runtime.sendMessage({ action: 'openOptions', page: m ? m[1] : null });
+                        chrome.runtime.sendMessage({
+                            action: 'openOptions',
+                            page: m ? m[1] : null,
+                        });
                     }
                 });
         }, 0);
@@ -27,9 +32,13 @@ function caToolbar() {
 
 // Let the user reposition the toolbar by dragging its handle.
 function caMakeDraggable(bar, handle) {
-    var startX, startY, startLeft, startTop, dragging = false;
+    var startX,
+        startY,
+        startLeft,
+        startTop,
+        dragging = false;
 
-    handle.on('mousedown', function(e) {
+    handle.on('mousedown', function (e) {
         e.preventDefault();
         dragging = true;
         var rect = bar[0].getBoundingClientRect();
@@ -67,7 +76,7 @@ function caSavePosition(bar) {
 }
 
 function caRestorePosition(bar) {
-    chrome.storage.local.get('ca_toolbar_pos', function(r) {
+    chrome.storage.local.get('ca_toolbar_pos', function (r) {
         var pos = r && r.ca_toolbar_pos;
         if (pos) {
             bar.css({ left: pos.left + 'px', top: pos.top + 'px', right: 'auto' });
@@ -78,12 +87,14 @@ function caRestorePosition(bar) {
 // Briefly flash a light-green background on the given fields to confirm
 // they were just auto-filled, then fade back to their normal background.
 function caFlash(selector) {
-    jQuery(selector).each(function() {
+    jQuery(selector).each(function () {
         var el = jQuery(this);
         el.css({ transition: 'background-color .5s ease', backgroundColor: '#c8f7c5' });
-        setTimeout(function() {
+        setTimeout(function () {
             el.css('background-color', '');
-            setTimeout(function() { el.css('transition', ''); }, 500);
+            setTimeout(function () {
+                el.css('transition', '');
+            }, 500);
         }, 700);
     });
 }
@@ -96,12 +107,16 @@ function caToast(message) {
         container = jQuery('<div id="ca-toast-container"></div>').appendTo('body');
     }
     var toast = jQuery('<div class="ca-toast"></div>').text(message).appendTo(container);
-    setTimeout(function() { toast.addClass('ca-toast-show'); }, 10);
-    setTimeout(function() {
+    setTimeout(function () {
+        toast.addClass('ca-toast-show');
+    }, 10);
+    setTimeout(function () {
         toast.removeClass('ca-toast-show');
-        setTimeout(function() {
+        setTimeout(function () {
             toast.remove();
-            if (!container.children().length) { container.remove(); }
+            if (!container.children().length) {
+                container.remove();
+            }
         }, 300);
     }, 6000);
 }
@@ -137,7 +152,9 @@ function caClrField(selector) {
     if (!el.length) return;
     var tag = (el.prop('tagName') || '').toLowerCase();
     var type = (el.attr('type') || 'text').toLowerCase();
-    var isText = tag === 'textarea' || (tag === 'input' && type !== 'checkbox' && type !== 'radio' && type !== 'hidden');
+    var isText =
+        tag === 'textarea' ||
+        (tag === 'input' && type !== 'checkbox' && type !== 'radio' && type !== 'hidden');
     if (isText) {
         el[0].value = '';
     } else {
@@ -166,16 +183,16 @@ function caClrPopup(fieldName) {
 // The server reloads from the numeric {typ} (id) field — NOT the text field — so all
 // four must be set for a default to persist after leaving and returning to the page.
 function caPertNegFields(divId) {
-    var inputName = divId.replace(/_id$/, '');            // mental_text | mental_text_neg
+    var inputName = divId.replace(/_id$/, ''); // mental_text | mental_text_neg
     var isNeg = /_neg$/.test(inputName);
-    var typ = inputName.replace('_text', '').replace('_neg', '');  // mental | neuro
+    var typ = inputName.replace('_text', '').replace('_neg', ''); // mental | neuro
     return {
         typ: typ,
         isNeg: isNeg,
-        id:   isNeg ? typ + '_neg'              : typ,
-        text: isNeg ? typ + '_text_neg'         : typ + '_text',
+        id: isNeg ? typ + '_neg' : typ,
+        text: isNeg ? typ + '_text_neg' : typ + '_text',
         cust: isNeg ? typ + '_cmdfacCustId_neg' : typ + '_cmdfacCustId',
-        exam: isNeg ? typ + '_examvalId_negs'   : typ + '_examvalId'
+        exam: isNeg ? typ + '_examvalId_negs' : typ + '_examvalId',
     };
 }
 
@@ -189,29 +206,34 @@ var caPertNegCatalogs = {};
 // `params` is the 4th argument of the field's pertnegPick(...) onclick (facility params).
 function caPertNegCatalog(typ, params) {
     if (caPertNegCatalogs[typ]) return caPertNegCatalogs[typ];
-    var url = '/common/pertneg_picklist.cfm?typ=' + encodeURIComponent(typ) +
-              '&ids=&ids_neg=&cmdfacCustIds=&cmdfacCustIds_neg=&' + params;
+    var url =
+        '/common/pertneg_picklist.cfm?typ=' +
+        encodeURIComponent(typ) +
+        '&ids=&ids_neg=&cmdfacCustIds=&cmdfacCustIds_neg=&' +
+        params;
     caPertNegCatalogs[typ] = fetch(url, { credentials: 'include' })
-        .then(function(r) { return r.text(); })
-        .then(function(html) {
+        .then(function (r) {
+            return r.text();
+        })
+        .then(function (html) {
             var doc = new DOMParser().parseFromString(html, 'text/html');
             var boxes = doc.querySelectorAll('input[name="exam_value_id"]');
             var map = {};
-            boxes.forEach(function(cb) {
+            boxes.forEach(function (cb) {
                 var label = (cb.getAttribute('tmpname') || '').trim();
                 if (!label) return;
                 map[label.toLowerCase()] = {
                     label: label,
                     id: cb.getAttribute('value') || '',
                     custId: cb.getAttribute('cmdfaccustid') || '',
-                    examVal: cb.getAttribute('ex_valid') || ''
+                    examVal: cb.getAttribute('ex_valid') || '',
                 };
             });
             return map;
         })
-        .catch(function(err) {
+        .catch(function (err) {
             console.warn('caPertNegCatalog: failed to load picklist for', typ, err);
-            caPertNegCatalogs[typ] = null;   // allow retry on next call
+            caPertNegCatalogs[typ] = null; // allow retry on next call
             return {};
         });
     return caPertNegCatalogs[typ];
@@ -230,24 +252,37 @@ function caFillPertNeg(divId, value, friendlyName) {
     if (!span.length) return false;
 
     var f = caPertNegFields(divId);
-    var labels = value.split('|').map(function(s) { return s.trim(); }).filter(Boolean);
+    var labels = value
+        .split('|')
+        .map(function (s) {
+            return s.trim();
+        })
+        .filter(Boolean);
 
     // The onclick on the span (or ADD+ button) carries the facility params for the picklist.
     var trigger = span.attr('onclick') || div.find('.add-multi-pick-button').attr('onclick') || '';
     var pm = trigger.match(/,\s*'([^']*)'\s*\)/);
     var params = pm ? pm[1] : '';
 
-    caPertNegCatalog(f.typ, params).then(function(catalog) {
-        var ids = [], texts = [], custIds = [], examVals = [], missing = [];
-        labels.forEach(function(label) {
+    caPertNegCatalog(f.typ, params).then(function (catalog) {
+        var ids = [],
+            texts = [],
+            custIds = [],
+            examVals = [],
+            missing = [];
+        labels.forEach(function (label) {
             var entry = catalog[label.toLowerCase()];
-            if (!entry) { missing.push(label); return; }
+            if (!entry) {
+                missing.push(label);
+                return;
+            }
             ids.push(entry.id);
             texts.push(entry.label);
             custIds.push(entry.custId);
             examVals.push(entry.examVal);
         });
-        if (missing.length) console.warn('caFillPertNeg: no catalog match for', missing, 'in', f.typ);
+        if (missing.length)
+            console.warn('caFillPertNeg: no catalog match for', missing, 'in', f.typ);
         if (!texts.length) return;
 
         var newText = texts.join(',');
@@ -258,13 +293,13 @@ function caFillPertNeg(divId, value, friendlyName) {
             if (el.length) el[0].value = val;
             return el;
         }
-        setField(f.id,   ids.join(','));
+        setField(f.id, ids.join(','));
         setField(f.cust, custIds.join(','));
         setField(f.exam, examVals.join(','));
         var textEl = setField(f.text, newText);
         // Native events so EMSCharts' own (non-jQuery) listeners fire.
         if (textEl && textEl.length) {
-            ['keyup', 'blur', 'change'].forEach(function(t) {
+            ['keyup', 'blur', 'change'].forEach(function (t) {
                 textEl[0].dispatchEvent(new Event(t, { bubbles: true }));
             });
         }
@@ -281,13 +316,13 @@ function caClrPertNeg(divId) {
     var div = jQuery('#' + divId);
     if (!div.length) return;
     var f = caPertNegFields(divId);
-    [f.id, f.text, f.cust, f.exam].forEach(function(name) {
+    [f.id, f.text, f.cust, f.exam].forEach(function (name) {
         var el = jQuery('input[name="' + name + '"]');
         if (el.length) el[0].value = '';
     });
     var textEl = jQuery('input[name="' + f.text + '"]');
     if (textEl.length) {
-        ['keyup', 'blur', 'change'].forEach(function(t) {
+        ['keyup', 'blur', 'change'].forEach(function (t) {
             textEl[0].dispatchEvent(new Event(t, { bubbles: true }));
         });
     }
@@ -304,7 +339,9 @@ function caFill(selector, value, friendlyName) {
     if (!el.length || value === undefined || value === null || value === '') return false;
     var tag = (el.prop('tagName') || '').toLowerCase();
     var type = (el.attr('type') || 'text').toLowerCase();
-    var isText = tag === 'textarea' || (tag === 'input' && type !== 'checkbox' && type !== 'radio' && type !== 'hidden');
+    var isText =
+        tag === 'textarea' ||
+        (tag === 'input' && type !== 'checkbox' && type !== 'radio' && type !== 'hidden');
     if (isText) {
         var current = ((el[0] && el[0].value) || '').trim();
         var trimmedValue = value.trim();
@@ -322,8 +359,12 @@ function caFill(selector, value, friendlyName) {
         var blankVal = el.find('option:first').val();
         if (blankVal === value) return false;
         var existing = el.val();
-        var existingBlank = existing === null || existing === '' || existing === '0' ||
-                            existing === 'null' || existing === blankVal;
+        var existingBlank =
+            existing === null ||
+            existing === '' ||
+            existing === '0' ||
+            existing === 'null' ||
+            existing === blankVal;
         if (!existingBlank) {
             if (existing === value) return false;
             caToast('"' + friendlyName + '" was not updated — field already has content.');
@@ -333,4 +374,22 @@ function caFill(selector, value, friendlyName) {
     }
     caFlash(selector);
     return true;
+}
+
+// Exported for unit tests (Node/CommonJS). No-op in the browser content-script
+// context, where `module` is undefined and these functions are plain globals.
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        caFill,
+        caFillPopup,
+        caFillPertNeg,
+        caPertNegFields,
+        caPertNegCatalog,
+        caClrField,
+        caClrPopup,
+        caClrPertNeg,
+        caToast,
+        caFlash,
+        caToolbar,
+    };
 }
