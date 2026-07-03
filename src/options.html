@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>EMSCharts Assist Defaults</title>
         <style type="text/css">
             body {
@@ -28,7 +28,7 @@
             }
             summary {
                 cursor: pointer;
-                padding: .5em .7em;
+                padding: 0.5em 0.7em;
                 font-weight: bold;
                 background: #f0f0f0;
             }
@@ -50,8 +50,8 @@
                 padding: 6px 8px;
                 text-align: left;
             }
-            input[type=text],
-            input[type=number],
+            input[type='text'],
+            input[type='number'],
             textarea,
             select {
                 width: 300px;
@@ -70,7 +70,7 @@
             select:focus {
                 outline: none;
                 border-color: #2191c0;
-                box-shadow: 0 0 0 2px rgba(33, 145, 192, .25);
+                box-shadow: 0 0 0 2px rgba(33, 145, 192, 0.25);
             }
             .submit-row {
                 text-align: center;
@@ -159,32 +159,27 @@
 
     <body>
         <h1>EMSCharts Assist</h1>
-        <p class="intro">Set the default values that the AutoComplete buttons fill into your EMSCharts PCRs.</p>
+        <p class="intro">
+            Set the default values that the AutoComplete buttons fill into your EMSCharts PCRs.
+        </p>
         <div id="settings">
-
             <details id="section-page2" open>
-            <summary>Page 2 Settings</summary>
+                <summary>Page 2 Settings</summary>
                 <table>
                     <tr>
-                        <td class="l">
-                            Chief Complaint
-                        </td>
+                        <td class="l">Chief Complaint</td>
                         <td class="r">
                             <textarea id="pg2_chief_complaint"></textarea>
                         </td>
                     </tr>
                     <tr>
-                        <td class="l">
-                            Duration
-                        </td>
+                        <td class="l">Duration</td>
                         <td class="r">
-                            <input type="number" max="99" min="0" step="1" id="pg2_duration">
+                            <input type="number" max="99" min="0" step="1" id="pg2_duration" />
                         </td>
                     </tr>
                     <tr>
-                        <td class="l">
-                            Duration Units
-                        </td>
+                        <td class="l">Duration Units</td>
                         <td class="r">
                             <select id="pg2_duration_units">
                                 <option value=""></option>
@@ -199,25 +194,19 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="l">
-                            HPI
-                        </td>
+                        <td class="l">HPI</td>
                         <td class="r">
                             <textarea id="pg2_hpi"></textarea>
                         </td>
                     </tr>
                     <tr>
-                        <td class="l">
-                            Scene Description
-                        </td>
+                        <td class="l">Scene Description</td>
                         <td class="r">
                             <textarea id="pg2_scene_description"></textarea>
                         </td>
                     </tr>
                     <tr>
-                        <td class="l">
-                            First Agency Unit On Scene?
-                        </td>
+                        <td class="l">First Agency Unit On Scene?</td>
                         <td class="r">
                             <select id="pg2_first_on_scene">
                                 <option value=""></option>
@@ -229,9 +218,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="l">
-                            Level of Care per Protocol
-                        </td>
+                        <td class="l">Level of Care per Protocol</td>
                         <td class="r">
                             <select id="pg2_level_care">
                                 <option value=""></option>
@@ -241,21 +228,17 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="l">
-                            Patient Belongings
-                        </td>
+                        <td class="l">Patient Belongings</td>
                         <td class="r">
                             <textarea id="pg2_belongings"></textarea>
                         </td>
                     </tr>
                     <tr>
-                        <td class="l" style="font-weight:bold">Patient Movement</td>
+                        <td class="l" style="font-weight: bold">Patient Movement</td>
                         <td class="r"></td>
                     </tr>
                     <tr>
-                        <td class="l">
-                            Moved to Vehicle Via
-                        </td>
+                        <td class="l">Moved to Vehicle Via</td>
                         <td class="r">
                             <select id="pg2_to_truck">
                                 <option value=""></option>
@@ -274,25 +257,29 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="l">
-                            Position in Vehicle
-                        </td>
+                        <td class="l">Position in Vehicle</td>
                         <td class="r">
                             <select id="pg2_position">
                                 <option value=""></option>
-                                <option value="Ambulance Integrated Car Seat">Ambulance Integrated Car Seat</option>
+                                <option value="Ambulance Integrated Car Seat">
+                                    Ambulance Integrated Car Seat
+                                </option>
                                 <option value="Car Seat">Car Seat</option>
                                 <option value="Fowlers">Fowlers</option>
                                 <option value="Lateral">Lateral</option>
                                 <option value="Lateral - Left">Lateral - Left</option>
                                 <option value="Lateral - Right">Lateral - Right</option>
-                                <option value="Neonatal Ambulance Restraint Device">Neonatal Ambulance Restraint Device</option>
+                                <option value="Neonatal Ambulance Restraint Device">
+                                    Neonatal Ambulance Restraint Device
+                                </option>
                                 <option value="Not Applicable">Not Applicable</option>
                                 <option value="Not Available">Not Available</option>
                                 <option value="Not Known">Not Known</option>
                                 <option value="Other">Other</option>
                                 <option value="Patient's Car Seat">Patient's Car Seat</option>
-                                <option value="Pediatric Ambulance Restraint Device">Pediatric Ambulance Restraint Device</option>
+                                <option value="Pediatric Ambulance Restraint Device">
+                                    Pediatric Ambulance Restraint Device
+                                </option>
                                 <option value="Prone">Prone</option>
                                 <option value="Semi-Fowlers">Semi-Fowlers</option>
                                 <option value="Sitting">Sitting</option>
@@ -302,9 +289,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="l">
-                            Moved From Vehicle Via
-                        </td>
+                        <td class="l">Moved From Vehicle Via</td>
                         <td class="r">
                             <select id="pg2_from_truck">
                                 <option value=""></option>
@@ -320,7 +305,6 @@
                                 <option value="Stretcher">Stretcher</option>
                                 <option value="Wheelchair">Wheelchair</option>
                             </select>
-
                         </td>
                     </tr>
                     <tr>
@@ -328,139 +312,1004 @@
                         <td class="r">
                             <select id="pg2_transassess">
                                 <option value=""></option>
-                                <option value="Unable to sit without assistance">Unable to sit without assistance</option>
-                                <option value="Unable to stand without assistance">Unable to stand without assistance</option>
-                                <option value="Unable to walk without assistance">Unable to walk without assistance</option>
+                                <option value="Unable to sit without assistance">
+                                    Unable to sit without assistance
+                                </option>
+                                <option value="Unable to stand without assistance">
+                                    Unable to stand without assistance
+                                </option>
+                                <option value="Unable to walk without assistance">
+                                    Unable to walk without assistance
+                                </option>
                             </select>
                         </td>
                     </tr>
                     <tr>
-                        <td class="l">
-                            Stretcher purpose
-                        </td>
+                        <td class="l">Stretcher purpose</td>
                         <td class="r">
-                            <input id="pg2_stretcher_purpose" type="text">
+                            <input id="pg2_stretcher_purpose" type="text" />
                         </td>
                     </tr>
                 </table>
-
             </details>
             <details id="section-page3">
-            <summary>Page 3 Settings</summary>
+                <summary>Page 3 Settings</summary>
                 <table>
                     <tr>
-                        <td class="l" style="font-weight:bold">Mental / Neurological</td>
+                        <td class="l" style="font-weight: bold">Mental / Neurological</td>
                         <td class="r"></td>
                     </tr>
                     <tr>
-                        <td class="l" style="vertical-align:top;padding-top:10px;font-weight:bold;font-size:14px;">Mental</td>
+                        <td
+                            class="l"
+                            style="
+                                vertical-align: top;
+                                padding-top: 10px;
+                                font-weight: bold;
+                                font-size: 14px;
+                            "
+                        >
+                            Mental
+                        </td>
                         <td class="r">
                             <table class="pertneg-dual">
-                                <thead><tr><th>Not Present</th><th>Present</th><th></th></tr></thead>
+                                <thead>
+                                    <tr>
+                                        <th>Not Present</th>
+                                        <th>Present</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
                                 <tbody>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Agitation"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Agitation"></td><td>Agitation</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Altered mental status, unspecified"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Altered mental status, unspecified"></td><td>Altered mental status, unspecified</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Combative"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Combative"></td><td>Combative</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Confused"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Confused"></td><td>Confused</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Developmentally Impaired"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Developmentally Impaired"></td><td>Developmentally Impaired</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Disorientation, unspecified"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Disorientation, unspecified"></td><td>Disorientation, unspecified</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Hallucinations"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Hallucinations"></td><td>Hallucinations</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Normal Baseline for Patient"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Normal Baseline for Patient"></td><td>Normal Baseline for Patient</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Not Done"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Not Done"></td><td>Not Done</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Oriented-Event"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Oriented-Event"></td><td>Oriented-Event</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Oriented-Person"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Oriented-Person"></td><td>Oriented-Person</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Oriented-Place"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Oriented-Place"></td><td>Oriented-Place</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Oriented-Time"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Oriented-Time"></td><td>Oriented-Time</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Pharmacologically Paralyzed"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Pharmacologically Paralyzed"></td><td>Pharmacologically Paralyzed</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Pharmacologically Sedated"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Pharmacologically Sedated"></td><td>Pharmacologically Sedated</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Psychologically Impaired"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Psychologically Impaired"></td><td>Psychologically Impaired</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Slowness and poor responsiveness"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Slowness and poor responsiveness"></td><td>Slowness and poor responsiveness</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Somnolent"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Somnolent"></td><td>Somnolent</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="State of emotional shock and stress, unspecified"></td><td><input type="checkbox" data-group="pg3_mental_present" value="State of emotional shock and stress, unspecified"></td><td>State of emotional shock and stress, unspecified</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Strange and inexplicable behavior"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Strange and inexplicable behavior"></td><td>Strange and inexplicable behavior</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Stupor"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Stupor"></td><td>Stupor</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Uncooperative"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Uncooperative"></td><td>Uncooperative</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Unresponsive"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Unresponsive"></td><td>Unresponsive</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_mental_not_present" value="Unspecified coma"></td><td><input type="checkbox" data-group="pg3_mental_present" value="Unspecified coma"></td><td>Unspecified coma</td></tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Agitation"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Agitation"
+                                            />
+                                        </td>
+                                        <td>Agitation</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Altered mental status, unspecified"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Altered mental status, unspecified"
+                                            />
+                                        </td>
+                                        <td>Altered mental status, unspecified</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Combative"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Combative"
+                                            />
+                                        </td>
+                                        <td>Combative</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Confused"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Confused"
+                                            />
+                                        </td>
+                                        <td>Confused</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Developmentally Impaired"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Developmentally Impaired"
+                                            />
+                                        </td>
+                                        <td>Developmentally Impaired</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Disorientation, unspecified"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Disorientation, unspecified"
+                                            />
+                                        </td>
+                                        <td>Disorientation, unspecified</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Hallucinations"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Hallucinations"
+                                            />
+                                        </td>
+                                        <td>Hallucinations</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Normal Baseline for Patient"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Normal Baseline for Patient"
+                                            />
+                                        </td>
+                                        <td>Normal Baseline for Patient</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Not Done"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Not Done"
+                                            />
+                                        </td>
+                                        <td>Not Done</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Oriented-Event"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Oriented-Event"
+                                            />
+                                        </td>
+                                        <td>Oriented-Event</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Oriented-Person"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Oriented-Person"
+                                            />
+                                        </td>
+                                        <td>Oriented-Person</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Oriented-Place"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Oriented-Place"
+                                            />
+                                        </td>
+                                        <td>Oriented-Place</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Oriented-Time"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Oriented-Time"
+                                            />
+                                        </td>
+                                        <td>Oriented-Time</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Pharmacologically Paralyzed"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Pharmacologically Paralyzed"
+                                            />
+                                        </td>
+                                        <td>Pharmacologically Paralyzed</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Pharmacologically Sedated"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Pharmacologically Sedated"
+                                            />
+                                        </td>
+                                        <td>Pharmacologically Sedated</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Psychologically Impaired"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Psychologically Impaired"
+                                            />
+                                        </td>
+                                        <td>Psychologically Impaired</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Slowness and poor responsiveness"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Slowness and poor responsiveness"
+                                            />
+                                        </td>
+                                        <td>Slowness and poor responsiveness</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Somnolent"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Somnolent"
+                                            />
+                                        </td>
+                                        <td>Somnolent</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="State of emotional shock and stress, unspecified"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="State of emotional shock and stress, unspecified"
+                                            />
+                                        </td>
+                                        <td>State of emotional shock and stress, unspecified</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Strange and inexplicable behavior"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Strange and inexplicable behavior"
+                                            />
+                                        </td>
+                                        <td>Strange and inexplicable behavior</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Stupor"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Stupor"
+                                            />
+                                        </td>
+                                        <td>Stupor</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Uncooperative"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Uncooperative"
+                                            />
+                                        </td>
+                                        <td>Uncooperative</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Unresponsive"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Unresponsive"
+                                            />
+                                        </td>
+                                        <td>Unresponsive</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_not_present"
+                                                value="Unspecified coma"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_mental_present"
+                                                value="Unspecified coma"
+                                            />
+                                        </td>
+                                        <td>Unspecified coma</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </td>
                     </tr>
                     <tr>
-                        <td class="l" style="vertical-align:top;padding-top:10px;font-weight:bold;font-size:14px;">Neurological</td>
+                        <td
+                            class="l"
+                            style="
+                                vertical-align: top;
+                                padding-top: 10px;
+                                font-weight: bold;
+                                font-size: 14px;
+                            "
+                        >
+                            Neurological
+                        </td>
                         <td class="r">
                             <table class="pertneg-dual">
-                                <thead><tr><th>Not Present</th><th>Present</th><th></th></tr></thead>
+                                <thead>
+                                    <tr>
+                                        <th>Not Present</th>
+                                        <th>Present</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
                                 <tbody>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Aphagia"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Aphagia"></td><td>Aphagia</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Aphasia"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Aphasia"></td><td>Aphasia</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Arm Drift - Left"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Arm Drift - Left"></td><td>Arm Drift - Left</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Arm Drift - Right"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Arm Drift - Right"></td><td>Arm Drift - Right</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Cerebellar Function-Abnormal"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Cerebellar Function-Abnormal"></td><td>Cerebellar Function-Abnormal</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Cerebellar Function-Normal"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Cerebellar Function-Normal"></td><td>Cerebellar Function-Normal</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Decerebrate Posturing"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Decerebrate Posturing"></td><td>Decerebrate Posturing</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Decorticate Posturing"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Decorticate Posturing"></td><td>Decorticate Posturing</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Gait-Abnormal"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Gait-Abnormal"></td><td>Gait-Abnormal</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Gait-Normal"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Gait-Normal"></td><td>Gait-Normal</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Hemiplegia-Left"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Hemiplegia-Left"></td><td>Hemiplegia-Left</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Hemiplegia-Right"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Hemiplegia-Right"></td><td>Hemiplegia-Right</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Normal Baseline for Patient"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Normal Baseline for Patient"></td><td>Normal Baseline for Patient</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Not Done"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Not Done"></td><td>Not Done</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Other Seizures"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Other Seizures"></td><td>Other Seizures</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Speech Normal"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Speech Normal"></td><td>Speech Normal</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Speech Slurring"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Speech Slurring"></td><td>Speech Slurring</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Status Seizure"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Status Seizure"></td><td>Status Seizure</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Strength-Asymmetric"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Strength-Asymmetric"></td><td>Strength-Asymmetric</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Strength-Normal"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Strength-Normal"></td><td>Strength-Normal</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Strength-Symmetric"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Strength-Symmetric"></td><td>Strength-Symmetric</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Tremors"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Tremors"></td><td>Tremors</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Unresponsive"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Unresponsive"></td><td>Unresponsive</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Weakness-Facial Droop-Left"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Weakness-Facial Droop-Left"></td><td>Weakness-Facial Droop-Left</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Weakness-Facial Droop-Right"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Weakness-Facial Droop-Right"></td><td>Weakness-Facial Droop-Right</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Weakness-Left Sided"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Weakness-Left Sided"></td><td>Weakness-Left Sided</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Weakness-Right Sided"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Weakness-Right Sided"></td><td>Weakness-Right Sided</td></tr>
-                                    <tr><td><input type="checkbox" data-group="pg3_neuro_not_present" value="Within Normal Limits"></td><td><input type="checkbox" data-group="pg3_neuro_present" value="Within Normal Limits"></td><td>Within Normal Limits</td></tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Aphagia"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Aphagia"
+                                            />
+                                        </td>
+                                        <td>Aphagia</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Aphasia"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Aphasia"
+                                            />
+                                        </td>
+                                        <td>Aphasia</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Arm Drift - Left"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Arm Drift - Left"
+                                            />
+                                        </td>
+                                        <td>Arm Drift - Left</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Arm Drift - Right"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Arm Drift - Right"
+                                            />
+                                        </td>
+                                        <td>Arm Drift - Right</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Cerebellar Function-Abnormal"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Cerebellar Function-Abnormal"
+                                            />
+                                        </td>
+                                        <td>Cerebellar Function-Abnormal</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Cerebellar Function-Normal"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Cerebellar Function-Normal"
+                                            />
+                                        </td>
+                                        <td>Cerebellar Function-Normal</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Decerebrate Posturing"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Decerebrate Posturing"
+                                            />
+                                        </td>
+                                        <td>Decerebrate Posturing</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Decorticate Posturing"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Decorticate Posturing"
+                                            />
+                                        </td>
+                                        <td>Decorticate Posturing</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Gait-Abnormal"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Gait-Abnormal"
+                                            />
+                                        </td>
+                                        <td>Gait-Abnormal</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Gait-Normal"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Gait-Normal"
+                                            />
+                                        </td>
+                                        <td>Gait-Normal</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Hemiplegia-Left"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Hemiplegia-Left"
+                                            />
+                                        </td>
+                                        <td>Hemiplegia-Left</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Hemiplegia-Right"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Hemiplegia-Right"
+                                            />
+                                        </td>
+                                        <td>Hemiplegia-Right</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Normal Baseline for Patient"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Normal Baseline for Patient"
+                                            />
+                                        </td>
+                                        <td>Normal Baseline for Patient</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Not Done"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Not Done"
+                                            />
+                                        </td>
+                                        <td>Not Done</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Other Seizures"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Other Seizures"
+                                            />
+                                        </td>
+                                        <td>Other Seizures</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Speech Normal"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Speech Normal"
+                                            />
+                                        </td>
+                                        <td>Speech Normal</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Speech Slurring"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Speech Slurring"
+                                            />
+                                        </td>
+                                        <td>Speech Slurring</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Status Seizure"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Status Seizure"
+                                            />
+                                        </td>
+                                        <td>Status Seizure</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Strength-Asymmetric"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Strength-Asymmetric"
+                                            />
+                                        </td>
+                                        <td>Strength-Asymmetric</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Strength-Normal"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Strength-Normal"
+                                            />
+                                        </td>
+                                        <td>Strength-Normal</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Strength-Symmetric"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Strength-Symmetric"
+                                            />
+                                        </td>
+                                        <td>Strength-Symmetric</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Tremors"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Tremors"
+                                            />
+                                        </td>
+                                        <td>Tremors</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Unresponsive"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Unresponsive"
+                                            />
+                                        </td>
+                                        <td>Unresponsive</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Weakness-Facial Droop-Left"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Weakness-Facial Droop-Left"
+                                            />
+                                        </td>
+                                        <td>Weakness-Facial Droop-Left</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Weakness-Facial Droop-Right"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Weakness-Facial Droop-Right"
+                                            />
+                                        </td>
+                                        <td>Weakness-Facial Droop-Right</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Weakness-Left Sided"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Weakness-Left Sided"
+                                            />
+                                        </td>
+                                        <td>Weakness-Left Sided</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Weakness-Right Sided"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Weakness-Right Sided"
+                                            />
+                                        </td>
+                                        <td>Weakness-Right Sided</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_not_present"
+                                                value="Within Normal Limits"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                data-group="pg3_neuro_present"
+                                                value="Within Normal Limits"
+                                            />
+                                        </td>
+                                        <td>Within Normal Limits</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </td>
                     </tr>
                     <tr>
-                        <td class="l">
-                            Stroke Scale
-                        </td>
+                        <td class="l">Stroke Scale</td>
                         <td class="r">
                             <select id="stroke_scale">
-                                <option value=""></option>				
-                                <option value="3275" scored="">Cincinnati (CPSS) Negative</option>															
-                                <option value="3280" scored="">Cincinnati (CPSS) Non-Conclusive</option>															
-                                <option value="3285" scored="">Cincinnati (CPSS) Positive</option>															
-                                <option value="1000" scored="">Cincinnati (CPSS) Refused</option>															
-                                <option value="1100" scored="">Cincinnati (CPSS) Unable To Complete</option>	
+                                <option value=""></option>
+                                <option value="3275" scored="">Cincinnati (CPSS) Negative</option>
+                                <option value="3280" scored="">
+                                    Cincinnati (CPSS) Non-Conclusive
+                                </option>
+                                <option value="3285" scored="">Cincinnati (CPSS) Positive</option>
+                                <option value="1000" scored="">Cincinnati (CPSS) Refused</option>
+                                <option value="1100" scored="">
+                                    Cincinnati (CPSS) Unable To Complete
+                                </option>
                             </select>
                         </td>
                     </tr>
                     <tr>
-                        <td class="l">
-                            GCS Eye
-                        </td>
-                        <td class="r">                            
+                        <td class="l">GCS Eye</td>
+                        <td class="r">
                             <select id="gcs_eye_1">
                                 <option value="null"></option>
                                 <option value="4">4:Spontaneous</option>
-								<option value="3">3:To Sound</option>
+                                <option value="3">3:To Sound</option>
                                 <option value="2">2:To Pressure</option>
                                 <option value="1">1:None</option>
-                                <option value="0">NT:Not Testable</option>                                                    
+                                <option value="0">NT:Not Testable</option>
                             </select>
                         </td>
                     </tr>
                     <tr>
-                        <td class="l">
-                            GCS Verbal
-                        </td>
+                        <td class="l">GCS Verbal</td>
                         <td class="r">
                             <select id="gcs_verbal_1">
-                                <option value="null"></option>                               
+                                <option value="null"></option>
                                 <option value="5">5:Oriented</option>
                                 <option value="4">4:Confused</option>
                                 <option value="3">3:Words</option>
@@ -471,9 +1320,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="l">
-                            GCS Motor
-                        </td>
+                        <td class="l">GCS Motor</td>
                         <td class="r">
                             <select id="gcs_motor_1">
                                 <option value="null"></option>
@@ -490,14 +1337,24 @@
                     <tr>
                         <td class="l"></td>
                         <td class="r">
-                            <span style="display:inline-block; width:130px; font-weight:bold;">Left</span>
-                            <span style="display:inline-block; width:130px; margin-left:8px; font-weight:bold;">Right</span>
+                            <span style="display: inline-block; width: 130px; font-weight: bold"
+                                >Left</span
+                            >
+                            <span
+                                style="
+                                    display: inline-block;
+                                    width: 130px;
+                                    margin-left: 8px;
+                                    font-weight: bold;
+                                "
+                                >Right</span
+                            >
                         </td>
                     </tr>
                     <tr>
                         <td class="l">Pupil Size</td>
                         <td class="r">
-                            <select id="pg3_pupil_size_l" style="width:130px;">
+                            <select id="pg3_pupil_size_l" style="width: 130px">
                                 <option value="0"></option>
                                 <option value="10">2mm</option>
                                 <option value="11">3mm</option>
@@ -513,7 +1370,7 @@
                                 <option value="18">Pinpoint</option>
                                 <option value="16">Unable to Assess</option>
                             </select>
-                            <select id="pg3_pupil_size_r" style="width:130px; margin-left:8px;">
+                            <select id="pg3_pupil_size_r" style="width: 130px; margin-left: 8px">
                                 <option value="0"></option>
                                 <option value="10">2mm</option>
                                 <option value="11">3mm</option>
@@ -534,14 +1391,14 @@
                     <tr>
                         <td class="l">Pupil React</td>
                         <td class="r">
-                            <select id="pg3_pupil_rx_l" style="width:130px;">
+                            <select id="pg3_pupil_rx_l" style="width: 130px">
                                 <option value="0"></option>
                                 <option value="3">Non-React</option>
                                 <option value="5">Not Applicable</option>
                                 <option value="1">Reactive</option>
                                 <option value="4">Sluggish</option>
                             </select>
-                            <select id="pg3_pupil_rx_r" style="width:130px; margin-left:8px;">
+                            <select id="pg3_pupil_rx_r" style="width: 130px; margin-left: 8px">
                                 <option value="0"></option>
                                 <option value="3">Non-React</option>
                                 <option value="5">Not Applicable</option>
@@ -551,24 +1408,32 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="l">
-                            Pupil Comments
-                        </td>
+                        <td class="l">Pupil Comments</td>
                         <td class="r">
-                            <input type="text" id="pg3_pupil_comments">
+                            <input type="text" id="pg3_pupil_comments" />
                         </td>
                     </tr>
                     <tr>
                         <td class="l"></td>
                         <td class="r">
-                            <span style="display:inline-block; width:160px; font-weight:bold;">Motor</span>
-                            <span style="display:inline-block; width:130px; margin-left:8px; font-weight:bold;">Sensory</span>
+                            <span style="display: inline-block; width: 160px; font-weight: bold"
+                                >Motor</span
+                            >
+                            <span
+                                style="
+                                    display: inline-block;
+                                    width: 130px;
+                                    margin-left: 8px;
+                                    font-weight: bold;
+                                "
+                                >Sensory</span
+                            >
                         </td>
                     </tr>
                     <tr>
                         <td class="l">LA</td>
                         <td class="r">
-                            <select id="pg3_motor_la" style="width:160px;">
+                            <select id="pg3_motor_la" style="width: 160px">
                                 <option value="0"></option>
                                 <option value="4">Chemically Paralyzed</option>
                                 <option value="3">Flaccid</option>
@@ -576,7 +1441,7 @@
                                 <option value="5">Not assessed</option>
                                 <option value="2">Weak</option>
                             </select>
-                            <select id="pg3_sensory_la" style="width:130px; margin-left:8px;">
+                            <select id="pg3_sensory_la" style="width: 130px; margin-left: 8px">
                                 <option value="0"></option>
                                 <option value="3">Absent</option>
                                 <option value="2">Diminished</option>
@@ -589,7 +1454,7 @@
                     <tr>
                         <td class="l">RA</td>
                         <td class="r">
-                            <select id="pg3_motor_ra" style="width:160px;">
+                            <select id="pg3_motor_ra" style="width: 160px">
                                 <option value="0"></option>
                                 <option value="4">Chemically Paralyzed</option>
                                 <option value="3">Flaccid</option>
@@ -597,7 +1462,7 @@
                                 <option value="5">Not assessed</option>
                                 <option value="2">Weak</option>
                             </select>
-                            <select id="pg3_sensory_ra" style="width:130px; margin-left:8px;">
+                            <select id="pg3_sensory_ra" style="width: 130px; margin-left: 8px">
                                 <option value="0"></option>
                                 <option value="3">Absent</option>
                                 <option value="2">Diminished</option>
@@ -610,7 +1475,7 @@
                     <tr>
                         <td class="l">LL</td>
                         <td class="r">
-                            <select id="pg3_motor_ll" style="width:160px;">
+                            <select id="pg3_motor_ll" style="width: 160px">
                                 <option value="0"></option>
                                 <option value="4">Chemically Paralyzed</option>
                                 <option value="3">Flaccid</option>
@@ -618,7 +1483,7 @@
                                 <option value="5">Not assessed</option>
                                 <option value="2">Weak</option>
                             </select>
-                            <select id="pg3_sensory_ll" style="width:130px; margin-left:8px;">
+                            <select id="pg3_sensory_ll" style="width: 130px; margin-left: 8px">
                                 <option value="0"></option>
                                 <option value="3">Absent</option>
                                 <option value="2">Diminished</option>
@@ -631,7 +1496,7 @@
                     <tr>
                         <td class="l">RL</td>
                         <td class="r">
-                            <select id="pg3_motor_rl" style="width:160px;">
+                            <select id="pg3_motor_rl" style="width: 160px">
                                 <option value="0"></option>
                                 <option value="4">Chemically Paralyzed</option>
                                 <option value="3">Flaccid</option>
@@ -639,7 +1504,7 @@
                                 <option value="5">Not assessed</option>
                                 <option value="2">Weak</option>
                             </select>
-                            <select id="pg3_sensory_rl" style="width:130px; margin-left:8px;">
+                            <select id="pg3_sensory_rl" style="width: 130px; margin-left: 8px">
                                 <option value="0"></option>
                                 <option value="3">Absent</option>
                                 <option value="2">Diminished</option>
@@ -650,29 +1515,25 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="l">
-                            Sensory Comments
-                        </td>
+                        <td class="l">Sensory Comments</td>
                         <td class="r">
-                            <input type="text" id="pg3_sensory_comments">
+                            <input type="text" id="pg3_sensory_comments" />
                         </td>
                     </tr>
                     <tr>
-                        <td class="l">
-                            Motor Comments
-                        </td>
+                        <td class="l">Motor Comments</td>
                         <td class="r">
-                            <input type="text" id="pg3_motor_comments">
+                            <input type="text" id="pg3_motor_comments" />
                         </td>
                     </tr>
                     <tr>
-                        <td class="l" style="font-weight:bold">Airway</td>
+                        <td class="l" style="font-weight: bold">Airway</td>
                         <td class="r"></td>
                     </tr>
                     <tr>
                         <td class="l">Status</td>
                         <td class="r">
-                            <select id="pg3_airway_status" style="width:160px">
+                            <select id="pg3_airway_status" style="width: 160px">
                                 <option value=""></option>
                                 <option value="2">Compromised</option>
                                 <option value="1">Patent</option>
@@ -683,13 +1544,13 @@
                     <tr>
                         <td class="l">Comments</td>
                         <td class="r">
-                            <input type="text" id="pg3_airway_comments">
+                            <input type="text" id="pg3_airway_comments" />
                         </td>
                     </tr>
                     <tr>
                         <td class="l">Performed By</td>
                         <td class="r">
-                            <select id="pg3_air_by" style="width:200px">
+                            <select id="pg3_air_by" style="width: 200px">
                                 <option value=""></option>
                                 <option value="1195">EMS Provider</option>
                                 <option value="1200">Law Enforcement</option>
@@ -703,7 +1564,7 @@
                     <tr>
                         <td class="l">Outcome</td>
                         <td class="r">
-                            <select id="pg3_air_outcome" style="width:160px">
+                            <select id="pg3_air_outcome" style="width: 160px">
                                 <option value=""></option>
                                 <option value="1220">Improved</option>
                                 <option value="1225">Unchanged</option>
@@ -717,27 +1578,37 @@
                 </table>
             </details>
             <details id="section-page4">
-            <summary>Page 4 Settings</summary>
+                <summary>Page 4 Settings</summary>
                 <table>
                     <tr>
                         <td class="l">Respiratory Comments</td>
-                        <td class="r"><input type="text" id="pg4_resp_comments"></td>
+                        <td class="r"><input type="text" id="pg4_resp_comments" /></td>
                     </tr>
                     <tr>
                         <td class="l">Cardiovascular Comments</td>
-                        <td class="r"><input type="text" id="pg4_cardiac_comments"></td>
+                        <td class="r"><input type="text" id="pg4_cardiac_comments" /></td>
                     </tr>
                     <tr>
                         <td class="l"></td>
                         <td class="r">
-                            <span style="display:inline-block;width:150px;font-weight:bold">Left</span>
-                            <span style="display:inline-block;width:150px;margin-left:8px;font-weight:bold">Right</span>
+                            <span style="display: inline-block; width: 150px; font-weight: bold"
+                                >Left</span
+                            >
+                            <span
+                                style="
+                                    display: inline-block;
+                                    width: 150px;
+                                    margin-left: 8px;
+                                    font-weight: bold;
+                                "
+                                >Right</span
+                            >
                         </td>
                     </tr>
                     <tr>
                         <td class="l">Breath Sounds</td>
                         <td class="r">
-                            <select id="pg4_breath_sounds_l" style="width:150px">
+                            <select id="pg4_breath_sounds_l" style="width: 150px">
                                 <option value="0"></option>
                                 <option value="7">Absent</option>
                                 <option value="1">Clear</option>
@@ -750,7 +1621,7 @@
                                 <option value="9">Rhonchi</option>
                                 <option value="4">Wheeze</option>
                             </select>
-                            <select id="pg4_breath_sounds_r" style="width:150px;margin-left:8px">
+                            <select id="pg4_breath_sounds_r" style="width: 150px; margin-left: 8px">
                                 <option value="0"></option>
                                 <option value="7">Absent</option>
                                 <option value="1">Clear</option>
@@ -767,25 +1638,35 @@
                     </tr>
                     <tr>
                         <td class="l">Breath Comments</td>
-                        <td class="r"><input type="text" id="pg4_breath_comments"></td>
+                        <td class="r"><input type="text" id="pg4_breath_comments" /></td>
                     </tr>
                     <tr>
                         <td class="l"></td>
                         <td class="r">
-                            <span style="display:inline-block;width:150px;font-weight:bold">Left</span>
-                            <span style="display:inline-block;width:150px;margin-left:8px;font-weight:bold">Right</span>
+                            <span style="display: inline-block; width: 150px; font-weight: bold"
+                                >Left</span
+                            >
+                            <span
+                                style="
+                                    display: inline-block;
+                                    width: 150px;
+                                    margin-left: 8px;
+                                    font-weight: bold;
+                                "
+                                >Right</span
+                            >
                         </td>
                     </tr>
                     <tr>
                         <td class="l">Carotid</td>
                         <td class="r">
-                            <select id="pg4_carotid_l" style="width:150px">
+                            <select id="pg4_carotid_l" style="width: 150px">
                                 <option value=""></option>
                                 <option value="1">Strong</option>
                                 <option value="22">Normal</option>
                                 <option value="4">Not Checked</option>
                             </select>
-                            <select id="pg4_carotid_r" style="width:150px;margin-left:8px">
+                            <select id="pg4_carotid_r" style="width: 150px; margin-left: 8px">
                                 <option value=""></option>
                                 <option value="1">Strong</option>
                                 <option value="22">Normal</option>
@@ -796,13 +1677,13 @@
                     <tr>
                         <td class="l">Radial</td>
                         <td class="r">
-                            <select id="pg4_radial_l" style="width:150px">
+                            <select id="pg4_radial_l" style="width: 150px">
                                 <option value=""></option>
                                 <option value="1">Strong</option>
                                 <option value="22">Normal</option>
                                 <option value="4">Not Checked</option>
                             </select>
-                            <select id="pg4_radial_r" style="width:150px;margin-left:8px">
+                            <select id="pg4_radial_r" style="width: 150px; margin-left: 8px">
                                 <option value=""></option>
                                 <option value="1">Strong</option>
                                 <option value="22">Normal</option>
@@ -813,13 +1694,13 @@
                     <tr>
                         <td class="l">Brachial</td>
                         <td class="r">
-                            <select id="pg4_brachial_l" style="width:150px">
+                            <select id="pg4_brachial_l" style="width: 150px">
                                 <option value=""></option>
                                 <option value="1">Strong</option>
                                 <option value="22">Normal</option>
                                 <option value="4">Not Checked</option>
                             </select>
-                            <select id="pg4_brachial_r" style="width:150px;margin-left:8px">
+                            <select id="pg4_brachial_r" style="width: 150px; margin-left: 8px">
                                 <option value=""></option>
                                 <option value="1">Strong</option>
                                 <option value="22">Normal</option>
@@ -830,13 +1711,13 @@
                     <tr>
                         <td class="l">Femoral</td>
                         <td class="r">
-                            <select id="pg4_fem_l" style="width:150px">
+                            <select id="pg4_fem_l" style="width: 150px">
                                 <option value=""></option>
                                 <option value="1">Strong</option>
                                 <option value="22">Normal</option>
                                 <option value="4">Not Checked</option>
                             </select>
-                            <select id="pg4_fem_r" style="width:150px;margin-left:8px">
+                            <select id="pg4_fem_r" style="width: 150px; margin-left: 8px">
                                 <option value=""></option>
                                 <option value="1">Strong</option>
                                 <option value="22">Normal</option>
@@ -847,48 +1728,82 @@
                 </table>
             </details>
             <details id="section-page5">
-            <summary>Page 5 Settings</summary>
+                <summary>Page 5 Settings</summary>
                 <table>
                     <tr>
                         <td class="l"></td>
                         <td class="r">
-                            <span style="display:inline-block;width:160px;font-weight:bold">Trauma</span>
-                            <span style="display:inline-block;width:160px;margin-left:8px;font-weight:bold">Medical</span>
-                            <span style="display:inline-block;width:160px;margin-left:8px;font-weight:bold">Refusal</span>
+                            <span style="display: inline-block; width: 160px; font-weight: bold"
+                                >Trauma</span
+                            >
+                            <span
+                                style="
+                                    display: inline-block;
+                                    width: 160px;
+                                    margin-left: 8px;
+                                    font-weight: bold;
+                                "
+                                >Medical</span
+                            >
+                            <span
+                                style="
+                                    display: inline-block;
+                                    width: 160px;
+                                    margin-left: 8px;
+                                    font-weight: bold;
+                                "
+                                >Refusal</span
+                            >
                         </td>
                     </tr>
                     <tr>
                         <td class="l">Head Findings</td>
                         <td class="r">
-                            <input type="text" id="pg5_trauma_head_comments" style="width:160px">
-                            <input type="text" id="pg5_medical_head_comments" style="width:160px;margin-left:8px">
-                            <input type="text" id="pg5_refusal_head_comments" style="width:160px;margin-left:8px">
+                            <input type="text" id="pg5_trauma_head_comments" style="width: 160px" />
+                            <input
+                                type="text"
+                                id="pg5_medical_head_comments"
+                                style="width: 160px; margin-left: 8px"
+                            />
+                            <input
+                                type="text"
+                                id="pg5_refusal_head_comments"
+                                style="width: 160px; margin-left: 8px"
+                            />
                         </td>
                     </tr>
                     <tr>
                         <td class="l">Neck Findings</td>
                         <td class="r">
-                            <input type="text" id="pg5_trauma_neck_comments" style="width:160px">
-                            <input type="text" id="pg5_medical_neck_comments" style="width:160px;margin-left:8px">
-                            <input type="text" id="pg5_refusal_neck_comments" style="width:160px;margin-left:8px">
+                            <input type="text" id="pg5_trauma_neck_comments" style="width: 160px" />
+                            <input
+                                type="text"
+                                id="pg5_medical_neck_comments"
+                                style="width: 160px; margin-left: 8px"
+                            />
+                            <input
+                                type="text"
+                                id="pg5_refusal_neck_comments"
+                                style="width: 160px; margin-left: 8px"
+                            />
                         </td>
                     </tr>
                     <tr>
                         <td class="l">Trachea</td>
                         <td class="r">
-                            <select id="pg5_trauma_trachea" style="width:160px">
+                            <select id="pg5_trauma_trachea" style="width: 160px">
                                 <option value="">Not Appreciated</option>
                                 <option value="M">Midline</option>
                                 <option value="R">Deviated to Right</option>
                                 <option value="L">Deviated to Left</option>
                             </select>
-                            <select id="pg5_medical_trachea" style="width:160px;margin-left:8px">
+                            <select id="pg5_medical_trachea" style="width: 160px; margin-left: 8px">
                                 <option value="">Not Appreciated</option>
                                 <option value="M">Midline</option>
                                 <option value="R">Deviated to Right</option>
                                 <option value="L">Deviated to Left</option>
                             </select>
-                            <select id="pg5_refusal_trachea" style="width:160px;margin-left:8px">
+                            <select id="pg5_refusal_trachea" style="width: 160px; margin-left: 8px">
                                 <option value="">Not Appreciated</option>
                                 <option value="M">Midline</option>
                                 <option value="R">Deviated to Right</option>
@@ -899,124 +1814,214 @@
                     <tr>
                         <td class="l">Chest Findings</td>
                         <td class="r">
-                            <input type="text" id="pg5_trauma_chest_comments" style="width:160px">
-                            <input type="text" id="pg5_medical_chest_comments" style="width:160px;margin-left:8px">
-                            <input type="text" id="pg5_refusal_chest_comments" style="width:160px;margin-left:8px">
+                            <input
+                                type="text"
+                                id="pg5_trauma_chest_comments"
+                                style="width: 160px"
+                            />
+                            <input
+                                type="text"
+                                id="pg5_medical_chest_comments"
+                                style="width: 160px; margin-left: 8px"
+                            />
+                            <input
+                                type="text"
+                                id="pg5_refusal_chest_comments"
+                                style="width: 160px; margin-left: 8px"
+                            />
                         </td>
                     </tr>
                     <tr>
                         <td class="l">Pelvis Findings</td>
                         <td class="r">
-                            <input type="text" id="pg5_trauma_pelvis_comments" style="width:160px">
-                            <input type="text" id="pg5_medical_pelvis_comments" style="width:160px;margin-left:8px">
-                            <input type="text" id="pg5_refusal_pelvis_comments" style="width:160px;margin-left:8px">
+                            <input
+                                type="text"
+                                id="pg5_trauma_pelvis_comments"
+                                style="width: 160px"
+                            />
+                            <input
+                                type="text"
+                                id="pg5_medical_pelvis_comments"
+                                style="width: 160px; margin-left: 8px"
+                            />
+                            <input
+                                type="text"
+                                id="pg5_refusal_pelvis_comments"
+                                style="width: 160px; margin-left: 8px"
+                            />
                         </td>
                     </tr>
                     <tr>
                         <td class="l">Back Findings</td>
                         <td class="r">
-                            <input type="text" id="pg5_trauma_back_comments" style="width:160px">
-                            <input type="text" id="pg5_medical_back_comments" style="width:160px;margin-left:8px">
-                            <input type="text" id="pg5_refusal_back_comments" style="width:160px;margin-left:8px">
+                            <input type="text" id="pg5_trauma_back_comments" style="width: 160px" />
+                            <input
+                                type="text"
+                                id="pg5_medical_back_comments"
+                                style="width: 160px; margin-left: 8px"
+                            />
+                            <input
+                                type="text"
+                                id="pg5_refusal_back_comments"
+                                style="width: 160px; margin-left: 8px"
+                            />
                         </td>
                     </tr>
                     <tr>
                         <td class="l">Extremity Findings</td>
                         <td class="r">
-                            <input type="text" id="pg5_trauma_ex_comments" style="width:160px">
-                            <input type="text" id="pg5_medical_ex_comments" style="width:160px;margin-left:8px">
-                            <input type="text" id="pg5_refusal_ex_comments" style="width:160px;margin-left:8px">
+                            <input type="text" id="pg5_trauma_ex_comments" style="width: 160px" />
+                            <input
+                                type="text"
+                                id="pg5_medical_ex_comments"
+                                style="width: 160px; margin-left: 8px"
+                            />
+                            <input
+                                type="text"
+                                id="pg5_refusal_ex_comments"
+                                style="width: 160px; margin-left: 8px"
+                            />
                         </td>
                     </tr>
                     <tr>
                         <td class="l">Restraints</td>
                         <td class="r">
-                            <input type="text" id="pg5_trauma_ex_restraints" style="width:160px">
-                            <input type="text" id="pg5_medical_ex_restraints" style="width:160px;margin-left:8px">
-                            <input type="text" id="pg5_refusal_ex_restraints" style="width:160px;margin-left:8px">
+                            <input type="text" id="pg5_trauma_ex_restraints" style="width: 160px" />
+                            <input
+                                type="text"
+                                id="pg5_medical_ex_restraints"
+                                style="width: 160px; margin-left: 8px"
+                            />
+                            <input
+                                type="text"
+                                id="pg5_refusal_ex_restraints"
+                                style="width: 160px; margin-left: 8px"
+                            />
                         </td>
                     </tr>
                     <tr>
                         <td class="l">Skin Findings</td>
                         <td class="r">
-                            <input type="text" id="pg5_trauma_ex_skin_findings" style="width:160px">
-                            <input type="text" id="pg5_medical_ex_skin_findings" style="width:160px;margin-left:8px">
-                            <input type="text" id="pg5_refusal_ex_skin_findings" style="width:160px;margin-left:8px">
+                            <input
+                                type="text"
+                                id="pg5_trauma_ex_skin_findings"
+                                style="width: 160px"
+                            />
+                            <input
+                                type="text"
+                                id="pg5_medical_ex_skin_findings"
+                                style="width: 160px; margin-left: 8px"
+                            />
+                            <input
+                                type="text"
+                                id="pg5_refusal_ex_skin_findings"
+                                style="width: 160px; margin-left: 8px"
+                            />
                         </td>
                     </tr>
                     <tr>
-                        <td class="l" style="font-weight:bold">Abdomen</td>
+                        <td class="l" style="font-weight: bold">Abdomen</td>
                         <td class="r"></td>
                     </tr>
                     <tr>
                         <td class="l">Appearance</td>
                         <td class="r">
-                            <input type="text" id="pg5_trauma_ap_appearance" style="width:160px">
-                            <input type="text" id="pg5_medical_ap_appearance" style="width:160px;margin-left:8px">
-                            <input type="text" id="pg5_refusal_ap_appearance" style="width:160px;margin-left:8px">
+                            <input type="text" id="pg5_trauma_ap_appearance" style="width: 160px" />
+                            <input
+                                type="text"
+                                id="pg5_medical_ap_appearance"
+                                style="width: 160px; margin-left: 8px"
+                            />
+                            <input
+                                type="text"
+                                id="pg5_refusal_ap_appearance"
+                                style="width: 160px; margin-left: 8px"
+                            />
                         </td>
                     </tr>
                     <tr>
                         <td class="l">Palpation</td>
                         <td class="r">
-                            <input type="text" id="pg5_trauma_ap_palpation" style="width:160px">
-                            <input type="text" id="pg5_medical_ap_palpation" style="width:160px;margin-left:8px">
-                            <input type="text" id="pg5_refusal_ap_palpation" style="width:160px;margin-left:8px">
+                            <input type="text" id="pg5_trauma_ap_palpation" style="width: 160px" />
+                            <input
+                                type="text"
+                                id="pg5_medical_ap_palpation"
+                                style="width: 160px; margin-left: 8px"
+                            />
+                            <input
+                                type="text"
+                                id="pg5_refusal_ap_palpation"
+                                style="width: 160px; margin-left: 8px"
+                            />
                         </td>
                     </tr>
                     <tr>
                         <td class="l">Bowel Sounds</td>
                         <td class="r">
-                            <input type="text" id="pg5_trauma_ap_bowel_sounds" style="width:160px">
-                            <input type="text" id="pg5_medical_ap_bowel_sounds" style="width:160px;margin-left:8px">
-                            <input type="text" id="pg5_refusal_ap_bowel_sounds" style="width:160px;margin-left:8px">
+                            <input
+                                type="text"
+                                id="pg5_trauma_ap_bowel_sounds"
+                                style="width: 160px"
+                            />
+                            <input
+                                type="text"
+                                id="pg5_medical_ap_bowel_sounds"
+                                style="width: 160px; margin-left: 8px"
+                            />
+                            <input
+                                type="text"
+                                id="pg5_refusal_ap_bowel_sounds"
+                                style="width: 160px; margin-left: 8px"
+                            />
                         </td>
                     </tr>
                     <tr>
                         <td class="l">Comments</td>
                         <td class="r">
-                            <input type="text" id="pg5_trauma_ap_findings" style="width:160px">
-                            <input type="text" id="pg5_medical_ap_findings" style="width:160px;margin-left:8px">
-                            <input type="text" id="pg5_refusal_ap_findings" style="width:160px;margin-left:8px">
+                            <input type="text" id="pg5_trauma_ap_findings" style="width: 160px" />
+                            <input
+                                type="text"
+                                id="pg5_medical_ap_findings"
+                                style="width: 160px; margin-left: 8px"
+                            />
+                            <input
+                                type="text"
+                                id="pg5_refusal_ap_findings"
+                                style="width: 160px; margin-left: 8px"
+                            />
                         </td>
                     </tr>
                 </table>
             </details>
             <details id="section-page8">
-            <summary>Page 8 Settings</summary>
+                <summary>Page 8 Settings</summary>
                 <table>
                     <tr>
-                        <td class="l">
-                            "On Scene" Comment
-                        </td>
+                        <td class="l">"On Scene" Comment</td>
                         <td class="r">
                             <textarea id="pg8_at_ref"></textarea>
                         </td>
-                    </tr><tr>
-                        <td class="l">
-                            "Transporting" Comment
-                        </td>
+                    </tr>
+                    <tr>
+                        <td class="l">"Transporting" Comment</td>
                         <td class="r">
                             <textarea id="pg8_lv_ref"></textarea>
                         </td>
-                    </tr><tr>
-                        <td class="l">
-                            "At Hospital" Comment
-                        </td>
+                    </tr>
+                    <tr>
+                        <td class="l">"At Hospital" Comment</td>
                         <td class="r">
                             <textarea id="pg8_at_rec"></textarea>
                         </td>
-                    </tr><tr>
-                        <td class="l">
-                            "Refusal" Comment
-                        </td>
+                    </tr>
+                    <tr>
+                        <td class="l">"Refusal" Comment</td>
                         <td class="r">
                             <textarea id="pg8_can_1"></textarea>
                         </td>
-                    </tr><tr>
-                        <td class="l">
-                            "Custom" Comment
-                        </td>
+                    </tr>
+                    <tr>
+                        <td class="l">"Custom" Comment</td>
                         <td class="r">
                             <textarea id="pg8_can_2"></textarea>
                         </td>
@@ -1029,9 +2034,11 @@
         <div class="submit-row">
             <button id="save">Save</button>
             <button id="export" type="button" class="btn-secondary">Export defaults</button>
-            <button id="import-btn" type="button" class="btn-secondary">Import defaults (.json)</button>
+            <button id="import-btn" type="button" class="btn-secondary">
+                Import defaults (.json)
+            </button>
             <button id="reset" type="button" class="btn-danger">Reset</button>
-            <input id="import-file" type="file" accept="application/json,.json" hidden>
+            <input id="import-file" type="file" accept="application/json,.json" hidden />
         </div>
         <script src="options.js"></script>
     </body>

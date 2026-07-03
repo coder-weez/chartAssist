@@ -1,19 +1,19 @@
 version: 2
 updates:
-  # GitHub Actions used by workflows (e.g. actions/checkout, create-pull-request).
-  - package-ecosystem: github-actions
-    directory: "/"
-    schedule:
-      interval: weekly
-    labels:
-      - dependencies
+    # GitHub Actions used by workflows (e.g. actions/checkout, create-pull-request).
+    - package-ecosystem: github-actions
+      directory: '/'
+      schedule:
+          interval: weekly
+      labels:
+          - dependencies
 
-  # npm release tooling in package.json (chrome-webstore-upload-cli).
-  # Not shipped in the extension — jQuery is vendored and handled by
-  # .github/workflows/jquery-update.yml instead.
-  - package-ecosystem: npm
-    directory: "/"
-    schedule:
-      interval: weekly
-    labels:
-      - dependencies
+    # npm release tooling in package.json (chrome-webstore-upload-cli).
+    # Not shipped in the extension — jQuery is vendored and handled by
+    # .github/workflows/jquery-update.yml instead.
+    - package-ecosystem: npm
+      directory: '/'
+      schedule:
+          interval: weekly
+      labels:
+          - dependencies
