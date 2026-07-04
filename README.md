@@ -59,10 +59,16 @@ your default values. These are saved to `chrome.storage.sync`.
 ## Usage
 
 Open a patient care report on `emscharts.com`. On the supported pages
-(page 2, 3, 4, 5, and 8) the extension adds a toolbar with two buttons:
+(page 2, 3, 4, 5, and 8) the extension adds a floating toolbar:
 
 - **AutoComplete** (teal) — fills form fields with the defaults you saved in Options.
-- **Clear Fields** (yellow) — blanks out any fields the extension knows about on that page. Asks for confirmation before clearing.
+- **Clear Fields** (yellow) — blanks out any fields the extension manages on that page. Asks for confirmation before clearing.
+- **Page Defaults** — opens the Options page scrolled to the section for the current page.
+- **Preset buttons** (pages 5 and 8) — page 5 has Trauma / Medical / Refusal; page 8 has On Scene / Transport / At Hospital / Refusal / Custom.
+
+### QA Mode
+
+Click the extension icon in the Chrome toolbar to open the popup. The **QA Mode** toggle freezes the toolbar — all buttons are covered by an overlay and cannot be clicked, preventing accidental form changes while reviewing a completed chart. When QA Mode is enabled the toolbar snaps back to its default position in the top-right corner. When disabled, the toolbar returns to wherever you last left it.
 
 ## How settings are stored
 

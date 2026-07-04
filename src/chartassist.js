@@ -1,6 +1,19 @@
 // Shared UI helpers for EMSCharts Assist content scripts.
 // Loaded after jQuery and before each page script.
 
+function caApplyInitialState(bar) {
+    chrome.storage.local.get(['ca_qa_mode', 'ca_toolbar_pos'], function (r) {
+        var qaOn = !!r.ca_qa_mode;
+        bar.toggleClass('ca-frozen', qaOn);
+        if (qaOn) {
+            bar.css({ left: 'auto', top: '8px', right: '8px' });
+        } else if (r.ca_toolbar_pos) {
+            var pos = r.ca_toolbar_pos;
+            bar.css({ left: pos.left + 'px', top: pos.top + 'px', right: 'auto' });
+        }
+    });
+}
+
 // Returns the extension's floating button bar, creating it once on first use.
 // EMSCharts pages no longer expose a stable header element to attach to, so the
 // AutoComplete buttons live in their own fixed-position, draggable toolbar.
@@ -8,9 +21,21 @@ function caToolbar() {
     var bar = jQuery('#ca-toolbar');
     if (!bar.length) {
         bar = jQuery('<div id="ca-toolbar" class="ca-vertical"></div>').appendTo('body');
+        jQuery('<div id="ca-qa-film"></div>').appendTo(bar);
         var handle = jQuery('<div id="ca-drag" title="Drag to move">⠿</div>').appendTo(bar);
         caMakeDraggable(bar, handle);
-        caRestorePosition(bar);
+        caApplyInitialState(bar);
+        chrome.storage.onChanged.addListener(function (changes, area) {
+            if (area === 'local' && 'ca_qa_mode' in changes) {
+                var on = !!changes.ca_qa_mode.newValue;
+                bar.toggleClass('ca-frozen', on);
+                if (on) {
+                    bar.css({ left: 'auto', top: '8px', right: '8px' });
+                } else {
+                    caSavePosition(bar);
+                }
+            }
+        });
         setTimeout(function () {
             jQuery(
                 '<button class="ca-btn" style="font-size:11px;padding:3px 8px;opacity:0.85">Page Defaults</button>',
@@ -73,15 +98,6 @@ function caMakeDraggable(bar, handle) {
 function caSavePosition(bar) {
     var rect = bar[0].getBoundingClientRect();
     chrome.storage.local.set({ ca_toolbar_pos: { left: rect.left, top: rect.top } });
-}
-
-function caRestorePosition(bar) {
-    chrome.storage.local.get('ca_toolbar_pos', function (r) {
-        var pos = r && r.ca_toolbar_pos;
-        if (pos) {
-            bar.css({ left: pos.left + 'px', top: pos.top + 'px', right: 'auto' });
-        }
-    });
 }
 
 // Briefly flash a light-green background on the given fields to confirm

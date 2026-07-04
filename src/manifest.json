@@ -1,8 +1,8 @@
 {
     "name": "EMSCharts Assist",
     "short_name": "ChartAssist",
-    "version": "0.5.0.3",
-    "version_name": "0.5.0.3 (Manifest V3)",
+    "version": "0.6.0.0",
+    "version_name": "0.6.0.0 (Manifest V3)",
     "description": "Autofills EMSCharts with defaults.",
     "manifest_version": 3,
     "minimum_chrome_version": "88",
