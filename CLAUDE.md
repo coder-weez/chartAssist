@@ -6,7 +6,7 @@
 
 ## What this project is
 
-A Chrome MV3 extension that injects an **AutoComplete** toolbar and a **Clear Fields** button into EMSCharts PCR pages. AutoComplete reads user-configured defaults from `chrome.storage.sync` and fills in matching form fields. Clear Fields blanks those same fields after a confirmation prompt. No patient data is ever stored or transmitted.
+A Chrome MV3 extension that injects an **AutoComplete** toolbar and a **Clear Fields** button into EMSCharts PCR pages. AutoComplete reads user-configured defaults from `chrome.storage.sync` and fills in matching form fields. Clear Fields blanks those same fields after a confirmation prompt. A **QA Mode** toggle (in the extension popup) freezes the toolbar so no buttons can be clicked during chart review. No patient data is ever stored or transmitted.
 
 ## Architecture
 
@@ -15,7 +15,9 @@ src/
   manifest.json      — MV3 manifest; declares content scripts per page
   background.js      — Service worker; opens options tab with page anchor
   chartassist.js     — Shared helpers loaded before every page script
+  chartassist.css    — Shared styles injected into EMSCharts pages
   options.html/.js   — Settings UI; saves defaults to chrome.storage.sync
+  popup.html/.js     — Extension popup; hosts the QA Mode toggle
   page2.js           — Content script for EMSCharts page 2 (dispatch/HPI)
   page3.js           — Content script for page 3 (neuro/airway)
   page4.js           — Content script for page 4 (cardiac/respiratory)
@@ -25,11 +27,19 @@ src/
 
 Page 5 and page 8 both use **multiple preset buttons** instead of a single AutoComplete button. Page 5 has Trauma / Medical / Refusal; page 8 has On Scene / Transport / At Hospital / Refusal / Custom. Storage keys for page 5 follow the pattern `pg5_{category}_{fieldName}` (e.g. `pg5_trauma_head_comments`). The Options page shows three sub-tables within the single `<details id="section-page5">` block.
 
-```
-
-```
-
 Each page script is injected only on its matching EMSCharts URL (defined in `manifest.json`). All page scripts share `chartassist.js` via the `"js"` array in the manifest content script entry.
+
+### QA Mode (`popup.html` / `popup.js`)
+
+The extension popup exposes a **QA Mode** checkbox. Its state is stored in `chrome.storage.local` as `ca_qa_mode` (boolean). When on:
+
+- A `#ca-qa-film` overlay div (absolutely positioned over the toolbar) becomes visible, blocking all pointer events to the buttons beneath it and displaying a centred "QA MODE" label.
+- The toolbar snaps to its CSS default position (`top: 8px; right: 8px`) on every page load, overriding any saved drag position.
+- The `chrome.storage.onChanged` listener in `chartassist.js` reacts live if QA Mode is toggled while a PCR page is open.
+
+When QA Mode is turned off the toolbar's current position is written to `ca_toolbar_pos` (via `caSavePosition`) so subsequent page loads restore to that location rather than the pre-QA saved position.
+
+**Race condition note:** toolbar position restore and QA Mode check are merged into a single `caApplyInitialState` call (one `chrome.storage.local.get` for both keys). Previously they were two separate async calls whose callbacks could resolve in either order, causing QA Mode's position reset to be undone by a late-resolving position restore.
 
 jQuery is **vendored** at `src/jquery.min.js` (a deliberately version-less filename so updates are an in-place overwrite — the manifest references never change). The actual version lives in the file's banner comment, in `README.md`, and in update PR titles.
 
