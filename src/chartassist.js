@@ -100,7 +100,6 @@ function caSavePosition(bar) {
     chrome.storage.local.set({ ca_toolbar_pos: { left: rect.left, top: rect.top } });
 }
 
-
 // Briefly flash a light-green background on the given fields to confirm
 // they were just auto-filled, then fade back to their normal background.
 function caFlash(selector) {
