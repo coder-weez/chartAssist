@@ -87,6 +87,20 @@
 .ca-btn-danger:active {
     background: #ca8a04;
 }
+.ca-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    padding: 4px 4px 2px;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 2px;
+}
+#ca-toolbar > .ca-section-label:first-of-type {
+    border-top: none;
+    margin-top: 0;
+}
 #ca-toast-container {
     position: fixed;
     bottom: 16px;
