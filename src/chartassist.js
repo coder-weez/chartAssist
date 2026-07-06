@@ -36,21 +36,22 @@ function caToolbar(skipDefaults) {
                 }
             }
         });
-        if (!skipDefaults) setTimeout(function () {
-            jQuery(
-                '<button class="ca-btn" style="font-size:11px;padding:3px 8px;opacity:0.85">Page Defaults</button>',
-            )
-                .appendTo(bar)
-                .on('click', function () {
-                    if (chrome.runtime && chrome.runtime.id) {
-                        var m = window.location.pathname.match(/page(\d+)\.cfm/i);
-                        chrome.runtime.sendMessage({
-                            action: 'openOptions',
-                            page: m ? m[1] : null,
-                        });
-                    }
-                });
-        }, 0);
+        if (!skipDefaults)
+            setTimeout(function () {
+                jQuery(
+                    '<button class="ca-btn" style="font-size:11px;padding:3px 8px;opacity:0.85">Page Defaults</button>',
+                )
+                    .appendTo(bar)
+                    .on('click', function () {
+                        if (chrome.runtime && chrome.runtime.id) {
+                            var m = window.location.pathname.match(/page(\d+)\.cfm/i);
+                            chrome.runtime.sendMessage({
+                                action: 'openOptions',
+                                page: m ? m[1] : null,
+                            });
+                        }
+                    });
+            }, 0);
     }
     return bar;
 }

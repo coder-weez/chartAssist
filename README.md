@@ -71,11 +71,13 @@ Open a patient care report on `emscharts.com`. On the supported pages
 Page 1 (incident/unit info) has a hard-coded toolbar with two sections — no Options configuration required:
 
 **Base** — three buttons that simultaneously set the Base select and the Vehicle Dispatch Location text field:
+
 - 1321 EV Rd
 - 34 Maple
 - 380 High
 
 **Staffing** — two buttons that set Unit Staffing Level, Transport Code (always "Initial Trip"), and Referred By (always "Ontario County 911"):
+
 - **ALS** — sets staffing level to ALS
 - **BLS** — sets staffing level to BLS
 

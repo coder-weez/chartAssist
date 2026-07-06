@@ -33,18 +33,18 @@ Page 1 has a **hard-coded toolbar** with no Options configuration. It uses `caTo
 **Base** — three preset buttons set `select[name="Base_ID"]` to the matching option value, trigger EMSCharts' own `getUnitPicklist()` callback, and overwrite `input[name="vehcloc"]` with the option's text label (no appending — always overwrites):
 
 | Button label | `Base_ID` value | Address text written to `vehcloc` |
-|---|---|---|
-| 1321 EV Rd | `5650` | 1321 East Victor Road |
-| 34 Maple | `22751` | 34 Maple Avenue |
-| 380 High | `26274` | 380 High Street |
+| ------------ | --------------- | --------------------------------- |
+| 1321 EV Rd   | `5650`          | 1321 East Victor Road             |
+| 34 Maple     | `22751`         | 34 Maple Avenue                   |
+| 380 High     | `26274`         | 380 High Street                   |
 
 **Staffing** — ALS and BLS buttons call a shared `caSetStaffing(val)` helper that always overwrites (no append, no toast-gate) three fields:
 
-| Field | Selector | ALS value | BLS value |
-|---|---|---|---|
-| Unit Staffing Level | `select[name="unit_staff"]` | `3` | `2` |
-| Transport Code | `select[name="transcode"]` | `1` (Initial Trip) | `1` (Initial Trip) |
-| Referred By | `input[name="ref_md"]` | Ontario County 911 | Ontario County 911 |
+| Field               | Selector                    | ALS value          | BLS value          |
+| ------------------- | --------------------------- | ------------------ | ------------------ |
+| Unit Staffing Level | `select[name="unit_staff"]` | `3`                | `2`                |
+| Transport Code      | `select[name="transcode"]`  | `1` (Initial Trip) | `1` (Initial Trip) |
+| Referred By         | `input[name="ref_md"]`      | Ontario County 911 | Ontario County 911 |
 
 **Clear Fields** resets all five fields managed by page 1 (Base_ID, vehcloc, unit_staff, transcode, ref_md).
 

@@ -17,7 +17,10 @@ $(document).ready(function () {
         sel[0].dispatchEvent(new Event('change', { bubbles: true }));
         if (typeof getUnitPicklist === 'function') getUnitPicklist();
         caFlash('select[name="Base_ID"]');
-        var label = sel.find('option[value="' + val + '"]').text().trim();
+        var label = sel
+            .find('option[value="' + val + '"]')
+            .text()
+            .trim();
         var locEl = $('input[name="vehcloc"]');
         if (locEl.length && label) {
             locEl[0].value = label;
