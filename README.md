@@ -59,12 +59,27 @@ your default values. These are saved to `chrome.storage.sync`.
 ## Usage
 
 Open a patient care report on `emscharts.com`. On the supported pages
-(page 2, 3, 4, 5, and 8) the extension adds a floating toolbar:
+(page 1, 2, 3, 4, 5, and 8) the extension adds a floating toolbar:
 
 - **AutoComplete** (teal) — fills form fields with the defaults you saved in Options.
-- **Clear Fields** (yellow) — blanks out any fields the extension manages on that page. Asks for confirmation before clearing.
+- **Clear Fields** (red) — blanks out any fields the extension manages on that page. Asks for confirmation before clearing.
 - **Page Defaults** — opens the Options page scrolled to the section for the current page.
 - **Preset buttons** (pages 5 and 8) — page 5 has Trauma / Medical / Refusal; page 8 has On Scene / Transport / At Hospital / Refusal / Custom.
+
+### Page 1 toolbar
+
+Page 1 (incident/unit info) has a hard-coded toolbar with two sections — no Options configuration required:
+
+**Base** — three buttons that simultaneously set the Base select and the Vehicle Dispatch Location text field:
+
+- 1321 EV Rd
+- 34 Maple
+- 380 High
+
+**Staffing** — two buttons that set Unit Staffing Level, Transport Code (always "Initial Trip"), and Referred By (always "Ontario County 911"):
+
+- **ALS** — sets staffing level to ALS
+- **BLS** — sets staffing level to BLS
 
 ### QA Mode
 

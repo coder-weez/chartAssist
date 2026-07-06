@@ -17,7 +17,7 @@ function caApplyInitialState(bar) {
 // Returns the extension's floating button bar, creating it once on first use.
 // EMSCharts pages no longer expose a stable header element to attach to, so the
 // AutoComplete buttons live in their own fixed-position, draggable toolbar.
-function caToolbar() {
+function caToolbar(skipDefaults) {
     var bar = jQuery('#ca-toolbar');
     if (!bar.length) {
         bar = jQuery('<div id="ca-toolbar" class="ca-vertical"></div>').appendTo('body');
@@ -36,21 +36,22 @@ function caToolbar() {
                 }
             }
         });
-        setTimeout(function () {
-            jQuery(
-                '<button class="ca-btn" style="font-size:11px;padding:3px 8px;opacity:0.85">Page Defaults</button>',
-            )
-                .appendTo(bar)
-                .on('click', function () {
-                    if (chrome.runtime && chrome.runtime.id) {
-                        var m = window.location.pathname.match(/page(\d+)\.cfm/i);
-                        chrome.runtime.sendMessage({
-                            action: 'openOptions',
-                            page: m ? m[1] : null,
-                        });
-                    }
-                });
-        }, 0);
+        if (!skipDefaults)
+            setTimeout(function () {
+                jQuery(
+                    '<button class="ca-btn" style="font-size:11px;padding:3px 8px;opacity:0.85">Page Defaults</button>',
+                )
+                    .appendTo(bar)
+                    .on('click', function () {
+                        if (chrome.runtime && chrome.runtime.id) {
+                            var m = window.location.pathname.match(/page(\d+)\.cfm/i);
+                            chrome.runtime.sendMessage({
+                                action: 'openOptions',
+                                page: m ? m[1] : null,
+                            });
+                        }
+                    });
+            }, 0);
     }
     return bar;
 }

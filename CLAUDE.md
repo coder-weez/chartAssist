@@ -18,12 +18,39 @@ src/
   chartassist.css    — Shared styles injected into EMSCharts pages
   options.html/.js   — Settings UI; saves defaults to chrome.storage.sync
   popup.html/.js     — Extension popup; hosts the QA Mode toggle
+  page1.js           — Content script for EMSCharts page 1 (incident/unit info)
   page2.js           — Content script for EMSCharts page 2 (dispatch/HPI)
   page3.js           — Content script for page 3 (neuro/airway)
   page4.js           — Content script for page 4 (cardiac/respiratory)
   page5.js           — Content script for page 5 (physical exam)
   page8.js           — Content script for page 8 (billing/narrative)
 ```
+
+### Page 1 (`page1.js`)
+
+Page 1 has a **hard-coded toolbar** with no Options configuration. It uses `caToolbar(true)` (the `skipDefaults` flag) to omit the Page Defaults button. Two labelled sections:
+
+**Base** — three preset buttons set `select[name="Base_ID"]` to the matching option value, trigger EMSCharts' own `getUnitPicklist()` callback, and overwrite `input[name="vehcloc"]` with the option's text label (no appending — always overwrites):
+
+| Button label | `Base_ID` value | Address text written to `vehcloc` |
+| ------------ | --------------- | --------------------------------- |
+| 1321 EV Rd   | `5650`          | 1321 East Victor Road             |
+| 34 Maple     | `22751`         | 34 Maple Avenue                   |
+| 380 High     | `26274`         | 380 High Street                   |
+
+**Staffing** — ALS and BLS buttons call a shared `caSetStaffing(val)` helper that always overwrites (no append, no toast-gate) three fields:
+
+| Field               | Selector                    | ALS value          | BLS value          |
+| ------------------- | --------------------------- | ------------------ | ------------------ |
+| Unit Staffing Level | `select[name="unit_staff"]` | `3`                | `2`                |
+| Transport Code      | `select[name="transcode"]`  | `1` (Initial Trip) | `1` (Initial Trip) |
+| Referred By         | `input[name="ref_md"]`      | Ontario County 911 | Ontario County 911 |
+
+**Clear Fields** resets all five fields managed by page 1 (Base_ID, vehcloc, unit_staff, transcode, ref_md).
+
+### `caToolbar(skipDefaults)`
+
+`caToolbar` now accepts an optional boolean. When `true`, the Page Defaults button is not appended. Pass `true` from page scripts that have no Options page section (e.g. page 1).
 
 Page 5 and page 8 both use **multiple preset buttons** instead of a single AutoComplete button. Page 5 has Trauma / Medical / Refusal; page 8 has On Scene / Transport / At Hospital / Refusal / Custom. Storage keys for page 5 follow the pattern `pg5_{category}_{fieldName}` (e.g. `pg5_trauma_head_comments`). The Options page shows three sub-tables within the single `<details id="section-page5">` block.
 
