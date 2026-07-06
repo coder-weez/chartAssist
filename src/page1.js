@@ -41,6 +41,12 @@ $(document).ready(function () {
             staff[0].dispatchEvent(new Event('change', { bubbles: true }));
             caFlash('select[name="unit_staff"]');
         }
+        var capability = $('select[name="unit_capability"]');
+        if (capability.length) {
+            capability[0].value = unitStaffVal === '3' ? '3' : '4';
+            capability[0].dispatchEvent(new Event('change', { bubbles: true }));
+            caFlash('select[name="unit_capability"]');
+        }
         var trans = $('select[name="transcode"]');
         if (trans.length) {
             trans[0].value = '1';
@@ -73,6 +79,7 @@ $(document).ready(function () {
             return;
         caClrField('select[name="Base_ID"]');
         caClrField('input[name="vehcloc"]');
+        caClrField('select[name="unit_capability"]');
         caClrField('select[name="unit_staff"]');
         caClrField('select[name="transcode"]');
         caClrField('input[name="ref_md"]');
