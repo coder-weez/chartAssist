@@ -1,3 +1,4 @@
+/* global getUnitPicklist */
 $(document).ready(function () {
     var bar = caToolbar(true);
 
