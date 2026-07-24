@@ -7,7 +7,7 @@
         "globals": "^17.7.0",
         "jsdom": "^29.1.1",
         "prettier": "^3.9.4",
-        "vitest": "^4.1.9"
+        "vitest": "^4.1.10"
     },
     "scripts": {
         "test": "vitest run",
