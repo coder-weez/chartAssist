@@ -1,4 +1,6 @@
 {
+    "private": true,
+    "license": "UNLICENSED",
     "devDependencies": {
         "@eslint/js": "^10.0.1",
         "chrome-webstore-upload-cli": "^4.0.1",
