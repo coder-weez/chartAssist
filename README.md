@@ -70,11 +70,7 @@ Open a patient care report on `emscharts.com`. On the supported pages
 
 Page 1 (incident/unit info) has a hard-coded toolbar with two sections — no Options configuration required:
 
-**Base** — three buttons that simultaneously set the Base select and the Vehicle Dispatch Location text field:
-
-- 1321 EV Rd
-- 34 Maple
-- 380 High
+**Base** — one button per base, generated automatically from the EMSCharts Base dropdown (so the buttons always match the bases your account offers). Clicking a button sets the Base select and the Vehicle Dispatch Location text field together.
 
 **Staffing** — two buttons that set Unit Staffing Level, Transport Code (always "Initial Trip"), and Referred By (always "Ontario County 911"):
 
@@ -133,6 +129,18 @@ If the AutoComplete button doesn't fill anything:
    (right-click the page &rarr; **Inspect** &rarr; **Console**) to check for
    any errors logged by the extension.
 3. Reload the extension after making changes.
+
+### "Expected field(s) were not found" warning
+
+EMSCharts is maintained by Zoll, and updates on their side can rename or move
+form fields. When the extension loads a PCR page it quietly checks that the
+fields it fills still exist; if some are missing it shows a yellow warning toast
+and AutoComplete may not work correctly on that page. If you see this, the page
+likely changed on Zoll's end — please open an Issue noting which page it was so
+the selectors can be updated. (A weekly CI job also watches Zoll's public
+[release notes](https://help.zollonline.com/emscharts/Content/Subfolders%20for%20Whats%20New/NOW.htm)
+and opens a pull request whenever a new emsCharts version ships, as an early
+heads-up to re-check the fields.)
 
 ## Contributing
 

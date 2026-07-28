@@ -1,0 +1,100 @@
+name: EMSCharts release watch
+
+# Watches Zoll's public emsCharts release-notes page for a new version. When the
+# latest release differs from .github/emscharts-baseline.txt, opens a PR bumping
+# the baseline — merging it acknowledges the release and stops repeat alerts. The
+# PR is a prompt to manually check whether the update changed any form fields the
+# extension binds to (see the "Adding a new field" selectors in CLAUDE.md); the
+# real DOM lives behind login + PHI and cannot be scraped in CI.
+#
+# NOTE: this tracks the emsCharts NOW notes (the only public release feed). The
+# extension targets the classic pageN.cfm PCR pages; NOW changes are an early
+# signal and foreshadow the eventual migration. Point WATCH_URL elsewhere if a
+# classic-PCR release feed becomes available.
+
+on:
+    schedule:
+        - cron: '0 6 * * 1' # Mondays 06:00 UTC (matches the jQuery watcher)
+    workflow_dispatch:
+        inputs:
+            force_baseline:
+                description: 'Override the stored baseline for testing (e.g. "9.0 (6/19/2024)"). Blank for normal run.'
+                required: false
+                default: ''
+
+permissions:
+    contents: write
+    pull-requests: write
+
+concurrency:
+    group: emscharts-watch
+    cancel-in-progress: false
+
+env:
+    WATCH_URL: 'https://help.zollonline.com/emscharts/Content/Subfolders%20for%20Whats%20New/NOW.htm'
+
+jobs:
+    check:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+
+            - name: Detect latest release
+              id: ver
+              env:
+                  FORCE: ${{ github.event.inputs.force_baseline }}
+              run: |
+                  set -euo pipefail
+                  if [ -n "${FORCE:-}" ]; then
+                    CURRENT="$FORCE"
+                  else
+                    CURRENT=$(head -1 .github/emscharts-baseline.txt | tr -d '\r' | sed 's/[[:space:]]*$//')
+                  fi
+                  PAGE=$(curl -fsSL "$WATCH_URL")
+                  # Release notes list entries like "10.0 (8/14/2024)".
+                  TOKENS=$(printf '%s' "$PAGE" | grep -oE '[0-9]+\.[0-9]+ ?\([0-9]{1,2}/[0-9]{1,2}/[0-9]{4}\)' || true)
+                  [ -n "$TOKENS" ] || { echo "::error::no version tokens found — page layout may have changed ($WATCH_URL)"; exit 1; }
+                  # Highest version number, then the full "X.Y (date)" line carrying it.
+                  LATEST_VER=$(printf '%s\n' "$TOKENS" | grep -oE '^[0-9]+\.[0-9]+' | sort -V | tail -1)
+                  LATEST=$(printf '%s\n' "$TOKENS" | grep -E "^${LATEST_VER} " | head -1)
+                  [ -n "$CURRENT" ] && [ -n "$LATEST" ] || { echo "::error::could not resolve versions"; exit 1; }
+                  UPDATE=false
+                  [ "$CURRENT" != "$LATEST" ] && UPDATE=true
+                  {
+                    echo "current=$CURRENT"
+                    echo "latest=$LATEST"
+                    echo "update=$UPDATE"
+                  } >> "$GITHUB_OUTPUT"
+                  echo "Current='$CURRENT' Latest='$LATEST' Update=$UPDATE"
+
+            - name: Update baseline
+              if: steps.ver.outputs.update == 'true'
+              env:
+                  LATEST: ${{ steps.ver.outputs.latest }}
+              run: printf '%s\n' "$LATEST" > .github/emscharts-baseline.txt
+
+            - name: Create Pull Request
+              if: steps.ver.outputs.update == 'true'
+              uses: peter-evans/create-pull-request@v8
+              with:
+                  branch: chore/emscharts-release-watch
+                  base: main
+                  commit-message: 'chore: emsCharts release ${{ steps.ver.outputs.current }} -> ${{ steps.ver.outputs.latest }}'
+                  title: 'chore: new emsCharts release ${{ steps.ver.outputs.latest }}'
+                  delete-branch: true
+                  labels: dependencies
+                  body: |
+                      A new emsCharts release was published.
+
+                      - Previous baseline: `${{ steps.ver.outputs.current }}`
+                      - Latest release:    `${{ steps.ver.outputs.latest }}`
+                      - Release notes:     ${{ env.WATCH_URL }}
+
+                      **Action required before merging:** review the release notes for changes to
+                      form fields the extension binds to — chief complaint / HPI (page 2), neuro /
+                      airway / pertneg (page 3), cardiac / respiratory (page 4), physical exam
+                      (page 5), narrative (page 8). If field names or page structure changed, update
+                      the affected `caFill` / `caFillPopup` / `caFillPertNeg` selectors and the
+                      `caHealthCheck` canary lists (see CLAUDE.md → "Adding a new field").
+
+                      Merging this PR records the new baseline and silences repeat alerts for it.

@@ -3,10 +3,24 @@ $(document).ready(function () {
     var bar = caToolbar(true);
 
     // --- Base section ---
+    // Buttons are generated dynamically from the EMSCharts Base_ID dropdown:
+    // one button per real option (skipping the placeholder), labelled with the
+    // option's own text. The list adapts to whatever bases the dropdown offers.
     bar.append('<div class="ca-section-label">Base</div>');
-    bar.append('<button class="ca-btn ca-btn-base" data-base-id="5650">1321 EV Rd</button>');
-    bar.append('<button class="ca-btn ca-btn-base" data-base-id="22751">34 Maple</button>');
-    bar.append('<button class="ca-btn ca-btn-base" data-base-id="26274">380 High</button>');
+    var baseSel = $('select[name="Base_ID"]');
+    if (baseSel.length) {
+        var placeholderVal = baseSel[0].options.length ? baseSel[0].options[0].value : '';
+        baseSel.find('option').each(function () {
+            var val = this.value;
+            // Skip the placeholder / blank option.
+            if (val === placeholderVal || val === '' || val === '0' || val === '-1') return;
+            var label = $(this).text().trim();
+            if (!label) return;
+            var $btn = $('<button class="ca-btn ca-btn-base"></button>');
+            $btn.attr('data-base-id', val).text(label);
+            bar.append($btn);
+        });
+    }
 
     bar.on('click', '.ca-btn-base', function () {
         if (!chrome.runtime || !chrome.runtime.id) return;
