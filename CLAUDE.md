@@ -4,6 +4,8 @@
 
 > **Versioning:** bump `version` and `version_name` in `manifest.json` before publishing to the Chrome Web Store — Chrome rejects uploads where the version hasn't changed. Use semantic versioning: patch (`0.x.x.1`) for bug fixes, minor (`0.x+1.0.0`) for new features, major (`1.0.0.0`) for breaking changes. After merging to `main`, tag the commit to match (e.g. `git tag v0.4.0`). Tags live on `main`; don't tag feature branches.
 
+> **Before pushing:** run `npm run format:check` (not a path-scoped `prettier --check`). The `lint` CI job runs both ESLint _and_ Prettier over the **whole tree**, so Markdown files like this one count — an unformatted `CLAUDE.md` or `README.md` will fail CI just like unformatted JS. Run `npm run format` to auto-fix.
+
 ## What this project is
 
 A Chrome MV3 extension that injects an **AutoComplete** toolbar and a **Clear Fields** button into EMSCharts PCR pages. AutoComplete reads user-configured defaults from `chrome.storage.sync` and fills in matching form fields. Clear Fields blanks those same fields after a confirmation prompt. A **QA Mode** toggle (in the extension popup) freezes the toolbar so no buttons can be clicked during chart review. No patient data is ever stored or transmitted.
