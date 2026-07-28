@@ -6,6 +6,9 @@ $(document).ready(function () {
     caToolbar().append('<button class="can2 ca-btn">Custom</button>');
     caToolbar().append('<button class="ca-clear ca-btn ca-btn-danger">Clear Fields</button>');
 
+    // Canary selector — flags EMSCharts DOM changes (all buttons target this field).
+    caHealthCheck(8, ['textarea[name=vs_comment]']);
+
     $('.ca-clear').click(function () {
         if (!chrome.runtime || !chrome.runtime.id) return;
         if (!window.confirm('Clear all auto-filled fields on this page? This cannot be undone.'))

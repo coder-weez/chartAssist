@@ -2,6 +2,14 @@ $(document).ready(function () {
     caToolbar().append('<button class="chartfiller ca-btn">AutoComplete</button>');
     caToolbar().append('<button class="ca-clear ca-btn ca-btn-danger">Clear Fields</button>');
 
+    // Canary selectors — one or more per section — flag EMSCharts DOM changes.
+    caHealthCheck(4, [
+        'textarea[name=RESP_COMMENTS]',
+        'select[name=cv_breath_sounds_l]',
+        'select[name=PULSE_CAROTID]',
+        'input[name=cv_comments]',
+    ]);
+
     $('.ca-clear').click(function () {
         if (!chrome.runtime || !chrome.runtime.id) return;
         if (!window.confirm('Clear all auto-filled fields on this page? This cannot be undone.'))

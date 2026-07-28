@@ -4,6 +4,14 @@ $(document).ready(function () {
     caToolbar().append('<button class="pg5refusal ca-btn">Refusal</button>');
     caToolbar().append('<button class="ca-clear ca-btn ca-btn-danger">Clear Fields</button>');
 
+    // Canary selectors — one or more per section — flag EMSCharts DOM changes.
+    caHealthCheck(5, [
+        'input[name=head_comments]',
+        'select[name=trachea]',
+        'input[name=ap_appearance]',
+        'input[name=ex_comments]',
+    ]);
+
     $('.ca-clear').click(function () {
         if (!chrome.runtime || !chrome.runtime.id) return;
         if (!window.confirm('Clear all auto-filled fields on this page? This cannot be undone.'))

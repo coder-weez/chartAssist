@@ -393,6 +393,50 @@ function caFill(selector, value, friendlyName) {
     return true;
 }
 
+// --- DOM drift detection -------------------------------------------------
+// EMSCharts is a third-party app we don't control; when Zoll ships an update
+// that renames or restructures form fields, our selectors silently stop
+// matching and AutoComplete quietly fills nothing. caHealthCheck runs on every
+// page load and verifies a small set of "canary" selectors — representative
+// critical fields for each section the page fills — still resolve in the DOM.
+// Any that don't are surfaced with a toast and recorded under the
+// chrome.storage.local key `ca_health` (keyed by page), so breakage is visible
+// and inspectable without the user having to notice that a fill didn't happen.
+//
+// Privacy: only selector strings, the page number, the URL path, and a
+// timestamp are stored — never any field content or patient data.
+//
+// Maintenance: the anchor list lives in each page script's caHealthCheck call.
+// When adding/removing a section's fields, keep at least one canary per section
+// so drift in that section is still detected. Returns the array of missing
+// selectors (empty when healthy).
+function caHealthCheck(page, anchors) {
+    if (!chrome.runtime || !chrome.runtime.id || !anchors || !anchors.length) return [];
+    var missing = anchors.filter(function (sel) {
+        return jQuery(sel).length === 0;
+    });
+    chrome.storage.local.get(['ca_health'], function (r) {
+        var report = r.ca_health || {};
+        var pageKey = 'page' + page;
+        if (missing.length) {
+            report[pageKey] = {
+                missing: missing,
+                path: window.location.pathname,
+                ts: new Date().toISOString(),
+            };
+            caToast(
+                missing.length +
+                    ' expected field(s) were not found on this page — EMSCharts may have ' +
+                    'changed. AutoComplete may not work correctly here.',
+            );
+        } else if (report[pageKey]) {
+            delete report[pageKey]; // previously broken, now recovered — drop stale report
+        }
+        chrome.storage.local.set({ ca_health: report });
+    });
+    return missing;
+}
+
 // Exported for unit tests (Node/CommonJS). No-op in the browser content-script
 // context, where `module` is undefined and these functions are plain globals.
 if (typeof module !== 'undefined' && module.exports) {
@@ -408,5 +452,6 @@ if (typeof module !== 'undefined' && module.exports) {
         caToast,
         caFlash,
         caToolbar,
+        caHealthCheck,
     };
 }

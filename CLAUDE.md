@@ -30,13 +30,7 @@ src/
 
 Page 1 has a **hard-coded toolbar** with no Options configuration. It uses `caToolbar(true)` (the `skipDefaults` flag) to omit the Page Defaults button. Two labelled sections:
 
-**Base** — three preset buttons set `select[name="Base_ID"]` to the matching option value, trigger EMSCharts' own `getUnitPicklist()` callback, and overwrite `input[name="vehcloc"]` with the option's text label (no appending — always overwrites):
-
-| Button label | `Base_ID` value | Address text written to `vehcloc` |
-| ------------ | --------------- | --------------------------------- |
-| 1321 EV Rd   | `5650`          | 1321 East Victor Road             |
-| 34 Maple     | `22751`         | 34 Maple Avenue                   |
-| 380 High     | `26274`         | 380 High Street                   |
+**Base** — buttons are **generated dynamically** from the live `select[name="Base_ID"]` dropdown at page load: one button per real option (the first/placeholder option and any blank/`0`/`-1` value are skipped), each labelled with the option's own text. Clicking a button sets `select[name="Base_ID"]` to that option's value, triggers EMSCharts' own `getUnitPicklist()` callback, and overwrites `input[name="vehcloc"]` with the option's text label (no appending — always overwrites). Because the list is derived from the dropdown, adding/removing/renaming bases in EMSCharts is reflected automatically with no code change.
 
 **Staffing** — ALS and BLS buttons call a shared `caSetStaffing(val)` helper that always overwrites (no append, no toast-gate) three fields:
 
@@ -74,6 +68,7 @@ jQuery is **vendored** at `src/jquery.min.js` (a deliberately version-less filen
 
 All dependency updates arrive as **review-only pull requests** — nothing is merged to `main` automatically.
 
+- **EMSCharts itself** is watched by `.github/workflows/emscharts-watch.yml` (weekly, plus `workflow_dispatch` with a `force_baseline` test input). It fetches Zoll's public emsCharts release-notes page, extracts the newest `X.Y (date)` version, and compares it to `.github/emscharts-baseline.txt`. On a new release it bumps the baseline and opens a PR prompting a manual re-check of the form fields the extension binds to. This is an **early-warning signal only** — the authenticated PCR DOM (the actual selectors) is behind login + PHI and can't be scraped in CI; that drift is caught at runtime by `caHealthCheck` (see below). Note the watched page tracks emsCharts **NOW**; repoint `WATCH_URL` if a classic-PCR feed appears.
 - **jQuery** is vendored, so Dependabot can't track it. `.github/workflows/jquery-update.yml` runs weekly (and on demand via `workflow_dispatch`), compares `src/jquery.min.js`'s banner version against the npm registry, and on a newer release downloads it from the jQuery CDN, **verifies its SHA-256 against the npm tarball copy** (aborts on mismatch), overwrites the file, bumps the version in `README.md`, and opens a PR. Test it with the `force_version` input (e.g. `3.6.0`).
 - **GitHub Actions and the npm release tooling** (`chrome-webstore-upload-cli`) are watched by Dependabot (`.github/dependabot.yml`), `github-actions` + `npm` ecosystems, weekly.
 - **One-time setup:** enable _Settings → Actions → General → "Allow GitHub Actions to create and approve pull requests"_ or the PR step fails. Dependabot reads its config from the **default branch**, so it activates only once this is on `main`.
@@ -136,6 +131,12 @@ Companion clear helpers, called by the **Clear Fields** button on each page. Eac
 
 Creates (once) a fixed-position draggable toolbar. Appends a "Page Defaults" button that sends `{ action: 'openOptions', page: N }` to the background service worker, which opens the options page scrolled to `#section-pageN`. Each page script also appends its own action buttons (AutoComplete, Clear Fields, and any preset buttons) to this toolbar.
 
+### `caHealthCheck(page, anchors)`
+
+Runtime DOM-drift detector, called once per page from each page script's `$(document).ready`. `anchors` is a short list of **canary selectors** — one or more representative critical fields per section the page fills. On page load it checks which anchors fail to resolve; any missing ones are shown in a `caToast` and recorded under `chrome.storage.local` key `ca_health` (keyed `page{N}`, storing `{ missing, path, ts }`). When a previously-broken page resolves cleanly again, its stale report entry is deleted. **Privacy:** only selector strings, page number, URL path, and a timestamp are stored — never field content. Returns the array of missing selectors (empty when healthy).
+
+This is the counterpart to the `emscharts-watch.yml` CI job: the watcher gives advance notice of *announced* releases, while `caHealthCheck` catches the *silent DOM renames* the release notes won't mention — since only the extension, running on the authenticated page, ever sees the real selectors. Keep at least one canary per section so drift in that section is still detected.
+
 ## Extension context guard
 
 All click handlers in page scripts must guard against extension reload:
@@ -186,6 +187,7 @@ These use `caFillPertNeg` / `caClrPertNeg`. The hidden input name equals the div
 3. **`page{N}.js`**: add a `caFill` or `caFillPopup` call inside the `chrome.storage.sync.get` callback, reading directly from `s["pg{N}_{fieldName}"]`.
 4. **`page{N}.js`**: add a matching `caClrField`, `caClrPopup`, or `caClrPertNeg` call inside the `.ca-clear` click handler.
 5. For popup fields: use text-label option values in `options.html`, not numeric IDs.
+6. If the field belongs to a **new section** not yet represented in that page's `caHealthCheck(N, [...])` canary list, add one selector for it so DOM drift in the section is still detected. (Individual new fields in an already-covered section don't need their own canary.)
 
 ## Common pitfalls
 
