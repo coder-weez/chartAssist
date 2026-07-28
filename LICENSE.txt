@@ -1,21 +1,31 @@
-The MIT License (MIT)
+EMSCharts Assist — Proprietary Software License
+Copyright (c) 2026 coder-weez, Louise Gardner. All rights reserved.
 
-Copyright (c) 2026 coder-weez, Louise Gardner
+This software, including its source code, assets, and documentation (the
+"Software"), is the proprietary and confidential property of the copyright
+holders. It is made source-visible for reference and transparency only.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+No license or permission — express or implied — is granted to any person or
+entity to use, copy, reproduce, modify, adapt, translate, merge, publish,
+distribute, sublicense, sell, or create derivative works of the Software, in
+whole or in part, by any means, without the prior written permission of the
+copyright holders. All rights not expressly granted are reserved.
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+Viewing the source where it is made publicly available (for example, on a
+source-code hosting platform), or forking it through such a platform's own
+interface, does not grant any of the rights above.
 
+THIRD-PARTY COMPONENTS
+This repository contains third-party software licensed separately and NOT
+covered by this license. In particular, "src/jquery.min.js" is jQuery,
+distributed under the MIT License; the license terms retained in that file's
+banner continue to apply to it. All such components remain the property of
+their respective owners under their respective licenses.
+
+NO WARRANTY
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN
+ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
