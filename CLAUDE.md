@@ -93,7 +93,9 @@ For EMSCharts **popup multi-select** fields — these have no `<select>` element
 - Display span: `#{fieldName}_htmlid` — shows the selected text
 - An ADD+ button (`[name="add"]`) that EMSCharts normally hides after a popup save
 
-`caFillPopup` targets the hidden input, sets it via `el[0].value`, triggers `change`, updates the display span, and hides the ADD+ button. Silently skips if `current === value` (case-insensitive). Shows toast if a different value is already present. Returns `true` if anything visible happened, `false` for silent no-ops — same contract as `caFill`.
+`caFillPopup` targets the hidden input, sets it via `el[0].value`, triggers `change`, updates the display span, and hides the field's own ADD+ button. Silently skips if `current === value` (case-insensitive). Shows toast if a different value is already present. Returns `true` if anything visible happened, `false` for silent no-ops — same contract as `caFill`.
+
+**Scoping the ADD+ button — `caPopupAddButton(fieldName)`:** EMSCharts reuses `name="add"` for **every** multi-pick ADD+ button on the page, so `span.parent().find('[name="add"]')` (the old approach) could hide an _unrelated_ field's button when two widgets share a container — this is how page-2 fills were silently hiding the patient page's `cmscode` ADD+ button. Each button's onclick names its own field (`multiPickEnc('...', '<fieldName>', ...)`), so `caPopupAddButton` selects only the button whose onclick contains `'<fieldName>'` (quoted on both sides so a prefix like `pt_moved` can't match `pt_moved_from_multi`). Both `caFillPopup` (`.hide()`) and `caClrPopup` (`.show()`) toggle via this helper. Consequence: if EMSCharts ever renders a popup field whose ADD+ button doesn't carry the field name in its onclick, the button simply won't auto-hide (cosmetic) — it will never hide the wrong field's button.
 
 **Important:** popup fields store **text labels**, not numeric IDs. Options in `options.html` for popup fields must use `value="Stretcher"` not `value="4880"`.
 
@@ -121,7 +123,7 @@ For EMSCharts **pertneg** (pertinent positive/negative) multi-select fields such
 Companion clear helpers, called by the **Clear Fields** button on each page. Each mirrors its fill counterpart:
 
 - `caClrField` — sets text/textarea to `""` or select to `""`.
-- `caClrPopup` — clears the `_text` hidden input and display span; shows the ADD+ button.
+- `caClrPopup` — clears the `_text` hidden input and display span; shows the field's own ADD+ button (via `caPopupAddButton`, see above).
 - `caClrPertNeg` — blanks all four hidden fields (id/text/cmdfacCustId/examvalId, present or not-present per the divId) and the display span; shows the ADD+ button.
 
 ### `caToast(message)` / `caFlash(selector)`
@@ -139,13 +141,20 @@ Runtime DOM-drift detector, called once per page from each page script's `$(docu
 
 This is the counterpart to the `emscharts-watch.yml` CI job: the watcher gives advance notice of _announced_ releases, while `caHealthCheck` catches the _silent DOM renames_ the release notes won't mention — since only the extension, running on the authenticated page, ever sees the real selectors. Keep at least one canary per section so drift in that section is still detected.
 
-## Extension context guard
+## Page guard (`caActive` / `caOnPage`)
 
-All click handlers in page scripts must guard against extension reload:
+Every click handler in a page script must open with:
 
 ```js
-if (!chrome.runtime || !chrome.runtime.id) return;
+if (!caActive(N)) return; // N = this script's page number
 ```
+
+`caActive(page)` (in `chartassist.js`) returns `false` — so the handler bails — when **either**:
+
+1. **The extension context was invalidated** (reload/update while the page is open): `!chrome.runtime || !chrome.runtime.id`. This is the original guard, now folded into the helper.
+2. **The URL is no longer this script's page**: `caOnPage(page)` is false. EMSCharts can swap page content via history navigation **without a full reload**, which leaves a page script's handlers bound while the user has moved on to another page (e.g. the patient page `pagept.cfm`). Without this check, clicking a still-visible toolbar button would run the wrong page's fills/clears against whatever DOM is now present. `caOnPage` matches `/pr/page{N}.cfm` case-insensitively and requires `.cfm` immediately after the number (so `page1` never matches `page10`/`pagept`).
+
+New page-consumed `ca*` helpers must also be registered in `eslint.config.js` (`caHelpers`) or `no-undef` fails CI.
 
 ## Options system (`options.js`)
 

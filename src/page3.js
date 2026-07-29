@@ -13,7 +13,7 @@ $(document).ready(function () {
     ]);
 
     $('.ca-clear').click(function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(3)) return;
         if (!window.confirm('Clear all auto-filled fields on this page? This cannot be undone.'))
             return;
         caClrPertNeg('mental_text_id');
@@ -46,7 +46,7 @@ $(document).ready(function () {
     });
 
     $('.chartfiller').click(function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(3)) return;
         chrome.storage.sync.get(null, function (s) {
             caFillPertNeg('mental_text_id', s['pg3_mental_present'], 'Mental — Present');
             caFillPertNeg(

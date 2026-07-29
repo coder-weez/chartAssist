@@ -10,42 +10,42 @@ $(document).ready(function () {
     caHealthCheck(8, ['textarea[name=vs_comment]']);
 
     $('.ca-clear').click(function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(8)) return;
         if (!window.confirm('Clear all auto-filled fields on this page? This cannot be undone.'))
             return;
         caClrField('textarea[name=vs_comment]');
     });
 
     $('.atref').click(function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(8)) return;
         chrome.storage.sync.get(null, function (s) {
             caFill('textarea[name=vs_comment]', s['pg8_at_ref'], 'On Scene Comment');
         });
     });
 
     $('.lvref').click(function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(8)) return;
         chrome.storage.sync.get(null, function (s) {
             caFill('textarea[name=vs_comment]', s['pg8_lv_ref'], 'Transport Comment');
         });
     });
 
     $('.atrec').click(function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(8)) return;
         chrome.storage.sync.get(null, function (s) {
             caFill('textarea[name=vs_comment]', s['pg8_at_rec'], 'At Hospital Comment');
         });
     });
 
     $('.can1').click(function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(8)) return;
         chrome.storage.sync.get(null, function (s) {
             caFill('textarea[name=vs_comment]', s['pg8_can_1'], 'Refusal Comment');
         });
     });
 
     $('.can2').click(function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(8)) return;
         chrome.storage.sync.get(null, function (s) {
             caFill('textarea[name=vs_comment]', s['pg8_can_2'], 'Custom Comment');
         });

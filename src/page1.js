@@ -23,7 +23,7 @@ $(document).ready(function () {
     }
 
     bar.on('click', '.ca-btn-base', function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(1)) return;
         var val = $(this).data('base-id').toString();
         var sel = $('select[name="Base_ID"]');
         if (!sel.length) return;
@@ -76,19 +76,19 @@ $(document).ready(function () {
     }
 
     bar.on('click', '.ca-btn-als', function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(1)) return;
         caSetStaffing('3');
     });
 
     bar.on('click', '.ca-btn-bls', function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(1)) return;
         caSetStaffing('2');
     });
 
     bar.append('<button class="ca-clear ca-btn ca-btn-danger">Clear Fields</button>');
 
     bar.on('click', '.ca-clear', function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(1)) return;
         if (!window.confirm('Clear all auto-filled fields on this page? This cannot be undone.'))
             return;
         caClrField('select[name="Base_ID"]');
