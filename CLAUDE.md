@@ -21,7 +21,7 @@ src/
   chartassist.js     — Shared helpers loaded before every page script
   chartassist.css    — Shared styles injected into EMSCharts pages
   options.html/.js   — Settings UI; saves defaults to chrome.storage.sync
-  popup.html/.js     — Extension popup; hosts the QA Mode toggle
+  popup.html/.js     — Extension popup; hosts the QA Mode and dark-mode toggles
   page1.js           — Content script for EMSCharts page 1 (incident/unit info)
   page2.js           — Content script for EMSCharts page 2 (dispatch/HPI)
   page3.js           — Content script for page 3 (neuro/airway)
@@ -175,7 +175,13 @@ Storage keys follow the pattern `pg{N}_{fieldName}` (e.g. `pg2_chief_complaint`,
 
 ### Theme toggle
 
-The Options page header has a sun/moon **theme toggle** (`#theme-toggle`). `init_theme_toggle()` runs on load: it reads the saved choice and stamps `data-theme="light"|"dark"` on `<html>`. The CSS defines light tokens on `:root`, follows the OS via `@media (prefers-color-scheme: dark) :root:not([data-theme='light'])`, and lets an explicit `:root[data-theme='dark']` / `[data-theme='light']` override win in both directions (each also sets `color-scheme` so native controls match). With no saved choice the page follows the OS; clicking the toggle forces a theme and persists it to `chrome.storage.local` under `ca_theme` (same store as `ca_qa_mode`), with a `localStorage` fallback so the toggle still works when `options.html` is opened outside the extension. This is the only page with a manual theme control — the popup and injected toolbar are not themed.
+The Options page header has a sun/moon **theme toggle** (`#theme-toggle`). `init_theme_toggle()` runs on load: it reads the saved choice and stamps `data-theme="light"|"dark"` on `<html>`. The CSS defines light tokens on `:root`, follows the OS via `@media (prefers-color-scheme: dark) :root:not([data-theme='light'])`, and lets an explicit `:root[data-theme='dark']` / `[data-theme='light']` override win in both directions (each also sets `color-scheme` so native controls match). With no saved choice the page follows the OS; clicking the toggle forces a theme and persists it to `chrome.storage.local` under `ca_theme` (same store as `ca_qa_mode`), with a `localStorage` fallback so the toggle still works when `options.html` is opened outside the extension.
+
+**`ca_theme` is a single, extension-wide dark-mode preference** ('dark' | 'light' | unset = follow the OS). It is shared by three surfaces, so one control themes everything:
+
+- **Options page** — the sun/moon toggle described above.
+- **Popup** (`popup.html` / `popup.js`) — a matching sun/moon button in the header. Its theme code is the same pattern as the Options page (guarded `chrome`/`localStorage` access) and is wired _first_ so a missing `chrome` can't abort it. Toggling here writes `ca_theme` and themes the popup (CSS variables with a `:root[data-theme='dark']` override).
+- **Injected toolbar** (`chartassist.js` / `chartassist.css`) — `caApplyTheme(bar, stored)` toggles a `.ca-dark` class on `#ca-toolbar` from `caEffectiveTheme(stored)` (unset ⇒ `matchMedia('(prefers-color-scheme: dark)')`). It is applied in `caApplyInitialState` and re-applied live from the `chrome.storage.onChanged` listener, so toggling from the popup restyles an open PCR page's toolbar immediately. Only the toolbar is restyled, never the host EMSCharts page.
 
 ## EMSCharts popup multi-select field names (page 2)
 

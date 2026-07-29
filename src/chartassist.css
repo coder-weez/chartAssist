@@ -107,6 +107,21 @@
     border-top: none;
     margin-top: 0;
 }
+/* Dark mode — toggled from the popup or Options page via the shared ca_theme
+   preference (chartassist.js adds .ca-dark). Only the toolbar is restyled; the
+   accent/amber buttons already read well on the darkened card. */
+#ca-toolbar.ca-dark {
+    background: rgba(26, 33, 43, 0.97);
+    border-color: #2b3543;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+#ca-toolbar.ca-dark #ca-drag {
+    color: #8b97a8;
+}
+#ca-toolbar.ca-dark .ca-section-label {
+    color: #93a1b5;
+    border-top-color: #2b3543;
+}
 #ca-toast-container {
     position: fixed;
     bottom: 16px;

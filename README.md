@@ -55,8 +55,10 @@ responsibility when using EMSCharts and any tools that interact with it.
 
 After loading, click the extension icon and use the **Open Options** button in
 the popup to fill in your default values. These are saved to `chrome.storage.sync`.
-The Options page follows your system light/dark theme, and the sun/moon button in
-its header lets you force either theme (your choice is remembered).
+**Dark mode:** the extension follows your system light/dark theme by default. A
+sun/moon button in both the popup header and the Options page header lets you
+force either theme — it's a single, remembered setting that applies everywhere:
+the popup, the Options page, and the toolbar injected into EMSCharts pages.
 
 ## Usage
 
