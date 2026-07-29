@@ -387,6 +387,75 @@ function wire_pertneg_mutex() {
     });
 }
 
+// Theme toggle (header sun/moon button). Defaults to the OS preference and
+// remembers an explicit choice in chrome.storage.local (key `ca_theme`), with a
+// localStorage fallback so the toggle still works when opened outside the
+// extension (e.g. previewing options.html directly).
+function ca_theme_get(cb) {
+    try {
+        if (window.chrome && chrome.storage && chrome.storage.local) {
+            chrome.storage.local.get('ca_theme', function (r) {
+                cb(r && r.ca_theme);
+            });
+            return;
+        }
+    } catch {
+        /* fall through to localStorage */
+    }
+    try {
+        cb(window.localStorage.getItem('ca_theme'));
+    } catch {
+        cb(null);
+    }
+}
+
+function ca_theme_set(val) {
+    try {
+        if (window.chrome && chrome.storage && chrome.storage.local) {
+            chrome.storage.local.set({ ca_theme: val });
+            return;
+        }
+    } catch {
+        /* fall through to localStorage */
+    }
+    try {
+        window.localStorage.setItem('ca_theme', val);
+    } catch {
+        /* ignore */
+    }
+}
+
+function ca_theme_effective(stored) {
+    if (stored === 'light' || stored === 'dark') return stored;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light';
+}
+
+function ca_theme_apply(theme, persist) {
+    document.documentElement.setAttribute('data-theme', theme);
+    var btn = document.getElementById('theme-toggle');
+    if (btn) {
+        var label = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+        btn.setAttribute('aria-label', label);
+        btn.setAttribute('title', label);
+    }
+    if (persist) ca_theme_set(theme);
+}
+
+function init_theme_toggle() {
+    ca_theme_get(function (stored) {
+        ca_theme_apply(ca_theme_effective(stored), false);
+    });
+    var btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+        var current =
+            document.documentElement.getAttribute('data-theme') || ca_theme_effective(null);
+        ca_theme_apply(current === 'dark' ? 'light' : 'dark', true);
+    });
+}
+
 // Under Node/CommonJS (unit tests) export the functions and skip the DOM wiring;
 // the tests set up their own DOM. In the browser `module` is undefined, so the
 // else branch runs and wires up the Options page exactly as before.
@@ -399,6 +468,7 @@ if (typeof module !== 'undefined' && module.exports) {
         prune_stale_keys,
     };
 } else {
+    document.addEventListener('DOMContentLoaded', init_theme_toggle);
     document.addEventListener('DOMContentLoaded', restore_options);
     document.addEventListener('DOMContentLoaded', prune_stale_keys);
     document.addEventListener('DOMContentLoaded', open_section_from_hash);

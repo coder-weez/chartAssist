@@ -53,8 +53,10 @@ responsibility when using EMSCharts and any tools that interact with it.
 4. Select `Load Unpacked` in the upper-left corner
 5. Find the `emsChartsAssist` folder from the `git clone` step, and open the `src` directory
 
-After loading, right-click the extension icon and choose **Options** to fill in
-your default values. These are saved to `chrome.storage.sync`.
+After loading, click the extension icon and use the **Open Options** button in
+the popup to fill in your default values. These are saved to `chrome.storage.sync`.
+The Options page follows your system light/dark theme, and the sun/moon button in
+its header lets you force either theme (your choice is remembered).
 
 ## Usage
 
@@ -108,11 +110,11 @@ from `chrome.storage.sync` when an AutoComplete button is clicked.
 
 ### Back up, restore, or share your defaults
 
-The Options page has **Export defaults** and **Import defaults** buttons:
+The Options page's action bar has **Export** and **Import** buttons:
 
-- **Export defaults** downloads all of your saved settings as a single
+- **Export** downloads all of your saved settings as a single
   `emscharts-assist-defaults.json` file.
-- **Import defaults** loads settings from a previously exported file and saves
+- **Import** loads settings from a previously exported file and saves
   them. Only keys the extension recognizes are imported, so an unrelated or
   malformed file is rejected with an error message. Importing overwrites any
   existing value for the same field.

@@ -38,8 +38,12 @@
                 padding: 6px 12px;
                 background: #2191c0;
                 color: #fff;
+                border: none;
                 border-radius: 4px;
+                font-family: inherit;
+                font-size: 13px;
                 font-weight: bold;
+                cursor: pointer;
             }
             .btn-link:hover {
                 background: #1b7aa3;
@@ -99,22 +103,19 @@
         <div class="content">
             <p>Set default values that the AutoComplete buttons fill into your EMSCharts PCRs.</p>
 
-            <p>
-                First time here? Right-click this icon and choose <strong>Options</strong>, then
-                fill in your defaults by category.
-            </p>
+            <p>First time here? Open the Options page and fill in your defaults by category.</p>
 
             <p style="margin-bottom: 0">
-                <a
-                    class="btn-link"
-                    href="https://github.com/coder-weez/emsChartsAssist/issues"
-                    target="_blank"
-                    rel="noopener"
-                    >Report an issue</a
-                >
+                <button type="button" id="open_options" class="btn-link">Open Options</button>
             </p>
         </div>
         <div class="footer">
+            <a
+                href="https://github.com/coder-weez/emsChartsAssist/issues"
+                target="_blank"
+                rel="noopener"
+                >Report an issue</a
+            >
             <a href="https://github.com/coder-weez/emsChartsAssist" target="_blank" rel="noopener"
                 >Source</a
             >

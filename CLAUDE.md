@@ -3,6 +3,8 @@
 > **Keep this file and `README.md` up to date.** When behaviour, architecture, or helper APIs change, update both documents in the same commit. CLAUDE.md is the technical reference for contributors and AI assistants; README.md is the user-facing reference. Neither should drift from the actual code.
 
 > **Versioning:** bump `version` and `version_name` in `manifest.json` before publishing to the Chrome Web Store — Chrome rejects uploads where the version hasn't changed. Use semantic versioning: patch (`0.x.x.1`) for bug fixes, minor (`0.x+1.0.0`) for new features, major (`1.0.0.0`) for breaking changes. After merging to `main`, tag the commit to match (e.g. `git tag v0.4.0`). Tags live on `main`; don't tag feature branches.
+>
+> **1.0.0.0 milestone:** `1.0.0.0` was chosen deliberately as the first stable / feature-complete release (shipping the popup + Options UI refresh), not because of a breaking change. It succeeds `0.9.0.1`; the intermediate `0.10.0.0` was skipped in favour of the 1.0 milestone. Future _breaking_ changes bump the major from here (`2.0.0.0`, …); features and fixes continue as minor/patch (`1.1.0.0`, `1.0.0.1`).
 
 > **Before pushing:** run `npm run format:check` (not a path-scoped `prettier --check`). The `lint` CI job runs both ESLint _and_ Prettier over the **whole tree**, so Markdown files like this one count — an unformatted `CLAUDE.md` or `README.md` will fail CI just like unformatted JS. Run `npm run format` to auto-fix.
 
@@ -170,6 +172,10 @@ Storage keys follow the pattern `pg{N}_{fieldName}` (e.g. `pg2_chief_complaint`,
 `_all_opts()` builds a map of `{storageKey: type}` from all four arrays. `get_user_values`, `restore_options`, and `reset_options` all handle `"checkgroup"` type before the `getElementById` call, using `document.querySelectorAll('[data-group="..."]')` instead.
 
 `prune_stale_keys()` runs on options load and removes any stored keys not in the current field lists — keeps storage tidy after fields are renamed or removed.
+
+### Theme toggle
+
+The Options page header has a sun/moon **theme toggle** (`#theme-toggle`). `init_theme_toggle()` runs on load: it reads the saved choice and stamps `data-theme="light"|"dark"` on `<html>`. The CSS defines light tokens on `:root`, follows the OS via `@media (prefers-color-scheme: dark) :root:not([data-theme='light'])`, and lets an explicit `:root[data-theme='dark']` / `[data-theme='light']` override win in both directions (each also sets `color-scheme` so native controls match). With no saved choice the page follows the OS; clicking the toggle forces a theme and persists it to `chrome.storage.local` under `ca_theme` (same store as `ca_qa_mode`), with a `localStorage` fallback so the toggle still works when `options.html` is opened outside the extension. This is the only page with a manual theme control — the popup and injected toolbar are not themed.
 
 ## EMSCharts popup multi-select field names (page 2)
 
