@@ -17,6 +17,8 @@ const caHelpers = {
     caToast: 'readonly',
     caFlash: 'readonly',
     caToolbar: 'readonly',
+    caOnPage: 'readonly',
+    caActive: 'readonly',
     caHealthCheck: 'readonly',
     caMakeDraggable: 'readonly',
     caSavePosition: 'readonly',

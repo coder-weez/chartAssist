@@ -13,7 +13,7 @@ $(document).ready(function () {
     ]);
 
     $('.ca-clear').click(function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(5)) return;
         if (!window.confirm('Clear all auto-filled fields on this page? This cannot be undone.'))
             return;
         caClrField('input[name=head_comments]');
@@ -58,15 +58,15 @@ $(document).ready(function () {
     }
 
     $('.pg5trauma').click(function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(5)) return;
         fillPage5('pg5_trauma_');
     });
     $('.pg5medical').click(function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(5)) return;
         fillPage5('pg5_medical_');
     });
     $('.pg5refusal').click(function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(5)) return;
         fillPage5('pg5_refusal_');
     });
 });

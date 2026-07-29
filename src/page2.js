@@ -12,7 +12,7 @@ $(document).ready(function () {
     ]);
 
     $('.ca-clear').click(function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(2)) return;
         if (!window.confirm('Clear all auto-filled fields on this page? This cannot be undone.'))
             return;
         caClrField('textarea[name=PRMAIN_cc]');
@@ -31,7 +31,7 @@ $(document).ready(function () {
     });
 
     $('.chartfiller').click(function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(2)) return;
         chrome.storage.sync.get(null, function (s) {
             caFill('textarea[name=PRMAIN_cc]', s['pg2_chief_complaint'], 'Chief Complaint');
             caFill('input[name=PRMAIN_ccduration]', s['pg2_duration'], 'Duration');

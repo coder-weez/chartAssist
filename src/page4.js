@@ -11,7 +11,7 @@ $(document).ready(function () {
     ]);
 
     $('.ca-clear').click(function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(4)) return;
         if (!window.confirm('Clear all auto-filled fields on this page? This cannot be undone.'))
             return;
         caClrField('textarea[name=RESP_COMMENTS]');
@@ -30,7 +30,7 @@ $(document).ready(function () {
     });
 
     $('.chartfiller').click(function () {
-        if (!chrome.runtime || !chrome.runtime.id) return;
+        if (!caActive(4)) return;
         chrome.storage.sync.get(null, function (s) {
             caFill('textarea[name=RESP_COMMENTS]', s['pg4_resp_comments'], 'Respiratory Comments');
             caFill(

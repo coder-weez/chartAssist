@@ -138,6 +138,21 @@ function caToast(message) {
     }, 6000);
 }
 
+// Find the "ADD +" button that belongs to a specific popup field.
+// EMSCharts reuses name="add" for EVERY multi-pick ADD+ button, so scoping by
+// the span's parent (span.parent().find('[name="add"]')) can sweep up an
+// unrelated field's button when the two widgets share a container — e.g. the
+// patient page's `cmscode` button was being hidden by page-2 fills. Each button's
+// onclick names its own field (multiPickEnc('...', '<fieldName>', ...)), so match
+// on that to touch only this field's button. Quotes on both sides prevent a
+// prefix field name matching a longer one (e.g. pt_moved vs pt_moved_from_multi).
+function caPopupAddButton(fieldName) {
+    var needle = "'" + fieldName + "'";
+    return jQuery('[name="add"], .add-multi-pick-button').filter(function () {
+        return (this.getAttribute('onclick') || '').indexOf(needle) !== -1;
+    });
+}
+
 // Fill an EMSCharts popup multi-select field.
 // These fields store the selected text label in a hidden input ({fieldName}_text)
 // and display it in a span (#{fieldName}_htmlid) — there is no standard select element.
@@ -157,8 +172,8 @@ function caFillPopup(fieldName, value, friendlyName) {
     var span = jQuery('#' + fieldName + '_htmlid');
     if (span.length) {
         span.text(value);
-        span.parent().find('[name="add"]').hide();
     }
+    caPopupAddButton(fieldName).hide();
     caFlash('input[name="' + fieldName + '_text"]');
     return true;
 }
@@ -188,8 +203,8 @@ function caClrPopup(fieldName) {
     var span = jQuery('#' + fieldName + '_htmlid');
     if (span.length) {
         span.text('');
-        span.parent().find('[name="add"]').show();
     }
+    caPopupAddButton(fieldName).show();
 }
 
 // Derive the four hidden field names EMSCharts uses for a pertneg group from its divId.
@@ -393,6 +408,25 @@ function caFill(selector, value, friendlyName) {
     return true;
 }
 
+// --- Page guard ----------------------------------------------------------
+// True when the current document URL is still the EMSCharts page this script
+// targets. EMSCharts can swap page content via history navigation without a full
+// reload, which leaves a page script's click handlers bound while the user has
+// moved on to another page (e.g. the patient page pagept.cfm). Matching page{N}.cfm
+// requires ".cfm" immediately after the number, so page1 never matches page10/pagept.
+function caOnPage(page) {
+    return new RegExp('/pr/page' + page + '\\.cfm', 'i').test(window.location.pathname);
+}
+
+// Combined guard for the top of every page-script click handler: bail if the
+// extension context was invalidated (reload/update) OR we are no longer on the
+// page this script targets. Replaces the bare chrome.runtime.id check so a
+// persisted handler can never act on the wrong page.
+function caActive(page) {
+    if (!chrome.runtime || !chrome.runtime.id) return false;
+    return caOnPage(page);
+}
+
 // --- DOM drift detection -------------------------------------------------
 // EMSCharts is a third-party app we don't control; when Zoll ships an update
 // that renames or restructures form fields, our selectors silently stop
@@ -443,6 +477,7 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         caFill,
         caFillPopup,
+        caPopupAddButton,
         caFillPertNeg,
         caPertNegFields,
         caPertNegCatalog,
@@ -452,6 +487,8 @@ if (typeof module !== 'undefined' && module.exports) {
         caToast,
         caFlash,
         caToolbar,
+        caOnPage,
+        caActive,
         caHealthCheck,
     };
 }
