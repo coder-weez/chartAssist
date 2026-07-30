@@ -1,23 +1,37 @@
 /* global getUnitPicklist */
-$(document).ready(function () {
+
+// Return the real Base options to turn into buttons, in dropdown order.
+// EMSCharts marks a placeholder row with a blank/0/-1 value (or empty label);
+// those are skipped. We deliberately do NOT skip by position — some facilities'
+// Base_ID dropdown leads with a real base and has no placeholder row, so
+// skipping index 0 dropped that base's button.
+function caBaseOptions(selectEl) {
+    var out = [];
+    if (!selectEl || !selectEl.options) return out;
+    for (var i = 0; i < selectEl.options.length; i++) {
+        var opt = selectEl.options[i];
+        var val = opt.value;
+        if (val === '' || val === '0' || val === '-1') continue;
+        var label = (opt.textContent || '').trim();
+        if (!label) continue;
+        out.push({ value: val, label: label });
+    }
+    return out;
+}
+
+function caInitPage1() {
     var bar = caToolbar(true);
 
     // --- Base section ---
     // Buttons are generated dynamically from the EMSCharts Base_ID dropdown:
-    // one button per real option (skipping the placeholder), labelled with the
-    // option's own text. The list adapts to whatever bases the dropdown offers.
+    // one button per real option (see caBaseOptions), labelled with the option's
+    // own text. The list adapts to whatever bases the dropdown offers.
     bar.append('<div class="ca-section-label">Base</div>');
     var baseSel = $('select[name="Base_ID"]');
     if (baseSel.length) {
-        var placeholderVal = baseSel[0].options.length ? baseSel[0].options[0].value : '';
-        baseSel.find('option').each(function () {
-            var val = this.value;
-            // Skip the placeholder / blank option.
-            if (val === placeholderVal || val === '' || val === '0' || val === '-1') return;
-            var label = $(this).text().trim();
-            if (!label) return;
+        caBaseOptions(baseSel[0]).forEach(function (o) {
             var $btn = $('<button class="ca-btn ca-btn-base"></button>');
-            $btn.attr('data-base-id', val).text(label);
+            $btn.attr('data-base-id', o.value).text(o.label);
             bar.append($btn);
         });
     }
@@ -98,4 +112,12 @@ $(document).ready(function () {
         caClrField('select[name="transcode"]');
         caClrField('input[name="ref_md"]');
     });
-});
+}
+
+// Under Node/CommonJS (unit tests) export the testable helper and skip the DOM
+// wiring; in the browser `module` is undefined, so page1 initialises on ready.
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { caBaseOptions };
+} else {
+    $(document).ready(caInitPage1);
+}
