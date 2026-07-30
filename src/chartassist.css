@@ -80,14 +80,14 @@
     background: #176d92;
 }
 .ca-btn-danger {
-    background: #fbbf24;
-    color: #5c3406;
+    background: #facc15;
+    color: #fff;
 }
 .ca-btn-danger:hover {
-    background: #f5a800;
+    background: #eab308;
 }
 .ca-btn-danger:active {
-    background: #e09600;
+    background: #ca8a04;
 }
 .ca-section-label {
     font-size: 10px;
