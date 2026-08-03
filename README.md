@@ -68,7 +68,7 @@ Open a patient care report on `emscharts.com`. On the supported pages
 - **AutoComplete** (teal) — fills form fields with the defaults you saved in Options.
 - **Clear Fields** (red) — blanks out any fields the extension manages on that page. Asks for confirmation before clearing.
 - **Page Defaults** — opens the Options page scrolled to the section for the current page.
-- **Preset buttons** (pages 5 and 8) — page 5 has Trauma / Medical / Refusal; page 8 has On Scene / Transport / At Hospital / Refusal / Custom.
+- **Preset buttons** (pages 5 and 8) — page 5 has Trauma / Medical / Refusal; page 8 has On Scene / Transport / At Hospital / Refusal / Custom. On page 8, if the **Edit Vitals** popup is open, the chosen comment is written into that popup's own comment box instead of the main narrative field; with the popup closed it fills the main field as usual.
 
 ### Page 1 toolbar
 

@@ -9,6 +9,20 @@ lives at the **top of the Description — just under the opening tagline, above
 full history stays here. Write entries short and for EMS crews (no code or
 selector details).
 
+## 1.1.0.0 — unreleased
+
+### Fixed
+
+- **Page 8 vitals comments now land in the Edit Vitals popup.** When that popup
+  is open, the On Scene / Transport / At Hospital / Refusal / Custom buttons fill
+  the popup's own comment box instead of the comment field behind it. With the
+  popup closed, they fill the main field as before.
+
+### Changed
+
+- **The popup footer now has a "Report a Problem" link** for sending feedback,
+  and shows the extension version. (The old Source link was removed.)
+
 ## 1.0.0.0 — unreleased
 
 First stable release — an interface refresh across the whole extension.

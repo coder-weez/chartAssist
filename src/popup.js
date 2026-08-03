@@ -74,3 +74,15 @@ document.getElementById('qa_mode').addEventListener('change', function () {
 document.getElementById('open_options').addEventListener('click', function () {
     chrome.runtime.openOptionsPage();
 });
+
+// Show the running version, read from the manifest so it always matches
+// manifest.json (no manual drift). Cosmetic — stays blank outside the extension.
+try {
+    if (window.chrome && chrome.runtime && chrome.runtime.getManifest) {
+        var version = chrome.runtime.getManifest().version;
+        var versionEl = document.getElementById('version');
+        if (versionEl && version) versionEl.textContent = 'v' + version;
+    }
+} catch {
+    /* ignore — version display is cosmetic */
+}
