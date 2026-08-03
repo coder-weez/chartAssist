@@ -8,10 +8,10 @@
     flex-wrap: wrap;
     gap: 6px;
     padding: 5px;
-    background: rgba(255, 255, 255, 0.92);
-    border: 1px solid #bbb;
-    border-radius: 6px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid #d0d5dd;
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(16, 24, 40, 0.18);
     align-items: center;
 }
 #ca-qa-film {
@@ -64,18 +64,20 @@
     margin-left: 0;
     padding: 4px 12px;
     border: none;
-    border-radius: 4px;
-    background: #0d9488;
+    border-radius: 6px;
+    background: #2191c0;
     color: #fff;
     font-weight: bold;
     cursor: pointer;
     line-height: 1.4;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.15);
+    transition: background 0.15s ease;
 }
 .ca-btn:hover {
-    background: #0f766e;
+    background: #1b7aa3;
 }
 .ca-btn:active {
-    background: #115e59;
+    background: #176d92;
 }
 .ca-btn-danger {
     background: #facc15;
@@ -92,7 +94,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #6b7280;
+    color: #667085;
     padding: 4px 4px 2px;
     border-top: 1px solid #e5e7eb;
     margin-top: 2px;
@@ -100,6 +102,21 @@
 #ca-toolbar > .ca-section-label:first-of-type {
     border-top: none;
     margin-top: 0;
+}
+/* Dark mode — toggled from the popup or Options page via the shared ca_theme
+   preference (chartassist.js adds .ca-dark). Only the toolbar is restyled; the
+   accent/amber buttons already read well on the darkened card. */
+#ca-toolbar.ca-dark {
+    background: rgba(26, 33, 43, 0.97);
+    border-color: #2b3543;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+#ca-toolbar.ca-dark #ca-drag {
+    color: #8b97a8;
+}
+#ca-toolbar.ca-dark .ca-section-label {
+    color: #93a1b5;
+    border-top-color: #2b3543;
 }
 #ca-toast-container {
     position: fixed;

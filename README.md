@@ -53,8 +53,12 @@ responsibility when using EMSCharts and any tools that interact with it.
 4. Select `Load Unpacked` in the upper-left corner
 5. Find the `emsChartsAssist` folder from the `git clone` step, and open the `src` directory
 
-After loading, right-click the extension icon and choose **Options** to fill in
-your default values. These are saved to `chrome.storage.sync`.
+After loading, click the extension icon and use the **Open Options** button in
+the popup to fill in your default values. These are saved to `chrome.storage.sync`.
+**Dark mode:** the extension follows your system light/dark theme by default. A
+sun/moon button in both the popup header and the Options page header lets you
+force either theme — it's a single, remembered setting that applies everywhere:
+the popup, the Options page, and the toolbar injected into EMSCharts pages.
 
 ## Usage
 
@@ -108,11 +112,11 @@ from `chrome.storage.sync` when an AutoComplete button is clicked.
 
 ### Back up, restore, or share your defaults
 
-The Options page has **Export defaults** and **Import defaults** buttons:
+The Options page's action bar has **Export** and **Import** buttons:
 
-- **Export defaults** downloads all of your saved settings as a single
+- **Export** downloads all of your saved settings as a single
   `emscharts-assist-defaults.json` file.
-- **Import defaults** loads settings from a previously exported file and saves
+- **Import** loads settings from a previously exported file and saves
   them. Only keys the extension recognizes are imported, so an unrelated or
   malformed file is rejected with an error message. Importing overwrites any
   existing value for the same field.
@@ -135,8 +139,11 @@ If the AutoComplete button doesn't fill anything:
 EMSCharts is maintained by Zoll, and updates on their side can rename or move
 form fields. When the extension loads a PCR page it quietly checks that the
 fields it fills still exist; if some are missing it shows a yellow warning toast
-and AutoComplete may not work correctly on that page. If you see this, the page
-likely changed on Zoll's end — please open an Issue noting which page it was so
+and AutoComplete may not work correctly on that page. The specific missing field
+selectors are also logged to the page's DevTools console (a
+`EMSCharts Assist: … Missing selectors:` warning), so you can see exactly which
+ones failed. If you see this, the page likely changed on Zoll's end — please
+open an Issue noting which page it was (and the logged selectors, if handy) so
 the selectors can be updated. (A weekly CI job also watches Zoll's public
 [release notes](https://help.zollonline.com/emscharts/Content/Subfolders%20for%20Whats%20New/NOW.htm)
 and opens a pull request whenever a new emsCharts version ships, as an early

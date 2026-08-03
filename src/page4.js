@@ -7,7 +7,7 @@ $(document).ready(function () {
         'textarea[name=RESP_COMMENTS]',
         'select[name=cv_breath_sounds_l]',
         'select[name=PULSE_CAROTID]',
-        'input[name=cv_comments]',
+        'textarea[name=cv_comments]',
     ]);
 
     $('.ca-clear').click(function () {
@@ -26,7 +26,7 @@ $(document).ready(function () {
         caClrField('select[name=PULSE_BRA_R]');
         caClrField('select[name=PULSE_FEM_L]');
         caClrField('select[name=PULSE_FEM_R]');
-        caClrField('input[name=cv_comments]');
+        caClrField('textarea[name=cv_comments]');
     });
 
     $('.chartfiller').click(function () {
@@ -52,7 +52,11 @@ $(document).ready(function () {
             caFill('select[name=PULSE_BRA_R]', s['pg4_brachial_r'], 'Brachial (R)');
             caFill('select[name=PULSE_FEM_L]', s['pg4_fem_l'], 'Femoral (L)');
             caFill('select[name=PULSE_FEM_R]', s['pg4_fem_r'], 'Femoral (R)');
-            caFill('input[name=cv_comments]', s['pg4_cardiac_comments'], 'Cardiovascular Comments');
+            caFill(
+                'textarea[name=cv_comments]',
+                s['pg4_cardiac_comments'],
+                'Cardiovascular Comments',
+            );
         });
     });
 });

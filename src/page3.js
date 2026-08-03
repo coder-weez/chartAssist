@@ -20,6 +20,7 @@ $(document).ready(function () {
         caClrPertNeg('mental_text_neg_id');
         caClrPertNeg('neuro_text_id');
         caClrPertNeg('neuro_text_neg_id');
+        caClrField('#fld_neuro_comments');
         caClrField('select[name=stroke_scale]');
         caClrField('select[name=gcs_eye_1]');
         caClrField('select[name=gcs_verbal_1]');
@@ -60,6 +61,7 @@ $(document).ready(function () {
                 s['pg3_neuro_not_present'],
                 'Neurological — Not Present',
             );
+            caFill('#fld_neuro_comments', s['pg3_neuro_comments'], 'Neuro Comments');
             caFill('select[name=stroke_scale]', s['stroke_scale'], 'Stroke Scale');
             caFill('select[name=gcs_eye_1]', s['gcs_eye_1'], 'GCS Eye');
             caFill('select[name=gcs_verbal_1]', s['gcs_verbal_1'], 'GCS Verbal');

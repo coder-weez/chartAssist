@@ -2,7 +2,7 @@
 // Loaded after jQuery and before each page script.
 
 function caApplyInitialState(bar) {
-    chrome.storage.local.get(['ca_qa_mode', 'ca_toolbar_pos'], function (r) {
+    chrome.storage.local.get(['ca_qa_mode', 'ca_toolbar_pos', 'ca_theme'], function (r) {
         var qaOn = !!r.ca_qa_mode;
         bar.toggleClass('ca-frozen', qaOn);
         if (qaOn) {
@@ -11,7 +11,23 @@ function caApplyInitialState(bar) {
             var pos = r.ca_toolbar_pos;
             bar.css({ left: pos.left + 'px', top: pos.top + 'px', right: 'auto' });
         }
+        caApplyTheme(bar, r.ca_theme);
     });
+}
+
+// Dark mode: the injected toolbar honours the shared `ca_theme` preference set
+// from the popup or the Options page ('dark' | 'light' | unset = follow the OS).
+// Applied as a `.ca-dark` class so chartassist.css only restyles the toolbar,
+// never the host EMSCharts page.
+function caEffectiveTheme(stored) {
+    if (stored === 'light' || stored === 'dark') return stored;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light';
+}
+
+function caApplyTheme(bar, stored) {
+    bar.toggleClass('ca-dark', caEffectiveTheme(stored) === 'dark');
 }
 
 // Returns the extension's floating button bar, creating it once on first use.
@@ -26,7 +42,8 @@ function caToolbar(skipDefaults) {
         caMakeDraggable(bar, handle);
         caApplyInitialState(bar);
         chrome.storage.onChanged.addListener(function (changes, area) {
-            if (area === 'local' && 'ca_qa_mode' in changes) {
+            if (area !== 'local') return;
+            if ('ca_qa_mode' in changes) {
                 var on = !!changes.ca_qa_mode.newValue;
                 bar.toggleClass('ca-frozen', on);
                 if (on) {
@@ -34,6 +51,9 @@ function caToolbar(skipDefaults) {
                 } else {
                     caSavePosition(bar);
                 }
+            }
+            if ('ca_theme' in changes) {
+                caApplyTheme(bar, changes.ca_theme.newValue);
             }
         });
         if (!skipDefaults)
@@ -449,6 +469,19 @@ function caHealthCheck(page, anchors) {
     var missing = anchors.filter(function (sel) {
         return jQuery(sel).length === 0;
     });
+    // Also surface the specific selectors in the page's DevTools console — the
+    // toast only says how many are missing, and ca_health lives in extension
+    // storage the page console can't read.
+    if (missing.length) {
+        console.warn(
+            'EMSCharts Assist: ' +
+                missing.length +
+                ' expected field(s) not found on page ' +
+                page +
+                ' (EMSCharts may have changed). Missing selectors:',
+            missing,
+        );
+    }
     chrome.storage.local.get(['ca_health'], function (r) {
         var report = r.ca_health || {};
         var pageKey = 'page' + page;

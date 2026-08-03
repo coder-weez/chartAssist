@@ -3,21 +3,83 @@
     <head>
         <meta charset="utf-8" />
         <style type="text/css">
+            :root {
+                color-scheme: light;
+                --accent: #2191c0;
+                --accent-hover: #1b7aa3;
+                --pop-bg: #ffffff;
+                --pop-text: #222222;
+                --pop-muted: #777777;
+                --pop-header-bg: #003f7f;
+                --pop-qa-bg: #fff8e1;
+                --pop-qa-border: #ffe082;
+                --pop-qa-desc: #666666;
+            }
+            :root[data-theme='dark'] {
+                color-scheme: dark;
+                --accent: #38a7d4;
+                --accent-hover: #2b8bb3;
+                --pop-bg: #12161d;
+                --pop-text: #e6eaf0;
+                --pop-muted: #93a1b5;
+                --pop-header-bg: #10294a;
+                --pop-qa-bg: #262112;
+                --pop-qa-border: #4a3f14;
+                --pop-qa-desc: #c2b487;
+            }
             body {
                 width: 280px;
                 margin: 0;
                 font-family: Arial, Helvetica, sans-serif;
                 font-size: 13px;
-                color: #222;
+                color: var(--pop-text);
+                background: var(--pop-bg);
             }
             .header {
-                background: #003f7f;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                background: var(--pop-header-bg);
                 color: #fff;
                 padding: 10px 14px;
             }
             .header h1 {
                 margin: 0;
                 font-size: 15px;
+            }
+            .theme-btn {
+                margin-left: auto;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 30px;
+                height: 30px;
+                padding: 0;
+                border: 1px solid rgba(255, 255, 255, 0.25);
+                border-radius: 7px;
+                background: rgba(255, 255, 255, 0.12);
+                color: #fff;
+                cursor: pointer;
+            }
+            .theme-btn:hover {
+                background: rgba(255, 255, 255, 0.22);
+            }
+            .theme-btn svg {
+                width: 16px;
+                height: 16px;
+                display: block;
+            }
+            .theme-btn .icon-sun {
+                display: none;
+            }
+            .theme-btn .icon-moon {
+                display: block;
+            }
+            :root[data-theme='dark'] .theme-btn .icon-sun {
+                display: block;
+            }
+            :root[data-theme='dark'] .theme-btn .icon-moon {
+                display: none;
             }
             .content {
                 padding: 12px 14px;
@@ -27,7 +89,7 @@
                 line-height: 1.4;
             }
             a {
-                color: #2191c0;
+                color: var(--accent);
                 text-decoration: none;
             }
             a:hover {
@@ -36,17 +98,21 @@
             .btn-link {
                 display: inline-block;
                 padding: 6px 12px;
-                background: #2191c0;
+                background: var(--accent);
                 color: #fff;
+                border: none;
                 border-radius: 4px;
+                font-family: inherit;
+                font-size: 13px;
                 font-weight: bold;
+                cursor: pointer;
             }
             .btn-link:hover {
-                background: #1b7aa3;
+                background: var(--accent-hover);
                 text-decoration: none;
             }
             .muted {
-                color: #777;
+                color: var(--pop-muted);
                 font-size: 11px;
                 word-break: break-all;
             }
@@ -56,16 +122,16 @@
                 align-items: center;
                 padding: 6px 14px 10px;
                 font-size: 11px;
-                color: #777;
+                color: var(--pop-muted);
             }
             .qa-row {
                 display: flex;
                 align-items: center;
                 gap: 10px;
                 padding: 10px 14px;
-                background: #fff8e1;
-                border-top: 1px solid #ffe082;
-                border-bottom: 1px solid #ffe082;
+                background: var(--pop-qa-bg);
+                border-top: 1px solid var(--pop-qa-border);
+                border-bottom: 1px solid var(--pop-qa-border);
             }
             .qa-row label {
                 display: flex;
@@ -79,7 +145,7 @@
                 cursor: pointer;
             }
             .qa-desc {
-                color: #666;
+                color: var(--pop-qa-desc);
                 font-size: 11px;
                 line-height: 1.3;
             }
@@ -88,6 +154,30 @@
     <body>
         <div class="header">
             <h1>EMSCharts Assist</h1>
+            <button
+                id="theme-toggle"
+                class="theme-btn"
+                type="button"
+                aria-label="Switch to dark mode"
+                title="Switch to dark mode"
+            >
+                <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="currentColor" />
+                </svg>
+                <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4" fill="currentColor" />
+                    <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <line x1="12" y1="1.5" x2="12" y2="4" />
+                        <line x1="12" y1="20" x2="12" y2="22.5" />
+                        <line x1="1.5" y1="12" x2="4" y2="12" />
+                        <line x1="20" y1="12" x2="22.5" y2="12" />
+                        <line x1="4.2" y1="4.2" x2="6" y2="6" />
+                        <line x1="18" y1="18" x2="19.8" y2="19.8" />
+                        <line x1="4.2" y1="19.8" x2="6" y2="18" />
+                        <line x1="18" y1="6" x2="19.8" y2="4.2" />
+                    </g>
+                </svg>
+            </button>
         </div>
         <div class="qa-row">
             <label>
@@ -99,22 +189,19 @@
         <div class="content">
             <p>Set default values that the AutoComplete buttons fill into your EMSCharts PCRs.</p>
 
-            <p>
-                First time here? Right-click this icon and choose <strong>Options</strong>, then
-                fill in your defaults by category.
-            </p>
+            <p>First time here? Open the Options page and fill in your defaults by category.</p>
 
             <p style="margin-bottom: 0">
-                <a
-                    class="btn-link"
-                    href="https://github.com/coder-weez/emsChartsAssist/issues"
-                    target="_blank"
-                    rel="noopener"
-                    >Report an issue</a
-                >
+                <button type="button" id="open_options" class="btn-link">Open Options</button>
             </p>
         </div>
         <div class="footer">
+            <a
+                href="https://github.com/coder-weez/emsChartsAssist/issues"
+                target="_blank"
+                rel="noopener"
+                >Report an issue</a
+            >
             <a href="https://github.com/coder-weez/emsChartsAssist" target="_blank" rel="noopener"
                 >Source</a
             >
