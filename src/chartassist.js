@@ -38,7 +38,13 @@ function caToolbar(skipDefaults) {
     if (!bar.length) {
         bar = jQuery('<div id="ca-toolbar" class="ca-vertical"></div>').appendTo('body');
         jQuery('<div id="ca-qa-film"></div>').appendTo(bar);
-        var handle = jQuery('<div id="ca-drag" title="Drag to move">⠿</div>').appendTo(bar);
+        var header = jQuery('<div id="ca-header"></div>').appendTo(bar);
+        var handle = jQuery('<div id="ca-drag" title="Drag to move">⠿</div>').appendTo(header);
+        jQuery('<div id="ca-reset" title="Reset position">↺</div>')
+            .appendTo(header)
+            .on('click', function () {
+                caResetPosition(bar);
+            });
         caMakeDraggable(bar, handle);
         caApplyInitialState(bar);
         chrome.storage.onChanged.addListener(function (changes, area) {
@@ -119,6 +125,14 @@ function caMakeDraggable(bar, handle) {
 function caSavePosition(bar) {
     var rect = bar[0].getBoundingClientRect();
     chrome.storage.local.set({ ca_toolbar_pos: { left: rect.left, top: rect.top } });
+}
+
+// Snap the toolbar back to its CSS default (top-right) when the reset button is
+// clicked, and clear the saved position so it stays there on future page loads
+// too (clearing rather than re-saving keeps it correct if the window is resized).
+function caResetPosition(bar) {
+    bar.css({ left: 'auto', top: '8px', right: '8px' });
+    chrome.storage.local.remove('ca_toolbar_pos');
 }
 
 // Briefly flash a light-green background on the given fields to confirm

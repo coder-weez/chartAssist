@@ -52,6 +52,8 @@ Page 1 has a **hard-coded toolbar** with no Options configuration. It uses `caTo
 
 Page 5 and page 8 both use **multiple preset buttons** instead of a single AutoComplete button. Page 5 has Trauma / Medical / Refusal; page 8 has On Scene / Transport / At Hospital / Refusal / Custom. Storage keys for page 5 follow the pattern `pg5_{category}_{fieldName}` (e.g. `pg5_trauma_head_comments`). The Options page shows three sub-tables within the single `<details id="section-page5">` block.
 
+**Page 8 vitals popup (`caVitalsCommentBox` / `caCommentTarget` in `page8.js`):** the Edit Vitals popup (`EditVS.cfm`) has its own vitals comment box, and it runs in a **same-origin iframe** (its buttons call `window.top.hidePopWin` / `window.top.doSimpleModal2`), so the top-frame content script has to reach into the iframe's `contentDocument` to fill it. **Gotcha:** the main page-8 vitals comment field in the top document carries the **same** `id="fld_vitals_comment"` (and `name="vs_comment"`) as the popup box — the id is _not_ unique — so the popup box can't be distinguished in the top document. `caVitalsCommentBox()` therefore **deliberately skips the top document** (that element is the main field / fallback) and scans same-origin iframes recursively (the subModal wrapper nests `loading.html` frames) for a visible `#fld_vitals_comment`, returning it or `null`. `caCommentTarget()` returns that element or the main `textarea[name=vs_comment]` selector. Every page-8 fill/clear routes through `caCommentTarget()`, so an open popup receives the comment and the main field does otherwise. `caFill`/`caClrField`/`caFlash` accept a DOM element or a selector string interchangeably (both pass through `jQuery(...)`, which works cross-document), which is why no change to those helpers was needed. `caVitalsCommentBox` / `caFindVitalsCommentInFrames` / `caCommentTarget` are local to `page8.js`, not shared globals, so they need no entry in `eslint.config.js`'s `caHelpers`.
+
 Each page script is injected only on its matching EMSCharts URL (defined in `manifest.json`). All page scripts share `chartassist.js` via the `"js"` array in the manifest content script entry.
 
 ### QA Mode (`popup.html` / `popup.js`)
@@ -135,7 +137,7 @@ Companion clear helpers, called by the **Clear Fields** button on each page. Eac
 
 ### `caToolbar()`
 
-Creates (once) a fixed-position draggable toolbar. Appends a "Page Defaults" button that sends `{ action: 'openOptions', page: N }` to the background service worker, which opens the options page scrolled to `#section-pageN`. Each page script also appends its own action buttons (AutoComplete, Clear Fields, and any preset buttons) to this toolbar.
+Creates (once) a fixed-position draggable toolbar. The top `#ca-header` row holds the drag handle (`#ca-drag`, ⠿) on the left and a reset button (`#ca-reset`, ↺) on the right. Reset calls `caResetPosition`, which snaps the toolbar back to its CSS default (`top: 8px; right: 8px`) and **clears** `ca_toolbar_pos` (rather than re-saving pixel coordinates, so it stays correct across a window resize) — so the reset also holds on subsequent page loads. Appends a "Page Defaults" button that sends `{ action: 'openOptions', page: N }` to the background service worker, which opens the options page scrolled to `#section-pageN`. Each page script also appends its own action buttons (AutoComplete, Clear Fields, and any preset buttons) to this toolbar.
 
 ### `caHealthCheck(page, anchors)`
 
