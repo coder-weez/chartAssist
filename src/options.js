@@ -4,6 +4,7 @@ var txtInputs = [
     'pg3_pupil_comments',
     'pg3_sensory_comments',
     'pg3_motor_comments',
+    'pg3_neuro_comments',
     'pg3_airway_comments',
     'pg4_resp_comments',
     'pg4_cardiac_comments',
