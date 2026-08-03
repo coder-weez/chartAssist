@@ -7,9 +7,35 @@ User-facing changes to EMSCharts Assist, newest first.
 lives at the **top of the Description — just under the opening tagline, above
 "What it does:"**. Keep only the latest one or two versions in the listing; the
 full history stays here. Write entries short and for EMS crews (no code or
-selector details).
+selector details). When several unreleased versions ship in one store package
+(as below), use the combined "What's new" block as the store copy — the store
+publishes a single build, not each version separately.
+
+## What's new — combined 1.0.0.0 + 1.1.0.0 store release — unreleased
+
+`1.0.0.0` and `1.1.0.0` publish together as one Chrome Web Store update (crews
+move straight from `0.9.0.2` to `1.1.0.0`), so this is the block to paste into
+the listing's "What's new". Highlights:
+
+- **Dark mode** across the popup, Options page, and the toolbar on EMSCharts — one
+  toggle that follows your system light/dark theme by default.
+- **A refreshed interface** — a cleaner Options page with collapsible sections and
+  a fixed Save / Export / Import / Reset bar, a simpler popup with a direct
+  "Open Options" button, and a restyled, easier-to-read toolbar.
+- **Page 8 vitals comments** now fill the Edit Vitals popup's own comment box when
+  that popup is open (instead of the comment field behind it).
+- **A toolbar reset button (↺)** — snap the toolbar back to the top-right corner if
+  you've dragged it out of the way.
+- **A "Report a Problem" link and the version number** in the popup footer.
+
+The per-version detail for each of these is in the two entries below.
 
 ## 1.1.0.0 — unreleased
+
+### Added
+
+- **A reset button (↺) on the toolbar.** Next to the drag handle — click it to
+  snap the toolbar back to the top-right corner if you've moved it.
 
 ### Fixed
 

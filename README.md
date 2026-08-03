@@ -70,6 +70,8 @@ Open a patient care report on `emscharts.com`. On the supported pages
 - **Page Defaults** — opens the Options page scrolled to the section for the current page.
 - **Preset buttons** (pages 5 and 8) — page 5 has Trauma / Medical / Refusal; page 8 has On Scene / Transport / At Hospital / Refusal / Custom. On page 8, if the **Edit Vitals** popup is open, the chosen comment is written into that popup's own comment box instead of the main narrative field; with the popup closed it fills the main field as usual.
 
+Drag the toolbar by the **⠿** handle to move it out of the way; the **↺** button next to it snaps it back to the top-right corner.
+
 ### Page 1 toolbar
 
 Page 1 (incident/unit info) has a hard-coded toolbar with two sections — no Options configuration required:

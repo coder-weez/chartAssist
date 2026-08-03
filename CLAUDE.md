@@ -137,7 +137,7 @@ Companion clear helpers, called by the **Clear Fields** button on each page. Eac
 
 ### `caToolbar()`
 
-Creates (once) a fixed-position draggable toolbar. Appends a "Page Defaults" button that sends `{ action: 'openOptions', page: N }` to the background service worker, which opens the options page scrolled to `#section-pageN`. Each page script also appends its own action buttons (AutoComplete, Clear Fields, and any preset buttons) to this toolbar.
+Creates (once) a fixed-position draggable toolbar. The top `#ca-header` row holds the drag handle (`#ca-drag`, ⠿) on the left and a reset button (`#ca-reset`, ↺) on the right. Reset calls `caResetPosition`, which snaps the toolbar back to its CSS default (`top: 8px; right: 8px`) and **clears** `ca_toolbar_pos` (rather than re-saving pixel coordinates, so it stays correct across a window resize) — so the reset also holds on subsequent page loads. Appends a "Page Defaults" button that sends `{ action: 'openOptions', page: N }` to the background service worker, which opens the options page scrolled to `#section-pageN`. Each page script also appends its own action buttons (AutoComplete, Clear Fields, and any preset buttons) to this toolbar.
 
 ### `caHealthCheck(page, anchors)`
 
