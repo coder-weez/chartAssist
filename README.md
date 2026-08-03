@@ -139,8 +139,11 @@ If the AutoComplete button doesn't fill anything:
 EMSCharts is maintained by Zoll, and updates on their side can rename or move
 form fields. When the extension loads a PCR page it quietly checks that the
 fields it fills still exist; if some are missing it shows a yellow warning toast
-and AutoComplete may not work correctly on that page. If you see this, the page
-likely changed on Zoll's end — please open an Issue noting which page it was so
+and AutoComplete may not work correctly on that page. The specific missing field
+selectors are also logged to the page's DevTools console (a
+`EMSCharts Assist: … Missing selectors:` warning), so you can see exactly which
+ones failed. If you see this, the page likely changed on Zoll's end — please
+open an Issue noting which page it was (and the logged selectors, if handy) so
 the selectors can be updated. (A weekly CI job also watches Zoll's public
 [release notes](https://help.zollonline.com/emscharts/Content/Subfolders%20for%20Whats%20New/NOW.htm)
 and opens a pull request whenever a new emsCharts version ships, as an early

@@ -469,6 +469,19 @@ function caHealthCheck(page, anchors) {
     var missing = anchors.filter(function (sel) {
         return jQuery(sel).length === 0;
     });
+    // Also surface the specific selectors in the page's DevTools console — the
+    // toast only says how many are missing, and ca_health lives in extension
+    // storage the page console can't read.
+    if (missing.length) {
+        console.warn(
+            'EMSCharts Assist: ' +
+                missing.length +
+                ' expected field(s) not found on page ' +
+                page +
+                ' (EMSCharts may have changed). Missing selectors:',
+            missing,
+        );
+    }
     chrome.storage.local.get(['ca_health'], function (r) {
         var report = r.ca_health || {};
         var pageKey = 'page' + page;
