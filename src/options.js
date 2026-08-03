@@ -250,18 +250,94 @@ function restore_options() {
     });
 }
 
-// Remove any stored keys this extension no longer recognizes (e.g. settings
-// left behind by features that were removed), keeping chrome.storage.sync tidy.
-// Runs automatically when the Options page loads.
-function prune_stale_keys() {
-    var opts = _all_opts();
+// Storage keys that were renamed across versions. Older builds saved settings
+// under the key on the left; the current field name(s) are on the right. This
+// map exists because settings were being LOST on update: the Options page used
+// to auto-run a "prune" that permanently deleted any stored key the current
+// version didn't recognize — and a renamed key is, by definition, unrecognized.
+// So the first time an updated user opened Options, their saved defaults for
+// every renamed field were silently wiped. Migration copies each legacy value
+// forward instead, so nothing is destroyed on update.
+//
+// Only unambiguous renames are mapped. Fields that were genuinely removed or
+// whose meaning changed (the retired page-2 ALS-assessment field, the
+// dorsalis-pedis pulse selects that were replaced by brachial — a different
+// anatomical site) are deliberately left out: their old values stay untouched
+// in storage rather than being guessed into the wrong field.
+function legacy_key_map() {
+    var map = {
+        pg3_gcs_eye: ['gcs_eye_1'],
+        pg3_gcs_verbal: ['gcs_verbal_1'],
+        pg3_gcs_motor: ['gcs_motor_1'],
+        pg3_stroke_scale: ['stroke_scale'],
+    };
+    // Page 5's single physical-exam section was later split into three preset
+    // categories (Trauma / Medical / Refusal). A user who had one set of exam
+    // defaults previously had them apply regardless of preset, so copy each
+    // legacy value into all three category variants.
+    var pg5legacy = [
+        'head_comments',
+        'neck_comments',
+        'chest_comments',
+        'ap_appearance',
+        'ap_palpation',
+        'ap_bowel_sounds',
+        'ap_findings',
+        'pelvis_comments',
+        'back_comments',
+        'ex_comments',
+        'ex_restraints',
+        'ex_skin_findings',
+    ];
+    pg5legacy.forEach(function (suffix) {
+        map['pg5_' + suffix] = [
+            'pg5_trauma_' + suffix,
+            'pg5_medical_' + suffix,
+            'pg5_refusal_' + suffix,
+        ];
+    });
+    return map;
+}
+
+// Copy any legacy-named settings forward to their current key names, then drop
+// the legacy key. A target that already holds a value (one the user set under
+// the new name) is never clobbered. Runs once on Options load, before restore,
+// so migrated values populate the form. `done` is invoked when finished.
+function migrate_legacy_keys(done) {
+    var map = legacy_key_map();
     chrome.storage.sync.get(null, function (items) {
-        var stale = Object.keys(items).filter(function (k) {
-            return !opts.hasOwnProperty(k);
+        var toSet = {};
+        var toRemove = [];
+        Object.keys(map).forEach(function (oldKey) {
+            if (!(oldKey in items)) return;
+            var val = items[oldKey];
+            map[oldKey].forEach(function (newKey) {
+                var existing = items[newKey];
+                var newEmpty = existing === undefined || existing === null || existing === '';
+                if (newEmpty && !(newKey in toSet)) toSet[newKey] = val;
+            });
+            // The legacy value is now preserved under its new name(s); the old
+            // key is superseded and can be removed.
+            toRemove.push(oldKey);
         });
-        if (stale.length) {
-            console.info('Removing stale settings:', stale);
-            chrome.storage.sync.remove(stale);
+
+        function finish() {
+            if (toRemove.length) {
+                chrome.storage.sync.remove(toRemove, function () {
+                    if (done) done();
+                });
+            } else if (done) {
+                done();
+            }
+        }
+
+        if (toRemove.length) {
+            console.info('Migrating legacy option keys:', toRemove);
+        }
+        if (Object.keys(toSet).length) {
+            chrome.storage.sync.set(toSet, finish);
+        } else {
+            finish();
         }
     });
 }
@@ -466,12 +542,18 @@ if (typeof module !== 'undefined' && module.exports) {
         get_user_values,
         restore_options,
         reset_options,
-        prune_stale_keys,
+        legacy_key_map,
+        migrate_legacy_keys,
     };
 } else {
     document.addEventListener('DOMContentLoaded', init_theme_toggle);
-    document.addEventListener('DOMContentLoaded', restore_options);
-    document.addEventListener('DOMContentLoaded', prune_stale_keys);
+    // Migrate any legacy-named settings forward BEFORE restoring, so renamed
+    // fields repopulate. Restore is chained so it reads post-migration storage.
+    // (The old destructive prune_stale_keys was removed — it was deleting these
+    // very keys on update, which is how saved options were being lost.)
+    document.addEventListener('DOMContentLoaded', function () {
+        migrate_legacy_keys(restore_options);
+    });
     document.addEventListener('DOMContentLoaded', open_section_from_hash);
     document.addEventListener('DOMContentLoaded', wire_pertneg_mutex);
     document.querySelector('#save').addEventListener('click', save_options);
