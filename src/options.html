@@ -367,14 +367,23 @@
             #status:empty {
                 display: none;
             }
+            /* Mental / Neurological pertinent-pos/neg lists are split into two
+               side-by-side sub-tables (.pertneg-cols) to halve their height. */
+            .pertneg-cols {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 22px;
+                align-items: flex-start;
+            }
             .pertneg-dual {
                 border-collapse: collapse;
                 font-size: 12px;
-                width: auto;
+                table-layout: fixed;
+                width: 300px;
             }
             .pertneg-dual th {
                 text-align: center;
-                padding: 2px 10px 6px;
+                padding: 2px 4px 6px;
                 font-weight: 600;
                 color: var(--muted);
                 font-size: 11px;
@@ -387,7 +396,7 @@
             .pertneg-dual td:first-child,
             .pertneg-dual th:nth-child(2),
             .pertneg-dual td:nth-child(2) {
-                width: 90px;
+                width: 62px;
                 text-align: center;
             }
             .pertneg-dual tbody tr:hover {
@@ -628,425 +637,440 @@
                             Mental
                         </td>
                         <td class="r">
-                            <table class="pertneg-dual">
-                                <thead>
-                                    <tr>
-                                        <th>Not Present</th>
-                                        <th>Present</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Agitation"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Agitation"
-                                            />
-                                        </td>
-                                        <td>Agitation</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Altered mental status, unspecified"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Altered mental status, unspecified"
-                                            />
-                                        </td>
-                                        <td>Altered mental status, unspecified</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Combative"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Combative"
-                                            />
-                                        </td>
-                                        <td>Combative</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Confused"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Confused"
-                                            />
-                                        </td>
-                                        <td>Confused</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Developmentally Impaired"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Developmentally Impaired"
-                                            />
-                                        </td>
-                                        <td>Developmentally Impaired</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Disorientation, unspecified"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Disorientation, unspecified"
-                                            />
-                                        </td>
-                                        <td>Disorientation, unspecified</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Hallucinations"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Hallucinations"
-                                            />
-                                        </td>
-                                        <td>Hallucinations</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Normal Baseline for Patient"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Normal Baseline for Patient"
-                                            />
-                                        </td>
-                                        <td>Normal Baseline for Patient</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Not Done"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Not Done"
-                                            />
-                                        </td>
-                                        <td>Not Done</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Oriented-Event"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Oriented-Event"
-                                            />
-                                        </td>
-                                        <td>Oriented-Event</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Oriented-Person"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Oriented-Person"
-                                            />
-                                        </td>
-                                        <td>Oriented-Person</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Oriented-Place"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Oriented-Place"
-                                            />
-                                        </td>
-                                        <td>Oriented-Place</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Oriented-Time"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Oriented-Time"
-                                            />
-                                        </td>
-                                        <td>Oriented-Time</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Pharmacologically Paralyzed"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Pharmacologically Paralyzed"
-                                            />
-                                        </td>
-                                        <td>Pharmacologically Paralyzed</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Pharmacologically Sedated"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Pharmacologically Sedated"
-                                            />
-                                        </td>
-                                        <td>Pharmacologically Sedated</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Psychologically Impaired"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Psychologically Impaired"
-                                            />
-                                        </td>
-                                        <td>Psychologically Impaired</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Slowness and poor responsiveness"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Slowness and poor responsiveness"
-                                            />
-                                        </td>
-                                        <td>Slowness and poor responsiveness</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Somnolent"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Somnolent"
-                                            />
-                                        </td>
-                                        <td>Somnolent</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="State of emotional shock and stress, unspecified"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="State of emotional shock and stress, unspecified"
-                                            />
-                                        </td>
-                                        <td>State of emotional shock and stress, unspecified</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Strange and inexplicable behavior"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Strange and inexplicable behavior"
-                                            />
-                                        </td>
-                                        <td>Strange and inexplicable behavior</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Stupor"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Stupor"
-                                            />
-                                        </td>
-                                        <td>Stupor</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Uncooperative"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Uncooperative"
-                                            />
-                                        </td>
-                                        <td>Uncooperative</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Unresponsive"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Unresponsive"
-                                            />
-                                        </td>
-                                        <td>Unresponsive</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_not_present"
-                                                value="Unspecified coma"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_mental_present"
-                                                value="Unspecified coma"
-                                            />
-                                        </td>
-                                        <td>Unspecified coma</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="pertneg-cols">
+                                <table class="pertneg-dual">
+                                    <thead>
+                                        <tr>
+                                            <th>Not Present</th>
+                                            <th>Present</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Agitation"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Agitation"
+                                                />
+                                            </td>
+                                            <td>Agitation</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Altered mental status, unspecified"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Altered mental status, unspecified"
+                                                />
+                                            </td>
+                                            <td>Altered mental status, unspecified</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Combative"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Combative"
+                                                />
+                                            </td>
+                                            <td>Combative</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Confused"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Confused"
+                                                />
+                                            </td>
+                                            <td>Confused</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Developmentally Impaired"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Developmentally Impaired"
+                                                />
+                                            </td>
+                                            <td>Developmentally Impaired</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Disorientation, unspecified"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Disorientation, unspecified"
+                                                />
+                                            </td>
+                                            <td>Disorientation, unspecified</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Hallucinations"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Hallucinations"
+                                                />
+                                            </td>
+                                            <td>Hallucinations</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Normal Baseline for Patient"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Normal Baseline for Patient"
+                                                />
+                                            </td>
+                                            <td>Normal Baseline for Patient</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Not Done"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Not Done"
+                                                />
+                                            </td>
+                                            <td>Not Done</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Oriented-Event"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Oriented-Event"
+                                                />
+                                            </td>
+                                            <td>Oriented-Event</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Oriented-Person"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Oriented-Person"
+                                                />
+                                            </td>
+                                            <td>Oriented-Person</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Oriented-Place"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Oriented-Place"
+                                                />
+                                            </td>
+                                            <td>Oriented-Place</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="pertneg-dual">
+                                    <thead>
+                                        <tr>
+                                            <th>Not Present</th>
+                                            <th>Present</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Oriented-Time"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Oriented-Time"
+                                                />
+                                            </td>
+                                            <td>Oriented-Time</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Pharmacologically Paralyzed"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Pharmacologically Paralyzed"
+                                                />
+                                            </td>
+                                            <td>Pharmacologically Paralyzed</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Pharmacologically Sedated"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Pharmacologically Sedated"
+                                                />
+                                            </td>
+                                            <td>Pharmacologically Sedated</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Psychologically Impaired"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Psychologically Impaired"
+                                                />
+                                            </td>
+                                            <td>Psychologically Impaired</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Slowness and poor responsiveness"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Slowness and poor responsiveness"
+                                                />
+                                            </td>
+                                            <td>Slowness and poor responsiveness</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Somnolent"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Somnolent"
+                                                />
+                                            </td>
+                                            <td>Somnolent</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="State of emotional shock and stress, unspecified"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="State of emotional shock and stress, unspecified"
+                                                />
+                                            </td>
+                                            <td>
+                                                State of emotional shock and stress, unspecified
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Strange and inexplicable behavior"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Strange and inexplicable behavior"
+                                                />
+                                            </td>
+                                            <td>Strange and inexplicable behavior</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Stupor"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Stupor"
+                                                />
+                                            </td>
+                                            <td>Stupor</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Uncooperative"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Uncooperative"
+                                                />
+                                            </td>
+                                            <td>Uncooperative</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Unresponsive"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Unresponsive"
+                                                />
+                                            </td>
+                                            <td>Unresponsive</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_not_present"
+                                                    value="Unspecified coma"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_mental_present"
+                                                    value="Unspecified coma"
+                                                />
+                                            </td>
+                                            <td>Unspecified coma</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </td>
                     </tr>
                     <tr>
@@ -1062,493 +1086,506 @@
                             Neurological
                         </td>
                         <td class="r">
-                            <table class="pertneg-dual">
-                                <thead>
-                                    <tr>
-                                        <th>Not Present</th>
-                                        <th>Present</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Aphagia"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Aphagia"
-                                            />
-                                        </td>
-                                        <td>Aphagia</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Aphasia"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Aphasia"
-                                            />
-                                        </td>
-                                        <td>Aphasia</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Arm Drift - Left"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Arm Drift - Left"
-                                            />
-                                        </td>
-                                        <td>Arm Drift - Left</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Arm Drift - Right"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Arm Drift - Right"
-                                            />
-                                        </td>
-                                        <td>Arm Drift - Right</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Cerebellar Function-Abnormal"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Cerebellar Function-Abnormal"
-                                            />
-                                        </td>
-                                        <td>Cerebellar Function-Abnormal</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Cerebellar Function-Normal"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Cerebellar Function-Normal"
-                                            />
-                                        </td>
-                                        <td>Cerebellar Function-Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Decerebrate Posturing"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Decerebrate Posturing"
-                                            />
-                                        </td>
-                                        <td>Decerebrate Posturing</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Decorticate Posturing"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Decorticate Posturing"
-                                            />
-                                        </td>
-                                        <td>Decorticate Posturing</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Gait-Abnormal"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Gait-Abnormal"
-                                            />
-                                        </td>
-                                        <td>Gait-Abnormal</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Gait-Normal"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Gait-Normal"
-                                            />
-                                        </td>
-                                        <td>Gait-Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Hemiplegia-Left"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Hemiplegia-Left"
-                                            />
-                                        </td>
-                                        <td>Hemiplegia-Left</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Hemiplegia-Right"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Hemiplegia-Right"
-                                            />
-                                        </td>
-                                        <td>Hemiplegia-Right</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Normal Baseline for Patient"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Normal Baseline for Patient"
-                                            />
-                                        </td>
-                                        <td>Normal Baseline for Patient</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Not Done"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Not Done"
-                                            />
-                                        </td>
-                                        <td>Not Done</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Other Seizures"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Other Seizures"
-                                            />
-                                        </td>
-                                        <td>Other Seizures</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Speech Normal"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Speech Normal"
-                                            />
-                                        </td>
-                                        <td>Speech Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Speech Slurring"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Speech Slurring"
-                                            />
-                                        </td>
-                                        <td>Speech Slurring</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Status Seizure"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Status Seizure"
-                                            />
-                                        </td>
-                                        <td>Status Seizure</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Strength-Asymmetric"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Strength-Asymmetric"
-                                            />
-                                        </td>
-                                        <td>Strength-Asymmetric</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Strength-Normal"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Strength-Normal"
-                                            />
-                                        </td>
-                                        <td>Strength-Normal</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Strength-Symmetric"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Strength-Symmetric"
-                                            />
-                                        </td>
-                                        <td>Strength-Symmetric</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Tremors"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Tremors"
-                                            />
-                                        </td>
-                                        <td>Tremors</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Unresponsive"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Unresponsive"
-                                            />
-                                        </td>
-                                        <td>Unresponsive</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Weakness-Facial Droop-Left"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Weakness-Facial Droop-Left"
-                                            />
-                                        </td>
-                                        <td>Weakness-Facial Droop-Left</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Weakness-Facial Droop-Right"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Weakness-Facial Droop-Right"
-                                            />
-                                        </td>
-                                        <td>Weakness-Facial Droop-Right</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Weakness-Left Sided"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Weakness-Left Sided"
-                                            />
-                                        </td>
-                                        <td>Weakness-Left Sided</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Weakness-Right Sided"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Weakness-Right Sided"
-                                            />
-                                        </td>
-                                        <td>Weakness-Right Sided</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_not_present"
-                                                value="Within Normal Limits"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                data-group="pg3_neuro_present"
-                                                value="Within Normal Limits"
-                                            />
-                                        </td>
-                                        <td>Within Normal Limits</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="pertneg-cols">
+                                <table class="pertneg-dual">
+                                    <thead>
+                                        <tr>
+                                            <th>Not Present</th>
+                                            <th>Present</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Aphagia"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Aphagia"
+                                                />
+                                            </td>
+                                            <td>Aphagia</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Aphasia"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Aphasia"
+                                                />
+                                            </td>
+                                            <td>Aphasia</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Arm Drift - Left"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Arm Drift - Left"
+                                                />
+                                            </td>
+                                            <td>Arm Drift - Left</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Arm Drift - Right"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Arm Drift - Right"
+                                                />
+                                            </td>
+                                            <td>Arm Drift - Right</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Cerebellar Function-Abnormal"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Cerebellar Function-Abnormal"
+                                                />
+                                            </td>
+                                            <td>Cerebellar Function-Abnormal</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Cerebellar Function-Normal"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Cerebellar Function-Normal"
+                                                />
+                                            </td>
+                                            <td>Cerebellar Function-Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Decerebrate Posturing"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Decerebrate Posturing"
+                                                />
+                                            </td>
+                                            <td>Decerebrate Posturing</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Decorticate Posturing"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Decorticate Posturing"
+                                                />
+                                            </td>
+                                            <td>Decorticate Posturing</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Gait-Abnormal"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Gait-Abnormal"
+                                                />
+                                            </td>
+                                            <td>Gait-Abnormal</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Gait-Normal"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Gait-Normal"
+                                                />
+                                            </td>
+                                            <td>Gait-Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Hemiplegia-Left"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Hemiplegia-Left"
+                                                />
+                                            </td>
+                                            <td>Hemiplegia-Left</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Hemiplegia-Right"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Hemiplegia-Right"
+                                                />
+                                            </td>
+                                            <td>Hemiplegia-Right</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Normal Baseline for Patient"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Normal Baseline for Patient"
+                                                />
+                                            </td>
+                                            <td>Normal Baseline for Patient</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Not Done"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Not Done"
+                                                />
+                                            </td>
+                                            <td>Not Done</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="pertneg-dual">
+                                    <thead>
+                                        <tr>
+                                            <th>Not Present</th>
+                                            <th>Present</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Other Seizures"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Other Seizures"
+                                                />
+                                            </td>
+                                            <td>Other Seizures</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Speech Normal"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Speech Normal"
+                                                />
+                                            </td>
+                                            <td>Speech Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Speech Slurring"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Speech Slurring"
+                                                />
+                                            </td>
+                                            <td>Speech Slurring</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Status Seizure"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Status Seizure"
+                                                />
+                                            </td>
+                                            <td>Status Seizure</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Strength-Asymmetric"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Strength-Asymmetric"
+                                                />
+                                            </td>
+                                            <td>Strength-Asymmetric</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Strength-Normal"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Strength-Normal"
+                                                />
+                                            </td>
+                                            <td>Strength-Normal</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Strength-Symmetric"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Strength-Symmetric"
+                                                />
+                                            </td>
+                                            <td>Strength-Symmetric</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Tremors"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Tremors"
+                                                />
+                                            </td>
+                                            <td>Tremors</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Unresponsive"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Unresponsive"
+                                                />
+                                            </td>
+                                            <td>Unresponsive</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Weakness-Facial Droop-Left"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Weakness-Facial Droop-Left"
+                                                />
+                                            </td>
+                                            <td>Weakness-Facial Droop-Left</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Weakness-Facial Droop-Right"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Weakness-Facial Droop-Right"
+                                                />
+                                            </td>
+                                            <td>Weakness-Facial Droop-Right</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Weakness-Left Sided"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Weakness-Left Sided"
+                                                />
+                                            </td>
+                                            <td>Weakness-Left Sided</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Weakness-Right Sided"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Weakness-Right Sided"
+                                                />
+                                            </td>
+                                            <td>Weakness-Right Sided</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_not_present"
+                                                    value="Within Normal Limits"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    data-group="pg3_neuro_present"
+                                                    value="Within Normal Limits"
+                                                />
+                                            </td>
+                                            <td>Within Normal Limits</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </td>
                     </tr>
                     <tr>
