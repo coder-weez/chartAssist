@@ -173,7 +173,9 @@ Storage keys follow the pattern `pg{N}_{fieldName}` (e.g. `pg2_chief_complaint`,
 
 `_all_opts()` builds a map of `{storageKey: type}` from all four arrays. `get_user_values`, `restore_options`, and `reset_options` all handle `"checkgroup"` type before the `getElementById` call, using `document.querySelectorAll('[data-group="..."]')` instead.
 
-`prune_stale_keys()` runs on options load and removes any stored keys not in the current field lists — keeps storage tidy after fields are renamed or removed.
+`migrate_legacy_keys(done)` runs on options load **before** `restore_options` and copies settings saved under old key names forward to the current names (then removes the old key), so renamed fields repopulate rather than being lost. The rename table lives in `legacy_key_map()` (e.g. `pg3_gcs_eye` → `gcs_eye_1`, `pg3_stroke_scale` → `stroke_scale`, and the single page-5 exam keys like `pg5_head_comments` → all three `pg5_{trauma,medical,refusal}_head_comments`). A migrated target that already holds a value is never clobbered. Only unambiguous renames are mapped; genuinely removed or re-purposed fields (the old `pg2_als_assessment`, the `pg4_dors_*` pulse selects) are left untouched in storage, not guessed into the wrong field.
+
+**Do not re-introduce an auto-pruning step.** A previous `prune_stale_keys()` deleted any stored key the current version didn't recognize on every options load — but a _renamed_ key is unrecognized, so it silently wiped users' saved defaults on the first load after an update (the "options not preserved after update" bug). Storage preservation now always wins over tidiness: orphaned keys are harmless (tiny, invisible) and are left in place.
 
 ### Theme toggle
 

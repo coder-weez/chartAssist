@@ -11,12 +11,15 @@ selector details). When several unreleased versions ship in one store package
 (as below), use the combined "What's new" block as the store copy — the store
 publishes a single build, not each version separately.
 
-## What's new — combined 1.0.0.0 + 1.1.0.0 store release — unreleased
+## What's new — combined 1.0.0.0 + 1.1.0.0 + 1.1.0.1 store release — unreleased
 
-`1.0.0.0` and `1.1.0.0` publish together as one Chrome Web Store update (crews
-move straight from `0.9.0.2` to `1.1.0.0`), so this is the block to paste into
-the listing's "What's new". Highlights:
+`1.0.0.0`, `1.1.0.0`, and `1.1.0.1` publish together as one Chrome Web Store
+update (crews move straight from `0.9.0.2` to `1.1.0.1`), so this is the block to
+paste into the listing's "What's new". Highlights:
 
+- **Your saved defaults now carry over when the extension updates.** Settings
+  saved in older versions are kept and moved to their new spots automatically, so
+  updating no longer clears your Options.
 - **Dark mode** across the popup, Options page, and the toolbar on EMSCharts — one
   toggle that follows your system light/dark theme by default.
 - **A refreshed interface** — a cleaner Options page with collapsible sections and
@@ -29,6 +32,17 @@ the listing's "What's new". Highlights:
 - **A "Report a Problem" link and the version number** in the popup footer.
 
 The per-version detail for each of these is in the two entries below.
+
+## 1.1.0.1 — unreleased
+
+### Fixed
+
+- **Saved Options are no longer lost when the extension updates.** Some settings
+  were stored under names that changed in earlier releases; on the first Options
+  open after updating, those saved values were being deleted. The extension now
+  moves settings saved under old names to their current spots automatically, so
+  your defaults survive updates. (Fields that were removed or replaced entirely in
+  past releases can't be recovered, but nothing you've saved is deleted anymore.)
 
 ## 1.1.0.0 — unreleased
 
