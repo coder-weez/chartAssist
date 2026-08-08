@@ -89,6 +89,7 @@ var selBoxes = [
     'pg3_airway_status',
     'pg3_air_by',
     'pg3_air_outcome',
+    'pg4_resp_effort',
     'pg4_breath_sounds_l',
     'pg4_breath_sounds_r',
     'pg4_carotid_l',
