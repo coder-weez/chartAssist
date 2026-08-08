@@ -11,12 +11,15 @@ selector details). When several unreleased versions ship in one store package
 (as below), use the combined "What's new" block as the store copy — the store
 publishes a single build, not each version separately.
 
-## What's new — combined 1.0.0.0 + 1.1.0.0 + 1.1.0.1 store release — unreleased
+## What's new — combined 1.0.0.0 + 1.1.0.0 + 1.1.0.1 + 1.2.0.0 store release — unreleased
 
-`1.0.0.0`, `1.1.0.0`, and `1.1.0.1` publish together as one Chrome Web Store
-update (crews move straight from `0.9.0.2` to `1.1.0.1`), so this is the block to
-paste into the listing's "What's new". Highlights:
+`1.0.0.0`, `1.1.0.0`, `1.1.0.1`, and `1.2.0.0` publish together as one Chrome Web
+Store update (crews move straight from `0.9.0.2` to `1.2.0.0`), so this is the
+block to paste into the listing's "What's new". Highlights:
 
+- **New Respiratory Effort default on the Cardiac/Respiratory page.** Pick your
+  usual effort value in Options and AutoComplete fills it for you; the respiratory
+  fields are now grouped under a clear "Respiratory" heading.
 - **Your saved defaults now carry over when the extension updates.** Settings
   saved in older versions are kept and moved to their new spots automatically, so
   updating no longer clears your Options.
@@ -31,7 +34,23 @@ paste into the listing's "What's new". Highlights:
   you've dragged it out of the way.
 - **A "Report a Problem" link and the version number** in the popup footer.
 
-The per-version detail for each of these is in the two entries below.
+The per-version detail for each of these is in the entries below.
+
+## 1.2.0.0 — unreleased
+
+### Added
+
+- **Respiratory Effort default (Cardiac/Respiratory page).** A new Effort option
+  in the Page 4 settings lets you save a default respiratory effort value
+  (Normal, Labored, Retractions, Tachypnea, and the rest); AutoComplete fills it
+  and Clear Fields resets it. The respiratory fields are now grouped under a
+  "Respiratory" heading.
+
+### Changed
+
+- **Renamed the "Respiratory Comments" field to just "Comments"** in Options,
+  under the new Respiratory heading. Anything you'd already saved there carries
+  over unchanged.
 
 ## 1.1.0.1 — unreleased
 
