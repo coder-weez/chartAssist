@@ -14,6 +14,7 @@ $(document).ready(function () {
         if (!caActive(4)) return;
         if (!window.confirm('Clear all auto-filled fields on this page? This cannot be undone.'))
             return;
+        caClrField('select[name=cv_resp_effort]');
         caClrField('textarea[name=RESP_COMMENTS]');
         caClrField('select[name=cv_breath_sounds_l]');
         caClrField('select[name=cv_breath_sounds_r]');
@@ -32,7 +33,8 @@ $(document).ready(function () {
     $('.chartfiller').click(function () {
         if (!caActive(4)) return;
         chrome.storage.sync.get(null, function (s) {
-            caFill('textarea[name=RESP_COMMENTS]', s['pg4_resp_comments'], 'Respiratory Comments');
+            caFill('select[name=cv_resp_effort]', s['pg4_resp_effort'], 'Respiratory Effort');
+            caFill('textarea[name=RESP_COMMENTS]', s['pg4_resp_comments'], 'Comments');
             caFill(
                 'select[name=cv_breath_sounds_l]',
                 s['pg4_breath_sounds_l'],
