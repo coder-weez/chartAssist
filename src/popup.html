@@ -14,6 +14,10 @@
                 --pop-qa-bg: #fff8e1;
                 --pop-qa-border: #ffe082;
                 --pop-qa-desc: #666666;
+                --pop-field-bg: #ffffff;
+                --pop-field-border: #cfd6df;
+                --pop-error: #c0392b;
+                --pop-success: #1a7f37;
             }
             :root[data-theme='dark'] {
                 color-scheme: dark;
@@ -26,6 +30,10 @@
                 --pop-qa-bg: #262112;
                 --pop-qa-border: #4a3f14;
                 --pop-qa-desc: #c2b487;
+                --pop-field-bg: #0d1117;
+                --pop-field-border: #2b3543;
+                --pop-error: #ff8a80;
+                --pop-success: #5bd07f;
             }
             body {
                 width: 280px;
@@ -34,6 +42,13 @@
                 font-size: 13px;
                 color: var(--pop-text);
                 background: var(--pop-bg);
+            }
+            /* The `hidden` attribute must win even over rules that set an explicit
+               display (e.g. .link-btn { display: block }), which would otherwise
+               override the UA [hidden] { display: none } and keep a hidden
+               element visible. */
+            [hidden] {
+                display: none !important;
             }
             .header {
                 display: flex;
@@ -153,6 +168,177 @@
                 font-size: 11px;
                 color: var(--pop-muted);
             }
+
+            /* ---- Login form ---- */
+            .auth-intro {
+                margin: 0 0 12px;
+                line-height: 1.4;
+            }
+            .field {
+                margin: 0 0 10px;
+            }
+            .field label {
+                display: block;
+                font-size: 11px;
+                color: var(--pop-muted);
+                margin-bottom: 3px;
+            }
+            .field input {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 7px 9px;
+                font-family: inherit;
+                font-size: 13px;
+                color: var(--pop-text);
+                background: var(--pop-field-bg);
+                border: 1px solid var(--pop-field-border);
+                border-radius: 6px;
+            }
+            .field input:focus {
+                outline: none;
+                border-color: var(--accent);
+            }
+            .remember {
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                font-size: 12px;
+                margin: 0 0 12px;
+                cursor: pointer;
+            }
+            .remember input {
+                cursor: pointer;
+            }
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                padding: 8px 12px;
+                border-radius: 6px;
+                font-family: inherit;
+                font-size: 13px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+            .btn-primary {
+                border: none;
+                background: var(--accent);
+                color: #fff;
+            }
+            .btn-primary:hover {
+                background: var(--accent-hover);
+            }
+            .btn-secondary {
+                background: transparent;
+                color: var(--accent);
+                border: 1px solid var(--accent);
+            }
+            .btn-secondary:hover {
+                background: var(--pop-qa-bg);
+            }
+            button:disabled {
+                opacity: 0.6;
+                cursor: default;
+            }
+            .divider {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin: 14px 0;
+                font-size: 11px;
+                color: var(--pop-muted);
+            }
+            .divider::before,
+            .divider::after {
+                content: '';
+                flex: 1;
+                height: 1px;
+                background: var(--pop-qa-border);
+            }
+            .auth-error {
+                color: var(--pop-error);
+                font-size: 12px;
+                line-height: 1.35;
+                margin: 10px 0 0;
+            }
+            .auth-error:empty {
+                margin: 0;
+            }
+            .auth-error.is-success {
+                color: var(--pop-success);
+            }
+            .signed-in-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 10px;
+                padding: 10px 14px;
+                background: var(--pop-qa-bg);
+                border-bottom: 1px solid var(--pop-qa-border);
+            }
+            .signed-in-meta {
+                display: flex;
+                flex-direction: column;
+                min-width: 0;
+            }
+            .signed-in-as {
+                font-weight: bold;
+                font-size: 12px;
+                word-break: break-all;
+            }
+            .signed-in-expiry {
+                font-size: 11px;
+                color: var(--pop-qa-desc);
+            }
+            .btn-text {
+                flex: none;
+                background: none;
+                border: none;
+                color: var(--accent);
+                font-family: inherit;
+                font-size: 12px;
+                font-weight: bold;
+                cursor: pointer;
+                padding: 4px;
+            }
+            .btn-text:hover {
+                text-decoration: underline;
+            }
+            .link-btn {
+                display: block;
+                width: 100%;
+                padding: 4px 0;
+                background: none;
+                border: none;
+                color: var(--accent);
+                font-family: inherit;
+                font-size: 13px;
+                font-weight: bold;
+                text-align: center;
+                text-decoration: underline;
+                cursor: pointer;
+            }
+            .link-btn:hover {
+                color: var(--accent-hover);
+            }
+            /* Account-mode links: smaller text, with a clear gap above each (from
+               the Sign in / Create account button that precedes it). */
+            #signup_cancel,
+            #reset_cancel {
+                margin-top: 12px;
+                font-size: 12px;
+            }
+            /* Forgot password? / Create an account sit side by side under Sign in. */
+            .auth-links {
+                display: flex;
+                justify-content: center;
+                gap: 16px;
+                margin-top: 12px;
+            }
+            .auth-links .link-btn {
+                width: auto;
+                margin-top: 0;
+                font-size: 12px;
+            }
         </style>
     </head>
     <body>
@@ -183,22 +369,167 @@
                 </svg>
             </button>
         </div>
-        <div class="qa-row">
-            <label>
-                <input type="checkbox" id="qa_mode" />
-                QA Mode
-            </label>
-            <span class="qa-desc">Freezes toolbar buttons on all PCR pages.</span>
-        </div>
-        <div class="content">
-            <p>Set default values that the AutoComplete buttons fill into your EMSCharts PCRs.</p>
 
-            <p>First time here? Open the Options page and fill in your defaults by category.</p>
-
-            <p style="margin-bottom: 0">
-                <button type="button" id="open_options" class="btn-link">Open Options</button>
+        <!-- Signed-out view: shown until a valid session exists -->
+        <div class="content" id="view-auth" hidden>
+            <p class="auth-intro" id="auth_intro">
+                Sign in to enable ChartAssist on your EMSCharts PCR pages.
             </p>
+            <form id="signin_form" autocomplete="on">
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        autocomplete="username"
+                        placeholder="you@example.com"
+                        required
+                    />
+                </div>
+                <div class="field">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" autocomplete="current-password" required />
+                </div>
+                <label class="remember">
+                    <input type="checkbox" id="remember_email" checked />
+                    Remember my email
+                </label>
+                <button type="submit" id="btn_signin" class="btn-primary">Sign in</button>
+            </form>
+
+            <div class="auth-links" id="auth_alt_links">
+                <button type="button" id="reset_toggle" class="link-btn">Forgot password?</button>
+                <button type="button" id="signup_toggle" class="link-btn">Create an account</button>
+            </div>
+
+            <form id="signup_form" autocomplete="off" hidden>
+                <p class="auth-intro">New here? Create an account with your email.</p>
+                <div class="field">
+                    <label for="signup_email">Email</label>
+                    <input
+                        type="email"
+                        id="signup_email"
+                        autocomplete="username"
+                        placeholder="you@yourservice.com"
+                        required
+                    />
+                </div>
+                <div class="field">
+                    <label for="signup_password">Password</label>
+                    <input
+                        type="password"
+                        id="signup_password"
+                        autocomplete="new-password"
+                        required
+                    />
+                </div>
+                <div class="field">
+                    <label for="signup_password2">Confirm password</label>
+                    <input
+                        type="password"
+                        id="signup_password2"
+                        autocomplete="new-password"
+                        required
+                    />
+                </div>
+                <button type="submit" id="btn_signup" class="btn-primary">Create account</button>
+                <button type="button" id="signup_cancel" class="link-btn">Back to sign in</button>
+            </form>
+
+            <form id="reset_form" autocomplete="off" hidden>
+                <p class="auth-intro">Reset your password with a code we email you.</p>
+                <div id="reset_step1">
+                    <div class="field">
+                        <label for="reset_email">Email</label>
+                        <input
+                            type="email"
+                            id="reset_email"
+                            autocomplete="username"
+                            placeholder="you@example.com"
+                        />
+                    </div>
+                    <button type="button" id="btn_reset_send" class="btn-primary">
+                        Send reset code
+                    </button>
+                </div>
+                <div id="reset_step2" hidden>
+                    <div class="field">
+                        <label for="reset_code">Reset code</label>
+                        <input
+                            type="text"
+                            id="reset_code"
+                            inputmode="numeric"
+                            autocomplete="one-time-code"
+                            placeholder="6-digit code"
+                        />
+                    </div>
+                    <div class="field">
+                        <label for="reset_password">New password</label>
+                        <input type="password" id="reset_password" autocomplete="new-password" />
+                    </div>
+                    <div class="field">
+                        <label for="reset_password2">Confirm new password</label>
+                        <input type="password" id="reset_password2" autocomplete="new-password" />
+                    </div>
+                    <button type="button" id="btn_reset_confirm" class="btn-primary">
+                        Reset password
+                    </button>
+                </div>
+                <button type="button" id="reset_cancel" class="link-btn">Back to sign in</button>
+            </form>
+
+            <div class="divider" id="auth_divider">or</div>
+
+            <button type="button" id="code_toggle" class="link-btn">
+                Use a temporary access code
+            </button>
+
+            <form id="code_form" autocomplete="off" hidden>
+                <div class="field">
+                    <label for="access_code">Access code</label>
+                    <input type="text" id="access_code" placeholder="Temporary code" />
+                </div>
+                <button type="submit" id="btn_redeem" class="btn-secondary">Use code</button>
+            </form>
+
+            <p id="auth_error" class="auth-error" role="alert" aria-live="polite"></p>
         </div>
+
+        <!-- Signed-in view: the existing tools, gated behind login -->
+        <div id="view-app" hidden>
+            <div class="signed-in-row">
+                <div class="signed-in-meta">
+                    <span id="signed_in_as" class="signed-in-as"></span>
+                    <span id="signed_in_expiry" class="signed-in-expiry"></span>
+                </div>
+                <button type="button" id="btn_signout" class="btn-text">Sign out</button>
+            </div>
+            <div class="qa-row">
+                <label>
+                    <input type="checkbox" id="qa_mode" />
+                    QA Mode
+                </label>
+                <span class="qa-desc">Freezes toolbar buttons on all PCR pages.</span>
+            </div>
+            <div class="content">
+                <p>
+                    Set default values that the AutoComplete buttons fill into your EMSCharts PCRs.
+                </p>
+                <p>First time here? Open the Options page and fill in your defaults by category.</p>
+                <p
+                    style="
+                        margin-bottom: 0;
+                        display: flex;
+                        justify-content: space-between;
+                        gap: 10px;
+                    "
+                >
+                    <button type="button" id="open_options" class="btn-link">Open Options</button>
+                    <button type="button" id="open_admin" class="btn-link" hidden>Admin</button>
+                </p>
+            </div>
+        </div>
+
         <div class="footer">
             <a href="https://forms.gle/hCJSKcwXwBjcMKx18" target="_blank" rel="noopener"
                 >Report a Problem</a
@@ -211,6 +542,7 @@
                 >Privacy Policy</a
             >
         </div>
+        <script src="auth.js"></script>
         <script src="popup.js"></script>
     </body>
 </html>

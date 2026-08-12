@@ -87,6 +87,35 @@ Page 1 (incident/unit info) has a hard-coded toolbar with two sections — no Op
 
 Click the extension icon in the Chrome toolbar to open the popup. The **QA Mode** toggle freezes the toolbar — all buttons are covered by an overlay and cannot be clicked, preventing accidental form changes while reviewing a completed chart. When QA Mode is enabled the toolbar snaps back to its default position in the top-right corner. When disabled, the toolbar returns to wherever you last left it.
 
+## Sign in
+
+To limit use to authorized personnel, ChartAssist sits behind a login. Until you
+sign in, the toolbar on EMSCharts stays locked — a "Sign in to enable" overlay
+covers the buttons. Click the extension icon and sign in from the popup:
+
+- **Email + password** — each person has their own account. First time? Click
+  **Create an account** and register with your work email; anyone at an approved
+  domain (for example `@vfambulence.com`) is accepted, other domains are rejected.
+  Tick **Remember my email** to pre-fill it next time (your password is never
+  stored).
+- **Access code** — a temporary code an administrator generates that unlocks the
+  extension for a set window (e.g. 24 hours), handy for ride-alongs or temporary
+  crew. Enter it in the popup instead of an email/password.
+
+A normal sign-in keeps you authorized for **1 month** (across browser restarts);
+after that you sign in again. You can sign out any time from the popup. No patient
+data is involved in signing in — only your account credentials.
+
+**For administrators:** the login is backed by a small
+[Supabase](https://supabase.com) project (managed Postgres + authentication),
+which must be configured before the extension can be used. See
+[`supabase/README.md`](supabase/README.md) for the one-time setup and the SQL
+snippets to approve a domain (or a one-off email) and generate time-limited access
+codes (crews create
+their own accounts from the popup).
+Once set up, put your project URL and publishable key in `src/auth.js` and
+`src/manifest.json`.
+
 ## How settings are stored
 
 Your defaults are saved with Chrome's built-in
@@ -94,8 +123,11 @@ Your defaults are saved with Chrome's built-in
 (the `storage` permission in the manifest). Notes for users and contributors:
 
 - **Defaults only.** Only the template values you enter on the Options page are
-  stored. No patient data and nothing from actual PCRs is ever saved or
-  transmitted — the extension has no backend.
+  stored, and they never leave your browser except through Chrome's own sync. No
+  patient data and nothing from actual PCRs is ever saved or transmitted. (The
+  extension does contact its authentication service when you **sign in** — see the
+  section above — but that carries only your login credentials, never any report
+  data.)
 - **Synced across devices.** Because it uses `storage.sync`, your defaults
   follow you to any Chrome where you're signed into the same profile with sync
   enabled (otherwise it behaves like local storage).

@@ -93,6 +93,40 @@
                 margin: 0;
                 padding: 0 0 88px;
             }
+            /* Login gate overlay — covers the settings until a valid session
+               exists (see options.js). Shown by default = fail-closed. */
+            #ca-options-gate {
+                position: fixed;
+                inset: 0;
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 24px;
+                background: var(--bg);
+            }
+            #ca-options-gate[hidden] {
+                display: none;
+            }
+            #ca-options-gate .ca-gate-card {
+                max-width: 420px;
+                text-align: center;
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                box-shadow: var(--shadow-lg);
+                padding: 28px 26px;
+            }
+            #ca-options-gate h2 {
+                margin: 0 0 8px;
+                font-size: 18px;
+                color: var(--text);
+            }
+            #ca-options-gate p {
+                margin: 0;
+                color: var(--muted);
+                line-height: 1.5;
+            }
             .appbar {
                 position: sticky;
                 top: 0;
@@ -406,6 +440,15 @@
     </head>
 
     <body>
+        <div id="ca-options-gate">
+            <div class="ca-gate-card">
+                <h2>Sign in required</h2>
+                <p>
+                    Open the ChartAssist popup (click the extension icon in your browser toolbar)
+                    and sign in. This page unlocks automatically once you do.
+                </p>
+            </div>
+        </div>
         <header class="appbar">
             <div class="appbar-inner">
                 <img src="icon_48.png" alt="" />

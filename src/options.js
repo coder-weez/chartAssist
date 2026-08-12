@@ -534,6 +534,48 @@ function init_theme_toggle() {
     });
 }
 
+// --- Login gate ------------------------------------------------------------
+// The Options page is reachable outside the popup (right-click the icon →
+// Options, chrome://extensions, or a direct URL), so it enforces the same login
+// as the toolbar: a full-page overlay (#ca-options-gate, shown by default =
+// fail-closed) covers the settings until a valid session exists. Mirrors
+// auth.js's caSessionValid so this page need not load auth.js. With no extension
+// context at all (options.html opened directly for preview) there is no session
+// boundary to enforce, so the settings are shown.
+var ca_options_gate_timer = null;
+
+function ca_options_session_valid(session) {
+    return !!(session && session.session_expires_at > Date.now());
+}
+
+function ca_apply_options_gate() {
+    var gate = document.getElementById('ca-options-gate');
+    if (!gate) return;
+    var store = null;
+    try {
+        store = window.chrome && chrome.storage && chrome.storage.local;
+    } catch {
+        /* window.chrome access threw — treat as no extension context */
+    }
+    if (!store) {
+        gate.hidden = true; // not an extension context (preview) — nothing to gate
+        return;
+    }
+    store.get('ca_session', function (r) {
+        var session = r && r.ca_session;
+        var ok = ca_options_session_valid(session);
+        gate.hidden = ok;
+        if (ca_options_gate_timer) {
+            clearTimeout(ca_options_gate_timer);
+            ca_options_gate_timer = null;
+        }
+        if (ok) {
+            var ms = Math.min(session.session_expires_at - Date.now(), 0x7fffffff);
+            if (ms > 0) ca_options_gate_timer = setTimeout(ca_apply_options_gate, ms);
+        }
+    });
+}
+
 // Under Node/CommonJS (unit tests) export the functions and skip the DOM wiring;
 // the tests set up their own DOM. In the browser `module` is undefined, so the
 // else branch runs and wires up the Options page exactly as before.
@@ -548,6 +590,18 @@ if (typeof module !== 'undefined' && module.exports) {
     };
 } else {
     document.addEventListener('DOMContentLoaded', init_theme_toggle);
+    document.addEventListener('DOMContentLoaded', ca_apply_options_gate);
+    // Keep the gate in sync if the user signs in/out from the popup while this
+    // Options page is open.
+    try {
+        if (window.chrome && chrome.storage && chrome.storage.onChanged) {
+            chrome.storage.onChanged.addListener(function (changes, area) {
+                if (area === 'local' && 'ca_session' in changes) ca_apply_options_gate();
+            });
+        }
+    } catch {
+        /* not in an extension context */
+    }
     // Migrate any legacy-named settings forward BEFORE restoring, so renamed
     // fields repopulate. Restore is chained so it reads post-migration storage.
     // (The old destructive prune_stale_keys was removed — it was deleting these

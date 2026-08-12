@@ -11,6 +11,23 @@ selector details). When several unreleased versions ship in one store package
 (as below), use the combined "What's new" block as the store copy — the store
 publishes a single build, not each version separately.
 
+## What's new — 1.3.0.0 — unreleased
+
+**Sign-in now required.** ChartAssist keeps your tools behind a login so only your
+authorized crews can use it:
+
+- **Sign in with your work email and password** from the extension popup. Until
+  you do, the toolbar on EMSCharts stays locked. You stay signed in for 1 month.
+- **Create your own account** right in the popup with your work email — anyone at
+  an approved domain can register, so there is no per-person admin setup.
+- **Temporary access codes** let an admin grant time-limited access (e.g. a
+  24-hour ride-along) without creating an account — just enter the code.
+- **Remember my email** pre-fills your address next time; your password is never
+  stored.
+
+Signing in sends only your login details to the sign-in service — never any
+patient data. See the Privacy Policy for details.
+
 ## What's new — combined 1.0.0.0 + 1.1.0.0 + 1.1.0.1 + 1.2.0.0 store release — unreleased
 
 `1.0.0.0`, `1.1.0.0`, `1.1.0.1`, and `1.2.0.0` publish together as one Chrome Web
@@ -35,6 +52,55 @@ block to paste into the listing's "What's new". Highlights:
 - **A "Report a Problem" link and the version number** in the popup footer.
 
 The per-version detail for each of these is in the entries below.
+
+## 1.4.0.0 — unreleased
+
+### Added
+
+- **Crew-admin console.** A separate, role-gated admin page (`admin.html`) lets a
+  crew admin pre-approve people from their own organisation — add/remove
+  allow-listed emails and see who has signed up — without a super-admin running
+  SQL. Removing an allow-listed email also deletes any account for it, revoking
+  that person; a separate Remove in the Members list deletes an account while
+  keeping the pre-approval, so they can sign up again. An **Admin** button appears beside **Open Options** in the popup, only for
+  admins. Backed by multi-tenant `orgs` + `profiles` (role & org) with Row-Level
+  Security isolating each admin to their own org; the people an admin approves
+  self-register through the existing Create-account flow.
+
+## 1.3.0.0 — unreleased
+
+### Added
+
+- **Login gate.** The injected toolbar is disabled until the user signs in
+  (email + password) from the popup; a "Sign in to enable" lock overlay covers the
+  buttons otherwise, and every fill/clear also bails without a valid session. The
+  Options page is gated the same way (it is reachable outside the popup), so
+  defaults cannot be edited while signed out.
+  Accounts are restricted to configured email domains, a sign-in lasts 1 month
+  (with silent access-token refresh so revoked accounts drop within a refresh
+  cycle), and a "Remember my email" checkbox pre-fills the address — email only,
+  never the password.
+- **Self-service account creation.** A "Create account" form in the popup lets
+  crews register with their email (`caSignUp` → Supabase sign-up); the server-side
+  `enforce_allowed_domain` trigger limits it to approved domains — or to one-off
+  individual addresses an admin allow-lists in `allowed_emails` (contractors,
+  ride-alongs) — so no per-person admin provisioning is needed.
+- **Self-service password reset.** "Forgot password?" in the popup emails a
+  6-digit code (no web page needed); entering it with a new password resets it and
+  signs the user in. Needs custom SMTP and the Reset-Password email template set to
+  send `{{ .Token }}` — see `supabase/README.md`.
+- **Time-limited access codes.** A code redeemed in the popup unlocks the
+  extension until the code's own expiry, for guests/temporary crew. Admins mint
+  codes with a settable TTL via one SQL insert.
+- **Supabase auth backend.** Schema, RLS, the allow-list trigger (approved domains
+  plus one-off `allowed_emails`), and a `redeem-code` Edge Function live under
+  `supabase/`; the extension (`src/auth.js`) talks to it with plain `fetch` (no SDK).
+
+### Changed
+
+- The extension now makes network requests to its authentication service at
+  sign-in. No patient data is transmitted — only login credentials. See the
+  updated Privacy Policy and README.
 
 ## 1.2.0.0 — unreleased
 

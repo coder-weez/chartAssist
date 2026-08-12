@@ -12,3 +12,8 @@
 # Node
 node_modules/
 npm-debug.log*
+
+# Supabase CLI local state (created by `supabase link` / local dev — never commit)
+supabase/.temp/
+supabase/.branches/
+supabase/.env
