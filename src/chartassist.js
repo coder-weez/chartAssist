@@ -2,17 +2,22 @@
 // Loaded after jQuery and before each page script.
 
 function caApplyInitialState(bar) {
-    chrome.storage.local.get(['ca_qa_mode', 'ca_toolbar_pos', 'ca_theme'], function (r) {
-        var qaOn = !!r.ca_qa_mode;
-        bar.toggleClass('ca-frozen', qaOn);
-        if (qaOn) {
-            bar.css({ left: 'auto', top: '8px', right: '8px' });
-        } else if (r.ca_toolbar_pos) {
-            var pos = r.ca_toolbar_pos;
-            bar.css({ left: pos.left + 'px', top: pos.top + 'px', right: 'auto' });
-        }
-        caApplyTheme(bar, r.ca_theme);
-    });
+    chrome.storage.local.get(
+        ['ca_qa_mode', 'ca_toolbar_pos', 'ca_theme', 'ca_session'],
+        function (r) {
+            var qaOn = !!r.ca_qa_mode;
+            bar.toggleClass('ca-frozen', qaOn);
+            if (qaOn) {
+                bar.css({ left: 'auto', top: '8px', right: '8px' });
+            } else if (r.ca_toolbar_pos) {
+                var pos = r.ca_toolbar_pos;
+                bar.css({ left: pos.left + 'px', top: pos.top + 'px', right: 'auto' });
+            }
+            caApplyTheme(bar, r.ca_theme);
+            caSetSession(r.ca_session);
+            caApplySessionState(bar);
+        },
+    );
 }
 
 // Dark mode: the injected toolbar honours the shared `ca_theme` preference set
@@ -30,6 +35,46 @@ function caApplyTheme(bar, stored) {
     bar.toggleClass('ca-dark', caEffectiveTheme(stored) === 'dark');
 }
 
+// --- Login gate ----------------------------------------------------------
+// AutoComplete is gated on a valid login session (see popup.js / auth.js). The
+// session lives in chrome.storage.local under `ca_session`; we cache it here so
+// the synchronous caActive() guard and the toolbar lock can consult it without
+// an async round-trip. The cache is primed in caApplyInitialState and kept fresh
+// by the storage.onChanged listener — the same live-update path as QA Mode/theme.
+var caSession = null;
+var caSessionTimer = null;
+
+function caSetSession(s) {
+    caSession = s || null;
+}
+
+// Mirror of auth.js's caSessionValid (kept local so PCR pages need not load
+// auth.js — they never call the network). Valid while the expiry is in the future.
+function caHasSession() {
+    return !!(caSession && caSession.session_expires_at > Date.now());
+}
+
+// Show/hide the "sign in" lock film over the toolbar from the session state, and
+// (re)arm a timer so the bar locks the moment the session lapses even when no
+// storage event fires (e.g. the session cap simply elapses). `bar` is the jQuery
+// toolbar element.
+function caApplySessionState(bar) {
+    var ok = caHasSession();
+    bar.toggleClass('ca-locked', !ok);
+    if (caSessionTimer) {
+        clearTimeout(caSessionTimer);
+        caSessionTimer = null;
+    }
+    if (ok) {
+        var ms = Math.min(caSession.session_expires_at - Date.now(), 0x7fffffff);
+        if (ms > 0) {
+            caSessionTimer = setTimeout(function () {
+                caApplySessionState(bar);
+            }, ms);
+        }
+    }
+}
+
 // Returns the extension's floating button bar, creating it once on first use.
 // EMSCharts pages no longer expose a stable header element to attach to, so the
 // AutoComplete buttons live in their own fixed-position, draggable toolbar.
@@ -38,6 +83,7 @@ function caToolbar(skipDefaults) {
     if (!bar.length) {
         bar = jQuery('<div id="ca-toolbar" class="ca-vertical"></div>').appendTo('body');
         jQuery('<div id="ca-qa-film"></div>').appendTo(bar);
+        jQuery('<div id="ca-login-film"></div>').appendTo(bar);
         var header = jQuery('<div id="ca-header"></div>').appendTo(bar);
         var handle = jQuery('<div id="ca-drag" title="Drag to move">⠿</div>').appendTo(header);
         jQuery('<div id="ca-reset" title="Reset position">↺</div>')
@@ -60,6 +106,10 @@ function caToolbar(skipDefaults) {
             }
             if ('ca_theme' in changes) {
                 caApplyTheme(bar, changes.ca_theme.newValue);
+            }
+            if ('ca_session' in changes) {
+                caSetSession(changes.ca_session.newValue);
+                caApplySessionState(bar);
             }
         });
         if (!skipDefaults)
@@ -458,6 +508,7 @@ function caOnPage(page) {
 // persisted handler can never act on the wrong page.
 function caActive(page) {
     if (!chrome.runtime || !chrome.runtime.id) return false;
+    if (!caHasSession()) return false;
     return caOnPage(page);
 }
 
@@ -536,6 +587,8 @@ if (typeof module !== 'undefined' && module.exports) {
         caToolbar,
         caOnPage,
         caActive,
+        caHasSession,
+        caSetSession,
         caHealthCheck,
     };
 }

@@ -1,18 +1,23 @@
 # Privacy Policy — EMSCharts Assist
 
-_Last updated: June 2026_
+_Last updated: August 2026_
 
 ## What this extension does
 
-EMSCharts Assist is a Chrome browser extension that fills in fields on EMSCharts patient care reports (PCRs) with default values you configure.
+EMSCharts Assist is a Chrome browser extension that fills in fields on EMSCharts patient care reports (PCRs) with default values you configure. To restrict use to authorized personnel, it requires you to sign in before the tools are enabled.
 
 ## Data we collect
 
-**We collect nothing.**
+To verify that you're authorized to use the extension, signing in sends the following to the extension's authentication service (hosted on [Supabase](https://supabase.com)) over HTTPS:
 
-- No personal information is collected, stored, or transmitted.
-- No patient data, PCR field values, or report content is ever read, recorded, or sent anywhere.
-- The extension has no backend server and makes no network requests.
+- **Your email address and password**, when you create an account or sign in; or
+- **A temporary access code**, if you sign in with one instead.
+
+That is the only data transmitted, and only at sign-in.
+
+- **No patient data.** No PCR field values, report content, or protected health information (PHI) is ever read, recorded, or transmitted. The login carries only your account credentials — never anything from any report.
+- **Passwords are never stored by the extension.** Your password is sent to the authentication service (which hashes it) and is not kept on your device. After a successful sign-in, only a session token — and, if you tick "Remember my email", your email address — are stored locally in your browser (`chrome.storage.local`).
+- **Sessions.** A successful sign-in keeps you authorized for 1 month (or, for an access code, until the code expires), after which you sign in again.
 
 ## Data you store locally
 

@@ -10,7 +10,7 @@
 
 ## What this project is
 
-A Chrome MV3 extension that injects an **AutoComplete** toolbar and a **Clear Fields** button into EMSCharts PCR pages. AutoComplete reads user-configured defaults from `chrome.storage.sync` and fills in matching form fields. Clear Fields blanks those same fields after a confirmation prompt. A **QA Mode** toggle (in the extension popup) freezes the toolbar so no buttons can be clicked during chart review. No patient data is ever stored or transmitted.
+A Chrome MV3 extension that injects an **AutoComplete** toolbar and a **Clear Fields** button into EMSCharts PCR pages. AutoComplete reads user-configured defaults from `chrome.storage.sync` and fills in matching form fields. Clear Fields blanks those same fields after a confirmation prompt. A **QA Mode** toggle (in the extension popup) freezes the toolbar so no buttons can be clicked during chart review. A **login gate** (email+password or a time-limited access code, backed by Supabase) disables the toolbar until an authorized user signs in — see [Authentication / login gate](#authentication--login-gate). No patient data is ever stored or transmitted — only login credentials, at sign-in.
 
 ## Architecture
 
@@ -21,13 +21,18 @@ src/
   chartassist.js     — Shared helpers loaded before every page script
   chartassist.css    — Shared styles injected into EMSCharts pages
   options.html/.js   — Settings UI; saves defaults to chrome.storage.sync
-  popup.html/.js     — Extension popup; hosts the QA Mode and dark-mode toggles
+  popup.html/.js     — Extension popup; login UI + QA Mode and dark-mode toggles
+  auth.js            — Supabase login helpers (loaded in the popup only)
   page1.js           — Content script for EMSCharts page 1 (incident/unit info)
   page2.js           — Content script for EMSCharts page 2 (dispatch/HPI)
   page3.js           — Content script for page 3 (neuro/airway)
   page4.js           — Content script for page 4 (cardiac/respiratory)
   page5.js           — Content script for page 5 (physical exam)
   page8.js           — Content script for page 8 (billing/narrative)
+
+supabase/            — Login backend (deployed separately; see supabase/README.md)
+  schema.sql         — tables, RLS, domain-allowlist trigger, redeem_access_code()
+  functions/redeem-code/ — Edge Function that validates access codes server-side
 ```
 
 ### Page 1 (`page1.js`)
@@ -69,6 +74,27 @@ When QA Mode is turned off the toolbar's current position is written to `ca_tool
 **Race condition note:** toolbar position restore and QA Mode check are merged into a single `caApplyInitialState` call (one `chrome.storage.local.get` for both keys). Previously they were two separate async calls whose callbacks could resolve in either order, causing QA Mode's position reset to be undone by a late-resolving position restore.
 
 jQuery is **vendored** at `src/jquery.min.js` (a deliberately version-less filename so updates are an in-place overwrite — the manifest references never change). The actual version lives in the file's banner comment, in `README.md`, and in update PR titles.
+
+## Authentication / login gate
+
+The toolbar is gated on a valid **login session**. Until a user signs in, every page script's actions are inert and a lock overlay covers the toolbar.
+
+**Surfaces:**
+
+- **`popup.html` / `popup.js`** — the sign-in UI. A signed-out view (email + password sign-in, a self-service **Create account** form and a **Forgot-password** reset flow — both switched via `showAuthMode('signin'|'signup'|'reset')` — a "Remember my email" checkbox, and a collapsible access-code field) and a signed-in view (identity, expiry, Sign out) toggle via `render()` on the `ca_session` state. `popup.html` loads `auth.js` **before** `popup.js`. The theme block stays wired first (unchanged).
+- **`auth.js`** — loaded in the popup **only** (PCR pages never call the network). Holds the Supabase config constants (`SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SESSION_TTL_HOURS = 24 * 30` ~1 month, and the optional `ALLOWED_EMAIL_DOMAINS` client-side hint) and the helpers: `caSignIn`, `caSignUp`, `caRequestPasswordReset` / `caConfirmPasswordReset` (self-service reset via an emailed 6-digit OTP), `caRefreshSession`, `caRedeemCode`, `caSignOut`, the pure `caSessionValid` / `caEmailDomainAllowed`, and the remember-email helpers. All network calls are plain `fetch` against Supabase REST endpoints — no SDK, matching the vendored-jQuery approach. Exposes `caSessionValid` / `caEmailDomain` / `caEmailDomainAllowed` / `SESSION_TTL_HOURS` via the CommonJS test shim.
+- **`chartassist.js`** — the in-page gate. It caches the session (`caSession`, primed in `caApplyInitialState`, kept fresh by the `storage.onChanged` listener alongside `ca_qa_mode`/`ca_theme`), locks the toolbar via a `#ca-login-film` overlay + `.ca-locked` class (`caApplySessionState`, which also arms a `setTimeout` so the bar locks the instant the session lapses with no storage event), and gates `caActive(page)` with a local `caHasSession()` check. `caHasSession` **mirrors** `auth.js`'s `caSessionValid` on purpose, so PCR pages need not load `auth.js`. `caSetSession` is exported for tests.
+- **`options.html` / `options.js`** — the Options page is reachable outside the popup (Chrome's own "Options" entry, `chrome://extensions`, or a direct URL), so it enforces the same gate: a full-page `#ca-options-gate` overlay (shown by default = **fail-closed**) covers the settings until a valid `ca_session` exists. `ca_apply_options_gate` mirrors `caSessionValid` (like chartassist.js), re-checks on `storage.onChanged` + a timer, and — opened as a plain file with no extension context — shows the settings (nothing to gate). The gate wiring lives in the browser-only `else` branch, so tests are unaffected.
+
+**Session model** (`chrome.storage.local` key `ca_session`): `{ access_token, refresh_token, session_expires_at, email|null, source }`. `session_expires_at` (epoch-ms) is the **single source of truth** for the gate. A user login stamps it 1 month (30 days) ahead; `caRefreshSession` swaps the Supabase access token **without** moving it (so a revoked/deactivated account drops within one refresh cycle while the 1-month cap still holds). An access-code session is capped by the code's own `expires_at`. Remember-email stores **only the email** under `ca_remember_email` — never the password.
+
+**Backend (`supabase/`):** accounts are Supabase's built-in `auth.users`. A BEFORE-INSERT `enforce_allowed_domain` trigger gates sign-up — it admits an email whose full address is in `allowed_emails` (one-off individuals) or whose domain is in `allowed_domains`, rejecting the rest — so crews self-register from the popup (needs Supabase Auth's "Allow new users to sign up" on). `access_codes` + the `redeem_access_code` SQL function implement time-limited codes, invoked by the `redeem-code` Edge Function (deployed `--no-verify-jwt`, using the **service-role** key); RLS with no public policies keeps those tables unreadable by the publishable key. The extension ships only the **publishable key** (`sb_publishable_…`, public by design) — the service-role key lives only in the function's env. Configure `SUPABASE_URL`/`SUPABASE_PUBLISHABLE_KEY` in `auth.js` and the host in `manifest.json`. Full schema, RLS, and setup: `supabase/README.md`.
+
+**Cooperative model:** the gate runs client-side, so it controls access for cooperative users (your crews) and honors expiry/revocation, but is **not** proof against a determined technical bypass — accepted by design. Do not describe it as bypass-proof.
+
+**Admin console (`admin.html` / `admin.js`):** a separate, role-gated page (not Options) for crew admins to manage their org's allow-list and view members. Reached via an admin-only **Admin** button in the popup (shown from a cached `ca_admin` flag, then revalidated via `caGetProfile`/`caIsAdminRole`) or a direct URL; otherwise a fail-closed `#ca-admin-gate` — like the Options gate but also requiring an admin **role** — covers it. It calls Supabase over PostgREST with the user's token, so **RLS is the real boundary** (the gate is only UX). Multi-tenancy in `supabase/schema.sql`: `orgs`, `profiles` (`user_id`/`org_id`/`role`/`email`), `org_id` on the allow-list tables, `auth_org_id()`/`auth_is_admin()` SECURITY-DEFINER helpers (avoid RLS recursion), a `my_profile()` RPC (`caGetProfile`), and a `handle_new_user()` trigger that provisions each profile; super-admins assign roles by SQL. Two removals, both server-side and destructive: deleting an **allowed_email** deletes the account too (revoke); the **Members** Remove (`remove_member` RPC) deletes the account but keeps the pre-approval. Details in `supabase/README.md`.
+
+**eslint:** `auth.js`'s exported helpers are registered as `caAuthHelpers` (consumed by `popup.js`); `auth.js` is added to the `varsIgnorePattern: '^ca'` group so its cross-file `ca*` helpers aren't flagged unused. New popup-consumed auth helpers must be added to `caAuthHelpers`.
 
 ## Dependency updates (CI)
 

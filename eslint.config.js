@@ -25,6 +25,24 @@ const caHelpers = {
     caRestorePosition: 'readonly',
 };
 
+// Auth helpers defined in auth.js and consumed by popup.js and admin.js (auth.js
+// is loaded before each in their HTML).
+const caAuthHelpers = {
+    caGetSession: 'readonly',
+    caSessionValid: 'readonly',
+    caSignIn: 'readonly',
+    caSignUp: 'readonly',
+    caRequestPasswordReset: 'readonly',
+    caConfirmPasswordReset: 'readonly',
+    caRefreshSession: 'readonly',
+    caRedeemCode: 'readonly',
+    caSignOut: 'readonly',
+    caSetRememberedEmail: 'readonly',
+    caGetRememberedEmail: 'readonly',
+    caGetProfile: 'readonly',
+    caIsAdminRole: 'readonly',
+};
+
 module.exports = [
     { ignores: ['src/jquery.min.js', 'build/**', 'node_modules/**'] },
     {
@@ -51,8 +69,11 @@ module.exports = [
     // chartassist.js defines the ca* helper API consumed by the page scripts,
     // so those top-level definitions read as "unused" within this file — ignore
     // the ca-prefixed names here (genuine unused locals are still reported).
+    // chartassist.js and auth.js both define ca* helpers consumed by other files,
+    // so those top-level definitions read as "unused" within each file — ignore
+    // the ca-prefixed names here (genuine unused locals are still reported).
     {
-        files: ['src/chartassist.js'],
+        files: ['src/chartassist.js', 'src/auth.js'],
         rules: {
             'no-unused-vars': [
                 'warn',
@@ -64,5 +85,21 @@ module.exports = [
     {
         files: ['src/page*.js'],
         languageOptions: { globals: { ...caHelpers } },
+    },
+    // popup.js consumes the auth helpers defined in auth.js.
+    {
+        files: ['src/popup.js'],
+        languageOptions: { globals: { ...caAuthHelpers } },
+    },
+    // admin.js consumes the auth helpers + Supabase config from auth.js.
+    {
+        files: ['src/admin.js'],
+        languageOptions: {
+            globals: {
+                ...caAuthHelpers,
+                SUPABASE_URL: 'readonly',
+                SUPABASE_PUBLISHABLE_KEY: 'readonly',
+            },
+        },
     },
 ];
