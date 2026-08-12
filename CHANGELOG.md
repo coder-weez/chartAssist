@@ -67,6 +67,15 @@ The per-version detail for each of these is in the entries below.
   Security isolating each admin to their own org; the people an admin approves
   self-register through the existing Create-account flow.
 
+### Security
+
+- **A crew admin can no longer remove someone in another organisation.** Removing
+  an allow-listed email deletes that person's account, but the deletion matched
+  only on the email address — so an admin could delete a user in another org by
+  adding and then removing that address. Account deletion is now scoped to the
+  admin's own org, the same boundary the Members-list Remove already enforces.
+  Admins can still add one-off outside addresses that match no approved domain.
+
 ## 1.3.0.0 — unreleased
 
 ### Added
