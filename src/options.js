@@ -132,7 +132,6 @@ function get_user_values() {
         var field_id = keys[i];
         var field_type = opts[field_id];
         if (typeof field_id == 'undefined' || field_id == 'undefined') continue;
-        console.debug('Getting user value for: ' + field_id + '(' + field_type + ')');
 
         if (field_type == 'checkgroup') {
             var checked = document.querySelectorAll('[data-group="' + field_id + '"]:checked');
@@ -198,8 +197,7 @@ function show_status(msg, isError) {
 
 function save_options() {
     var values = get_user_values();
-    console.info('Saving Values:');
-    console.debug(values);
+    console.info('Saving Values');
 
     chrome.storage.sync.set(values, function () {
         show_status('OPTIONS SAVED');
@@ -212,7 +210,6 @@ function restore_options() {
     var opt_keys = Object.keys(opts);
 
     chrome.storage.sync.get(opt_keys, function (items) {
-        console.debug(items);
         for (var i = 0; i < opt_keys.length; i++) {
             var field_id = opt_keys[i];
             var field_type = opts[field_id];
