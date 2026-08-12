@@ -268,9 +268,22 @@ grant select on public.orgs to authenticated;
 -- Removing a pre-approval revokes the person. When an allowed_emails row is
 -- deleted, delete the matching account too — their profiles row then cascades
 -- away via its ON DELETE CASCADE FK to auth.users. SECURITY DEFINER so it may
--- modify auth.users regardless of who triggered the delete (a crew admin, whose
--- RLS scopes them to their own org's rows). No-op when the email never
--- registered an account. The user's session ends within one refresh cycle.
+-- modify auth.users regardless of who triggered the delete.
+--
+-- SECURITY: the deletion is scoped to the pre-approval's own org — it removes an
+-- account only when that user's profile sits in old.org_id. The email column is
+-- deliberately free-form (crew admins add one-off outside addresses that match
+-- no domain), so email alone cannot bound WHICH account gets destroyed: without
+-- the org match, a crew admin could insert ANY address into their own org, then
+-- delete it, and this trigger's global email match would delete that account in
+-- ANOTHER org. Matching on org as well as email confines a crew admin to their
+-- own tenant — the same boundary remove_member() enforces. `is not distinct
+-- from` so a global (org_id NULL) pre-approval still lines up with a NULL-org
+-- profile.
+--
+-- No-op when the email never registered an account, or when the account's
+-- profile is in a different org. The user's session ends within one refresh
+-- cycle.
 -- ---------------------------------------------------------------------------
 create or replace function public.remove_user_on_allowed_email_delete()
 returns trigger
@@ -279,7 +292,11 @@ security definer
 set search_path = public
 as $$
 begin
-    delete from auth.users where lower(email) = lower(old.email);
+    delete from auth.users u
+    using public.profiles p
+    where p.user_id = u.id
+      and lower(u.email) = lower(old.email)
+      and p.org_id is not distinct from old.org_id;
     return old;
 end;
 $$;
