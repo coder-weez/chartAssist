@@ -33,6 +33,9 @@ src/
 supabase/            — Login backend (deployed separately; see supabase/README.md)
   schema.sql         — tables, RLS, domain-allowlist trigger, redeem_access_code()
   functions/redeem-code/ — Edge Function that validates access codes server-side
+  email-templates/   — HTML bodies for the Supabase auth emails (confirm/reset/changed)
+
+site/                — Static pages hosted on Cloudflare Pages (brand + /email-confirmed)
 ```
 
 ### Page 1 (`page1.js`)
@@ -98,6 +101,20 @@ The toolbar is gated on a valid **login session**. Until a user signs in, every 
 **Account approvals & role management (Pending requests / Members cards):** self-registered users without a pre-approved email/domain arrive as `status='pending'` profiles in the crew they picked. The console lists them with a plain `profiles?status=eq.pending` read (the existing `profiles_org_read` policy already scopes it to the admin's org — no new policy) and acts through admin- and org-gated SECURITY-DEFINER RPCs: `approve_signup(p_user_id)` flips status to `approved` (the person then signs in with the password they set at sign-up), and `deny_signup(p_user_id)` deletes the pending account. `set_member_role(p_user_id, p_role)` switches an **approved** member between `member`, `qa_auditor` (a QA-review role — QA Mode but no admin powers), and `crew_admin` — it refuses `super_admin` (a SQL-only role), a `super_admin` target, and the caller's **own** role (no self-lockout). The Members list filters to `status=eq.approved` and renders an inline role `<select>` for editable rows (plain text for self and super_admins). All three RPCs are `grant execute … to authenticated` **only** — clients never write `profiles` directly (its RLS stays read-only), the same pattern as `remove_member`. `admin.js` calls them via `admin_fetch('/rest/v1/rpc/…')`; each card has its own status line (`showPendingMsg` / `showMembersMsg`). **Live sync across admins:** since there's no realtime SDK (plain `fetch` only), the console re-fetches the shared lists (`loadEmails`/`loadPending`/`loadMembers`) on a 20s `setInterval` (`startConsolePolling`, armed only while the gate is open, cleared when it locks) and on tab focus/visibility, so one admin's approve/deny/role/removal shows up in another admin's open console — `refreshConsole` skips the redraw while a `<select>` is focused so it can't yank a dropdown out from under an in-progress change.
 
 **eslint:** `auth.js`'s exported helpers are registered as `caAuthHelpers` (consumed by `popup.js`); `auth.js` is added to the `varsIgnorePattern: '^ca'` group so its cross-file `ca*` helpers aren't flagged unused. New popup-consumed auth helpers must be added to `caAuthHelpers`.
+
+## Hosting & external services (Supabase · Resend · Cloudflare)
+
+Beyond the Chrome extension itself, the login gate depends on three hosted services. None of them ship in the extension package (`release` uses `--source=src`); they are configured out-of-band, and the full setup lives in `supabase/README.md`.
+
+- **Supabase** — the auth backend. Built-in `auth.users` for accounts/passwords, the `public` schema (`orgs` / `profiles` / allow-lists / `access_codes`) with RLS + SECURITY-DEFINER RPCs (`supabase/schema.sql`), and the `redeem-code` Edge Function. The extension talks to it over plain `fetch` (PostgREST + `/auth/v1`) and ships only the **publishable** key. Configured via `SUPABASE_URL` / `SUPABASE_PUBLISHABLE_KEY` in `auth.js` and the host in `manifest.json`.
+- **Resend** — transactional email. Supabase's built-in mailer is test-only (rate-limited, org-members only), so Resend is wired as Supabase's **custom SMTP** (`smtp.resend.com`, sender `noreply@grtechsupport.com`) to deliver the email-confirmation and password-reset codes. Both flows use a 6-digit **OTP** (`{{ .Token }}`), not a magic link, so the email carries no URL to mismatch the sending domain — bodies live in `supabase/email-templates/`. No email is ever sent from the extension; Supabase sends it server-side.
+- **Cloudflare** — DNS + web hosting across the three domains:
+    - **DNS / email-auth records** for the sending domain `grtechsupport.com` — SPF/DKIM/DMARC that make Resend mail pass authentication and stay out of spam.
+    - **Email Routing** — receives `support@grtechsupport.com` (forwarding), independent of Resend's `send.` sending subdomain.
+    - **Pages** — hosts `site/` on `gardnerrespondertechnologies.com`: the brand `index.html` at `/`, and `email-confirmed.html` at `/email-confirmed` (a fallback landing page for link-based confirmation; the default flow confirms with the in-popup code instead).
+    - **Redirect Rule** — `grteches.com` 301-redirects to the brand domain.
+
+**Domain roles:** `gardnerrespondertechnologies.com` = brand + site + Supabase Site URL; `grtechsupport.com` = email sending + support; `grteches.com` = short alias / redirect. The gate stays **cooperative** regardless of hosting — these services enforce email delivery and (via RLS) data isolation, not a bypass-proof client.
 
 ## Dependency updates (CI)
 

@@ -139,6 +139,24 @@ creating crews, assigning the top-level roles), and generating time-limited acce
 codes. Once set up, put your project URL and publishable key in `src/auth.js` and
 `src/manifest.json`.
 
+**Hosting & services (for administrators).** The login and its emails rely on three
+hosted services — none of which ship inside the extension; they're configured once
+(full setup in [`supabase/README.md`](supabase/README.md)):
+
+- **Supabase** — stores accounts, crews, roles, and access codes and handles
+  sign-in. The extension talks to it directly and ships only its public key.
+- **Resend** — sends the email-confirmation and password-reset messages (each a
+  6-digit code, not a link), wired in as Supabase's email provider and sent from
+  `grtechsupport.com`.
+- **Cloudflare** — runs DNS for the domains — including the SPF/DKIM/DMARC records
+  that keep those emails out of spam — receives `support@grtechsupport.com`, and
+  hosts the small landing pages under `site/` (on `gardnerrespondertechnologies.com`).
+
+The three domains split by purpose: `gardnerrespondertechnologies.com` is the brand
+site, `grtechsupport.com` sends the email and receives support, and `grteches.com`
+is a short alias that redirects to the brand. No patient data touches any of these —
+only account credentials at sign-in.
+
 ## How settings are stored
 
 Your defaults are saved with Chrome's built-in
