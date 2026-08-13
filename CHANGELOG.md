@@ -20,6 +20,10 @@ publishes a single build, not each version separately.
   an email link — fewer steps, and the email is far less likely to hit your junk
   folder.
 
+- **"You've been approved" email.** When a crew admin approves your access from the
+  Admin console, you now get an email letting you know you can sign in — no more
+  guessing and re-checking.
+
 - **No more surprise sign-outs on hospital or venue Wi-Fi.** Networks with a
   "sign in to this Wi-Fi" page used to log you out of ChartAssist; now they don't.
 - **QA Mode stays put.** Opening the popup on a shaky connection no longer turns QA

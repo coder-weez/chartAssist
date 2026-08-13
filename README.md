@@ -127,13 +127,11 @@ A normal sign-in keeps you authorized for **1 month** (across browser restarts);
 after that you sign in again. You can sign out any time from the popup. No patient
 data is involved in signing in — only your account credentials.
 
-**When you'll get an email.** ChartsAssist only emails you about your own account,
-in three cases: a **code to confirm your email** when you create an account, a
-**password-reset code** if you use "Forgot password?", and a **notice if your
-password is changed**. You will **not** get an email when a crew admin approves your
-access — you find that out by signing in (before approval you see a "waiting for
-approval" note; once approved, sign-in just works). Emails come from
-`grtechsupport.com`.
+**When you'll get an email.** ChartsAssist only emails you about your own account:
+a **code to confirm your email** when you create an account, a **password-reset
+code** if you use "Forgot password?", a **notice if your password is changed**, and
+a **"you've been approved" notice** once a crew admin approves your access (so you
+know you can sign in). Emails come from `grtechsupport.com`.
 
 **For administrators:** the login is backed by a small
 [Supabase](https://supabase.com) project (managed Postgres + authentication),

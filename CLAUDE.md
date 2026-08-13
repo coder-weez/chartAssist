@@ -33,6 +33,7 @@ src/
 supabase/            — Login backend (deployed separately; see supabase/README.md)
   schema.sql         — tables, RLS, domain-allowlist trigger, redeem_access_code()
   functions/redeem-code/ — Edge Function that validates access codes server-side
+  functions/notify-approved/ — Edge Function that emails a user on approval (Resend API)
   email-templates/   — HTML bodies for the Supabase auth emails (confirm/reset/changed)
 
 site/                — Static pages hosted on Cloudflare Pages (brand + /email-confirmed)
@@ -107,7 +108,7 @@ The toolbar is gated on a valid **login session**. Until a user signs in, every 
 Beyond the Chrome extension itself, the login gate depends on three hosted services. None of them ship in the extension package (`release` uses `--source=src`); they are configured out-of-band, and the full setup lives in `supabase/README.md`.
 
 - **Supabase** — the auth backend. Built-in `auth.users` for accounts/passwords, the `public` schema (`orgs` / `profiles` / allow-lists / `access_codes`) with RLS + SECURITY-DEFINER RPCs (`supabase/schema.sql`), and the `redeem-code` Edge Function. The extension talks to it over plain `fetch` (PostgREST + `/auth/v1`) and ships only the **publishable** key. Configured via `SUPABASE_URL` / `SUPABASE_PUBLISHABLE_KEY` in `auth.js` and the host in `manifest.json`.
-- **Resend** — transactional email. Supabase's built-in mailer is test-only (rate-limited, org-members only), so Resend is wired as Supabase's **custom SMTP** (`smtp.resend.com`, sender `noreply@grtechsupport.com`) to deliver the email-confirmation and password-reset codes. Both flows use a 6-digit **OTP** (`{{ .Token }}`), not a magic link, so the email carries no URL to mismatch the sending domain — bodies live in `supabase/email-templates/`. No email is ever sent from the extension; Supabase sends it server-side.
+- **Resend** — transactional email. Supabase's built-in mailer is test-only (rate-limited, org-members only), so Resend is wired as Supabase's **custom SMTP** (`smtp.resend.com`, sender `noreply@grtechsupport.com`) to deliver the email-confirmation and password-reset codes. Both flows use a 6-digit **OTP** (`{{ .Token }}`), not a magic link, so the email carries no URL to mismatch the sending domain — bodies live in `supabase/email-templates/`. No email is ever sent from the extension; Supabase sends it server-side. The `notify-approved` Edge Function additionally sends the "you've been approved" notice **directly via the Resend API** (not SMTP), using the same verified domain and a `RESEND_API_KEY` secret.
 - **Cloudflare** — DNS + web hosting across the three domains:
     - **DNS / email-auth records** for the sending domain `grtechsupport.com` — SPF/DKIM/DMARC that make Resend mail pass authentication and stay out of spam.
     - **Email Routing** — receives `support@grtechsupport.com` (forwarding), independent of Resend's `send.` sending subdomain.
@@ -122,7 +123,9 @@ Beyond the Chrome extension itself, the login gate depends on three hosted servi
 2. **Password-reset code** — when the user starts "Forgot password?" (`caRequestPasswordReset` → 6-digit code, `caConfirmPasswordReset`).
 3. **Password-changed notice** — Supabase's built-in security notification, sent after a reset sets a new password.
 
-**No email is sent for the custom crew-admin workflow** — `approve_signup` / `deny_signup` / `set_member_role` / `remove_member` only change `profiles.status`/`role`, which Supabase Auth knows nothing about. So an **approved user finds out by signing in**, not by email (adding a "you're approved" email would need a webhook + Edge Function calling the Resend API). The extension never triggers magic-link, invite, email-change, or reauthentication emails either. Access-code redemption sends nothing.
+4. **"You've been approved" notice** — when a crew admin **approves** a pending sign-up **from the console**, `admin.js` fire-and-forget calls the JWT-verified `notify-approved` Edge Function, which re-checks the caller is an admin, derives the recipient **server-side** from `user_id`, and sends via the **Resend API** (not SMTP — approval isn't a Supabase Auth event). Best-effort: a send failure never blocks the approve. Ad-hoc **SQL** approvals don't email.
+
+No email is sent for **deny / role change / member removal** — those only change `profiles.status`/`role`, which Supabase Auth knows nothing about. The extension never triggers magic-link, invite, email-change, or reauthentication emails either, and access-code redemption sends nothing.
 
 ## Dependency updates (CI)
 

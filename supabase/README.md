@@ -8,6 +8,8 @@ is no server code to run beyond one Edge Function.
   the atomic, rate-limited `redeem_access_code()` function.
 - `functions/redeem-code/index.ts` — the Edge Function that validates access
   codes with the service-role key (and forwards the caller IP for rate limiting).
+- `functions/notify-approved/index.ts` — the Edge Function that emails a user
+  "you've been approved" when a crew admin approves them (sends via the Resend API).
 
 ## One-time setup
 
@@ -46,6 +48,21 @@ is no server code to run beyond one Edge Function.
     `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are injected automatically for
     deployed functions — you do **not** put the service-role key anywhere in this
     repo.
+
+    Also deploy the **approval-notification** function — this one **keeps JWT
+    verification** (only a signed-in admin may call it) and needs your Resend API
+    key so it can send the "you've been approved" email:
+
+    ```bash
+    supabase functions deploy notify-approved --project-ref YOUR-PROJECT-REF
+    supabase secrets set RESEND_API_KEY=re_your_key --project-ref YOUR-PROJECT-REF
+    ```
+
+    It re-checks the caller is a crew admin (via `my_profile()`), derives the
+    recipient's email **server-side** from the user id, and sends via the Resend API.
+    `admin.js` calls it fire-and-forget right after **Approve**, so a mail hiccup
+    never blocks the approval. (The `RESEND_API_KEY` is the same key used as the
+    custom-SMTP password — see _Email delivery_ below.)
 
 5. **Wire the extension to your project.** From Dashboard → **Project Settings**,
    copy the **Project URL** (under **API**) and the **Publishable** key (it starts
@@ -311,6 +328,8 @@ requests** and either:
 
 - **Approve** (`approve_signup`) — flips the profile to `approved`; the person then
   signs in with the password they already set at sign-up. No second password step.
+  Approving from the console also emails them a "you've been approved" notice (the
+  `notify-approved` function, best-effort). Approving via the SQL runbook does not.
 - **Deny** (`deny_signup`) — deletes the pending account (they can request again).
 
 Pre-approved emails/domains skip all of this and are `approved` immediately. The

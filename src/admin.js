@@ -403,8 +403,23 @@ function approveSignup(userId, email) {
                 return;
             }
             showPendingMsg('Approved ' + email + '. They can now sign in.', 'ok');
+            notifyApproved(userId); // best-effort "you've been approved" email
             loadPending();
             loadMembers();
+        },
+    );
+}
+
+// Fire-and-forget: email the just-approved user that they can sign in, via the
+// notify-approved Edge Function (which re-checks admin + derives the recipient
+// server-side). Best-effort — the approval already succeeded, so a failure is only
+// logged, never surfaced.
+function notifyApproved(userId) {
+    admin_fetch(
+        '/functions/v1/notify-approved',
+        { method: 'POST', body: JSON.stringify({ user_id: userId }) },
+        function (err) {
+            if (err) console.warn('notify-approved failed:', err);
         },
     );
 }
