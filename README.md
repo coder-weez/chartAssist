@@ -1,7 +1,7 @@
 EMSCharts Assist
 ================
 
-EMSCharts Assist is a free extension for the Chrome browser which allows you to store defaults for emscharts.com patient care reports.
+EMSCharts Assist is a Chrome browser extension that lets you store defaults for emscharts.com patient care reports and fill them in with one click. Access is gated: the tools are disabled until you sign in with an **approved crew account** (or a time-limited access code). The source in this repository is proprietary — see [LICENSE.txt](LICENSE.txt) — and is published here for authorized crews and contributors, not as open-source software.
 
 ## Disclaimer
 
@@ -45,7 +45,26 @@ responsibility when using EMSCharts and any tools that interact with it.
 > - **GitHub Actions and the npm release tooling** (`chrome-webstore-upload-cli`)
 >   are watched by Dependabot (`.github/dependabot.yml`).
 
-## Install from Source
+## Install (for crew members)
+
+Most crew members don't need the source. Once your crew's admin has published or
+shared the extension:
+
+1. **Add it to Chrome** — from the Chrome Web Store listing your admin gives you,
+   click **Add to Chrome**. (Pin it: click the puzzle-piece icon in the toolbar and
+   the pin next to EMSCharts Assist so its icon stays visible.)
+2. **Sign in** — click the EMSCharts Assist icon and sign in with your approved
+   crew email and password, or an access code your admin gave you. If your email
+   isn't pre-approved, use **Create account**, pick your crew, and your request goes
+   to your crew admin — you'll sign in once they approve it.
+3. **Set your defaults** — use **Open Options** in the popup to fill in the values
+   you want auto-filled. Then open a PCR on emscharts.com and use the toolbar's
+   buttons. **Always review every auto-filled value before saving.**
+
+## Install from Source (authorized crews / developers)
+
+The source is proprietary (see [LICENSE.txt](LICENSE.txt)); these steps are for
+authorized crews running their own build and for contributors.
 
 1. `git clone https://github.com/coder-weez/emsChartsAssist.git`
 2. Open `chrome://extensions/` in your browser
@@ -53,8 +72,9 @@ responsibility when using EMSCharts and any tools that interact with it.
 4. Select `Load Unpacked` in the upper-left corner
 5. Find the `emsChartsAssist` folder from the `git clone` step, and open the `src` directory
 
-After loading, click the extension icon and use the **Open Options** button in
-the popup to fill in your default values. These are saved to `chrome.storage.sync`.
+After loading, click the extension icon and sign in, then use the **Open Options**
+button in the popup to fill in your default values. These are saved to
+`chrome.storage.sync`.
 **Dark mode:** the extension follows your system light/dark theme by default. A
 sun/moon button in both the popup header and the Options page header lets you
 force either theme — it's a single, remembered setting that applies everywhere:
@@ -85,7 +105,7 @@ Page 1 (incident/unit info) has a hard-coded toolbar with two sections — no Op
 
 ### QA Mode
 
-Click the extension icon in the Chrome toolbar to open the popup. The **QA Mode** toggle freezes the toolbar — all buttons are covered by an overlay and cannot be clicked, preventing accidental form changes while reviewing a completed chart. When QA Mode is enabled the toolbar snaps back to its default position in the top-right corner. When disabled, the toolbar returns to wherever you last left it.
+Click the extension icon in the Chrome toolbar to open the popup. The **QA Mode** toggle freezes the toolbar — all buttons are covered by an overlay and cannot be clicked, preventing accidental form changes while reviewing a completed chart. When QA Mode is enabled the toolbar snaps back to its default position in the top-right corner. When disabled, the toolbar returns to wherever you last left it. The toggle is shown only to **crew admins** and the **QA auditor** role (a crew admin assigns roles from the Admin console); other users don't see it.
 
 ## Sign in
 
@@ -94,10 +114,11 @@ sign in, the toolbar on EMSCharts stays locked — a "Sign in to enable" overlay
 covers the buttons. Click the extension icon and sign in from the popup:
 
 - **Email + password** — each person has their own account. First time? Click
-  **Create an account** and register with your work email; anyone at an approved
-  domain (for example `@vfambulence.com`) is accepted, other domains are rejected.
-  Tick **Remember my email** to pre-fill it next time (your password is never
-  stored).
+  **Create an account** and enter your work email. If your email (or its domain) is
+  already approved you're signed in right away; if not, a **Your crew** picker
+  appears — choose your crew and your request goes to its admin, and you can sign in
+  once they approve it. Tick **Remember my email** to pre-fill it next time (your
+  password is never stored).
 - **Access code** — a temporary code an administrator generates that unlocks the
   extension for a set window (e.g. 24 hours), handy for ride-alongs or temporary
   crew. Enter it in the popup instead of an email/password.
@@ -108,12 +129,14 @@ data is involved in signing in — only your account credentials.
 
 **For administrators:** the login is backed by a small
 [Supabase](https://supabase.com) project (managed Postgres + authentication),
-which must be configured before the extension can be used. See
-[`supabase/README.md`](supabase/README.md) for the one-time setup and the SQL
-snippets to approve a domain (or a one-off email) and generate time-limited access
-codes (crews create
-their own accounts from the popup).
-Once set up, put your project URL and publishable key in `src/auth.js` and
+which must be configured before the extension can be used. Once it's running,
+**crew admins** run their crew from an in-extension **Admin console** (the _Admin_
+button in the popup): pre-approve emails, **approve or deny** people who requested
+access, and **change a member's role** to grant or remove admin. See
+[`supabase/README.md`](supabase/README.md) for the one-time setup, the SQL snippets
+for the super-admin tasks that stay out of the console (approving a whole domain,
+creating crews, assigning the top-level roles), and generating time-limited access
+codes. Once set up, put your project URL and publishable key in `src/auth.js` and
 `src/manifest.json`.
 
 ## How settings are stored
@@ -162,11 +185,16 @@ share a standard set with colleagues.
 
 If the AutoComplete button doesn't fill anything:
 
-1. Make sure you've saved defaults in the **Options** page first.
-2. Open a supported PCR page, then open Chrome's DevTools console
-   (right-click the page &rarr; **Inspect** &rarr; **Console**) to check for
-   any errors logged by the extension.
-3. Reload the extension after making changes.
+1. **Make sure you're signed in.** The toolbar stays locked (a 🔒 "Sign in to
+   enable" overlay) until you sign in from the extension popup.
+2. **Set your defaults first.** On a fresh install nothing is configured, so a fill
+   click shows a _"No defaults configured yet"_ toast — open **Page Defaults** (or
+   **Options**) and fill in the values you want auto-filled.
+3. **Watch for a yellow warning toast** on the page (see below) — it means
+   EMSCharts changed and some fields couldn't be found.
+4. Reload the extension after changing settings.
+5. _Advanced:_ open Chrome's DevTools console (right-click the page &rarr;
+   **Inspect** &rarr; **Console**) to see the detailed errors the extension logs.
 
 ### "Expected field(s) were not found" warning
 
@@ -183,9 +211,11 @@ the selectors can be updated. (A weekly CI job also watches Zoll's public
 and opens a pull request whenever a new emsCharts version ships, as an early
 heads-up to re-check the fields.)
 
-## Contributing
+## Contributing & support
 
-Please report any issues by using the "Issues" tab above.
+Report bugs, questions, or field-drift warnings from the **Issues** tab above. For
+a **security or privacy vulnerability**, use the private channel described in
+[SECURITY.md](SECURITY.md) rather than a public issue.
 
-The original author is no longer active in EMS. If you're interested in
-maintaining/contributing/testing, see the contact in the project history.
+This project is maintained through this repository. If you'd like to help with
+maintaining, testing, or onboarding a crew, open an issue to reach the maintainers.

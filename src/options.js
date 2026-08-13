@@ -200,6 +200,13 @@ function save_options() {
     console.info('Saving Values');
 
     chrome.storage.sync.set(values, function () {
+        // chrome.storage.sync enforces a per-item (~8 KB) and total quota. A long
+        // pasted narrative can exceed it and the write silently fails — so surface
+        // the error instead of falsely reporting success.
+        if (chrome.runtime.lastError) {
+            show_status('SAVE FAILED: ' + chrome.runtime.lastError.message, true);
+            return;
+        }
         show_status('OPTIONS SAVED');
     });
 }
@@ -322,6 +329,12 @@ function migrate_legacy_keys(done) {
         function finish() {
             if (toRemove.length) {
                 chrome.storage.sync.remove(toRemove, function () {
+                    if (chrome.runtime.lastError) {
+                        console.warn(
+                            'migrate_legacy_keys: remove failed —',
+                            chrome.runtime.lastError.message,
+                        );
+                    }
                     if (done) done();
                 });
             } else if (done) {
@@ -333,7 +346,20 @@ function migrate_legacy_keys(done) {
             console.info('Migrating legacy option keys:', toRemove);
         }
         if (Object.keys(toSet).length) {
-            chrome.storage.sync.set(toSet, finish);
+            chrome.storage.sync.set(toSet, function () {
+                if (chrome.runtime.lastError) {
+                    // The renamed keys didn't persist (e.g. quota). Do NOT remove the
+                    // old keys — that would lose the user's saved values. Leave
+                    // storage untouched and continue loading.
+                    console.warn(
+                        'migrate_legacy_keys: set failed —',
+                        chrome.runtime.lastError.message,
+                    );
+                    if (done) done();
+                    return;
+                }
+                finish();
+            });
         } else {
             finish();
         }

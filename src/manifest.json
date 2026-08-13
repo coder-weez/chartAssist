@@ -1,9 +1,10 @@
 {
     "name": "EMSCharts Assist",
     "short_name": "ChartAssist",
-    "version": "1.4.0.0",
-    "version_name": "1.4.0.0 (Manifest V3)",
-    "description": "Autofills EMSCharts with defaults.",
+    "version": "1.6.0.0",
+    "version_name": "1.6.0.0 (Manifest V3)",
+    "description": "Auto-fill and clear EMSCharts PCR defaults in one click. Requires an approved crew account to sign in.",
+    "homepage_url": "https://github.com/coder-weez/emsChartsAssist",
     "manifest_version": 3,
     "minimum_chrome_version": "88",
     "icons": {

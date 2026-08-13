@@ -81,15 +81,33 @@ function caApplySessionState(bar) {
 function caToolbar(skipDefaults) {
     var bar = jQuery('#ca-toolbar');
     if (!bar.length) {
-        bar = jQuery('<div id="ca-toolbar" class="ca-vertical"></div>').appendTo('body');
+        // Start LOCKED (fail-closed): the session lives in async storage, so if the
+        // bar were created unlocked it would flash fully-enabled for a signed-out
+        // user (and a signed-in user's very first click could land before the cache
+        // primes). caApplyInitialState → caApplySessionState removes .ca-locked once
+        // a valid session is confirmed.
+        bar = jQuery('<div id="ca-toolbar" class="ca-vertical ca-locked"></div>').appendTo('body');
         jQuery('<div id="ca-qa-film"></div>').appendTo(bar);
         jQuery('<div id="ca-login-film"></div>').appendTo(bar);
         var header = jQuery('<div id="ca-header"></div>').appendTo(bar);
-        var handle = jQuery('<div id="ca-drag" title="Drag to move">⠿</div>').appendTo(header);
-        jQuery('<div id="ca-reset" title="Reset position">↺</div>')
+        var handle = jQuery(
+            '<div id="ca-drag" title="Drag to move" aria-label="Drag to move toolbar">⠿</div>',
+        ).appendTo(header);
+        // Reset is a real, keyboard-operable control (role=button + tabindex + Enter/
+        // Space), so keyboard/AT users can restore the toolbar's default position.
+        jQuery(
+            '<div id="ca-reset" title="Reset position" role="button" tabindex="0" ' +
+                'aria-label="Reset toolbar position">↺</div>',
+        )
             .appendTo(header)
             .on('click', function () {
                 caResetPosition(bar);
+            })
+            .on('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                    e.preventDefault();
+                    caResetPosition(bar);
+                }
             });
         caMakeDraggable(bar, handle);
         caApplyInitialState(bar);
@@ -205,7 +223,11 @@ function caFlash(selector) {
 function caToast(message) {
     var container = jQuery('#ca-toast-container');
     if (!container.length) {
-        container = jQuery('<div id="ca-toast-container"></div>').appendTo('body');
+        // role=status + aria-live so screen readers announce warnings (the container
+        // is pointer-events:none, which doesn't affect the live region).
+        container = jQuery(
+            '<div id="ca-toast-container" role="status" aria-live="polite"></div>',
+        ).appendTo('body');
     }
     var toast = jQuery('<div class="ca-toast"></div>').text(message).appendTo(container);
     setTimeout(function () {
@@ -220,6 +242,26 @@ function caToast(message) {
             }
         }, 300);
     }, 6000);
+}
+
+// First-run guidance. A brand-new user who has signed in but never opened the
+// Options page has NOTHING configured, so clicking a fill button would do nothing
+// visible and leave them confused. `s` is the chrome.storage.sync snapshot; when it
+// holds no non-empty value at all (a fresh install), show a single pointing-the-way
+// toast and return true so the caller can skip the no-op fills. Returns false once
+// any default exists, so it never nags a configured user (even if a given field
+// already matches). Checking for ANY value — rather than a per-page prefix — is
+// deliberate: some page-3 keys (gcs_eye_1, stroke_scale) carry no pg{N}_ prefix.
+function caNoDefaultsHint(s) {
+    var hasAny =
+        !!s &&
+        Object.keys(s).some(function (k) {
+            var v = s[k];
+            return v !== undefined && v !== null && String(v).trim() !== '';
+        });
+    if (hasAny) return false;
+    caToast('No defaults configured yet — click "Page Defaults" in the toolbar to set them.');
+    return true;
 }
 
 // Find the "ADD +" button that belongs to a specific popup field.
@@ -243,6 +285,11 @@ function caPopupAddButton(fieldName) {
 // Returns true if anything visible happened (fill or toast), false for silent no-ops.
 function caFillPopup(fieldName, value, friendlyName) {
     if (value === undefined || value === null || value === '') return false;
+    // Trim like caFill does — a trailing space in an Options value would otherwise
+    // defeat the case-insensitive equality check and fire a spurious "already has
+    // content" toast.
+    value = String(value).trim();
+    if (!value) return false;
     var input = jQuery('input[name="' + fieldName + '_text"]');
     if (!input.length) return false;
     var current = (input.val() || '').trim();
@@ -381,6 +428,10 @@ function caFillPertNeg(divId, value, friendlyName) {
     var params = pm ? pm[1] : '';
 
     caPertNegCatalog(f.typ, params).then(function (catalog) {
+        // The user may have navigated away (EMSCharts swaps pages without a reload)
+        // while this picklist fetch was in flight — don't write into a stale or
+        // replaced DOM, and bail if the extension context was invalidated.
+        if (!chrome.runtime || !chrome.runtime.id || !document.contains(span[0])) return;
         var ids = [],
             texts = [],
             custIds = [],
@@ -397,8 +448,18 @@ function caFillPertNeg(divId, value, friendlyName) {
             custIds.push(entry.custId);
             examVals.push(entry.examVal);
         });
-        if (missing.length)
+        if (missing.length) {
             console.warn('caFillPertNeg: no catalog match for', missing, 'in', f.typ);
+            // Surface it — otherwise the default is silently dropped (the picklist
+            // was unavailable, or the label doesn't match the facility's exact
+            // wording) while the user assumes it filled and saves it blank.
+            caToast(
+                (friendlyName || f.typ) +
+                    ' not filled: ' +
+                    missing.join(', ') +
+                    ' — check the spelling in Page Defaults, or try again.',
+            );
+        }
         if (!texts.length) return;
 
         var newText = texts.join(',');
@@ -462,7 +523,12 @@ function caFill(selector, value, friendlyName) {
         var current = ((el[0] && el[0].value) || '').trim();
         var trimmedValue = value.trim();
         if (current) {
-            if (current.toLowerCase().indexOf(trimmedValue.toLowerCase()) !== -1) return false;
+            // Treat the default as already-present only when it appears as a whole
+            // segment (bounded by string edges or non-word chars), so a short default
+            // like "No" isn't matched inside "Now denies chest pain" (a plain indexOf
+            // both suppressed legitimate appends and produced awkward overlaps).
+            var esc = trimmedValue.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            if (new RegExp('(^|\\W)' + esc + '($|\\W)').test(current.toLowerCase())) return false;
             el[0].value = current + ' ' + trimmedValue;
             caToast('"' + friendlyName + '" already had content — options default appended.');
         } else {
@@ -487,6 +553,9 @@ function caFill(selector, value, friendlyName) {
             return true;
         }
         el.val(value);
+        // If `value` is no longer a real <option> (EMSCharts changed an ID), .val()
+        // is a silent no-op — don't flash green or claim success as if it applied.
+        if (String(el.val()) !== String(value)) return false;
     }
     caFlash(selector);
     return true;
@@ -583,6 +652,7 @@ if (typeof module !== 'undefined' && module.exports) {
         caClrPopup,
         caClrPertNeg,
         caToast,
+        caNoDefaultsHint,
         caFlash,
         caToolbar,
         caOnPage,

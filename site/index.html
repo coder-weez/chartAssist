@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Gardner Responder Technologies</title>
+        <meta
+            name="description"
+            content="Gardner Responder Technologies builds focused software tools for EMS crews and responders."
+        />
+        <style>
+            :root {
+                --bg: #f4f6f8;
+                --card: #ffffff;
+                --text: #1f2933;
+                --muted: #667085;
+                --accent: #2191c0;
+                --border: #e5e7eb;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --bg: #0f141a;
+                    --card: #1a212b;
+                    --text: #e6edf3;
+                    --muted: #9aa7b4;
+                    --accent: #4bb3dd;
+                    --border: #2a333f;
+                }
+            }
+            * {
+                box-sizing: border-box;
+            }
+            html,
+            body {
+                margin: 0;
+                height: 100%;
+            }
+            body {
+                background: var(--bg);
+                color: var(--text);
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    Segoe UI,
+                    Roboto,
+                    Helvetica,
+                    Arial,
+                    sans-serif;
+                line-height: 1.6;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 24px;
+            }
+            .card {
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                max-width: 520px;
+                width: 100%;
+                padding: 40px 32px;
+                box-shadow: 0 6px 24px rgba(16, 24, 40, 0.08);
+            }
+            h1 {
+                font-size: 26px;
+                margin: 0 0 6px;
+            }
+            .tagline {
+                color: var(--accent);
+                font-weight: 600;
+                margin: 0 0 18px;
+            }
+            p {
+                margin: 0 0 14px;
+                color: var(--muted);
+                font-size: 15px;
+            }
+            a {
+                color: var(--accent);
+                font-weight: 600;
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .foot {
+                margin-top: 24px;
+                padding-top: 16px;
+                border-top: 1px solid var(--border);
+                font-size: 13px;
+                color: var(--muted);
+            }
+        </style>
+    </head>
+    <body>
+        <main class="card">
+            <h1>Gardner Responder Technologies</h1>
+            <p class="tagline">Software tools for EMS crews and responders.</p>
+            <p>
+                We build focused tools that cut the busywork out of EMS documentation, so crews can
+                spend less time on paperwork and more on patient care.
+            </p>
+            <p>
+                Questions or support:
+                <a href="mailto:support@grtechsupport.com">support@grtechsupport.com</a>
+            </p>
+            <p class="foot">© Gardner Responder Technologies</p>
+        </main>
+    </body>
+</html>

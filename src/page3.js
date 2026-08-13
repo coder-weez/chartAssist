@@ -49,6 +49,11 @@ $(document).ready(function () {
     $('.chartfiller').click(function () {
         if (!caActive(3)) return;
         chrome.storage.sync.get(null, function (s) {
+            if (chrome.runtime.lastError || !s) {
+                caToast('Could not read your saved defaults — please try again.');
+                return;
+            }
+            if (caNoDefaultsHint(s)) return;
             caFillPertNeg('mental_text_id', s['pg3_mental_present'], 'Mental — Present');
             caFillPertNeg(
                 'mental_text_neg_id',

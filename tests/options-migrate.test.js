@@ -9,6 +9,9 @@ const opts = require('../src/options.js');
 
 beforeEach(() => {
     global.chrome = {
+        // The real options page always has chrome.runtime; save/migrate consult
+        // chrome.runtime.lastError to detect a failed (e.g. over-quota) write.
+        runtime: { lastError: undefined },
         storage: {
             sync: {
                 _data: {},

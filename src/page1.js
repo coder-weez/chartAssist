@@ -22,6 +22,18 @@ function caBaseOptions(selectEl) {
 function caInitPage1() {
     var bar = caToolbar(true);
 
+    // Canary selectors — one or more per section — flag EMSCharts DOM changes.
+    // Page 1 has no Options page section, but it still binds real fields, so silent
+    // drift here must be caught too (Base + Staffing).
+    caHealthCheck(1, [
+        'select[name="Base_ID"]',
+        'input[name="vehcloc"]',
+        'select[name="unit_staff"]',
+        'select[name="unit_capability"]',
+        'select[name="transcode"]',
+        'input[name="ref_md"]',
+    ]);
+
     // --- Base section ---
     // Buttons are generated dynamically from the EMSCharts Base_ID dropdown:
     // one button per real option (see caBaseOptions), labelled with the option's

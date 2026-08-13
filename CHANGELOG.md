@@ -11,6 +11,52 @@ selector details). When several unreleased versions ship in one store package
 (as below), use the combined "What's new" block as the store copy — the store
 publishes a single build, not each version separately.
 
+## What's new — 1.6.0.0 — unreleased
+
+**Reliability, clearer feedback, and safer admin controls.**
+
+- **Confirm your email right in the popup.** New accounts confirm with a 6-digit
+  code entered in the extension (like the password-reset code) instead of clicking
+  an email link — fewer steps, and the email is far less likely to hit your junk
+  folder.
+
+- **No more surprise sign-outs on hospital or venue Wi-Fi.** Networks with a
+  "sign in to this Wi-Fi" page used to log you out of ChartAssist; now they don't.
+- **QA Mode stays put.** Opening the popup on a shaky connection no longer turns QA
+  Mode off or hides the Admin button by mistake — your access sticks.
+- **The Admin console keeps working when left open.** It quietly renews your
+  session instead of showing "Not authorized" after a while.
+- **Clearer messages when a fill doesn't happen.** A brand-new install now tells you
+  to set your defaults first; if a Mental/Neurological default can't be matched, or a
+  saved value is too long to store, you'll see a warning instead of a silent no-op.
+- **Safer crew management.** Admins can't accidentally remove themselves, another
+  admin who's the last one left, or a super admin — so a crew can never be locked out
+  of its own console.
+- **Access codes are harder to guess.** Repeated wrong codes from the same place are
+  temporarily blocked.
+- **Polish & accessibility.** The toolbar no longer flickers before locking, the
+  Clear Fields button is easier to read, and the toolbar controls are keyboard- and
+  screen-reader-friendly.
+
+## What's new — 1.5.0.0 — unreleased
+
+**Request access if you're not pre-approved, and let crew admins run their own
+crew.**
+
+- **Create an account, and request access if you're new.** If your work email (or
+  its domain) is already approved you're signed in right away, same as before. If
+  it isn't, a **Your crew** picker appears — choose your crew and your request goes
+  to that crew's admin; you'll be able to sign in as soon as they approve it, with no
+  need to be added ahead of time.
+- **Admins can approve or deny requests.** The Admin console has a new **Pending
+  requests** list — approve someone to let them sign in, or deny to remove the
+  request.
+- **Admins can change a member's role.** In the Members list, switch a person
+  between Member, QA auditor, and Crew admin — no database needed.
+- **QA Mode is now limited to who needs it.** The **QA Mode** toggle in the popup
+  shows only for crew admins and the new **QA auditor** role, so a regular crew
+  member can't freeze the toolbar by accident.
+
 ## What's new — 1.3.0.0 — unreleased
 
 **Sign-in now required.** ChartAssist keeps your tools behind a login so only your
