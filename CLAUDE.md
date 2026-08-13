@@ -116,6 +116,14 @@ Beyond the Chrome extension itself, the login gate depends on three hosted servi
 
 **Domain roles:** `gardnerrespondertechnologies.com` = brand + site + Supabase Site URL; `grtechsupport.com` = email sending + support; `grteches.com` = short alias / redirect. The gate stays **cooperative** regardless of hosting — these services enforce email delivery and (via RLS) data isolation, not a bypass-proof client.
 
+**When an end user receives email** — every case is a **Supabase Auth event** delivered via Resend; the extension itself never sends mail:
+
+1. **Email-confirmation code** — at sign-up when Supabase "Confirm email" is ON, and on the popup's **Resend code** action. A 6-digit code, verified in the popup (`caConfirmSignup` / `caResendConfirmation`).
+2. **Password-reset code** — when the user starts "Forgot password?" (`caRequestPasswordReset` → 6-digit code, `caConfirmPasswordReset`).
+3. **Password-changed notice** — Supabase's built-in security notification, sent after a reset sets a new password.
+
+**No email is sent for the custom crew-admin workflow** — `approve_signup` / `deny_signup` / `set_member_role` / `remove_member` only change `profiles.status`/`role`, which Supabase Auth knows nothing about. So an **approved user finds out by signing in**, not by email (adding a "you're approved" email would need a webhook + Edge Function calling the Resend API). The extension never triggers magic-link, invite, email-change, or reauthentication emails either. Access-code redemption sends nothing.
+
 ## Dependency updates (CI)
 
 All dependency updates arrive as **review-only pull requests** — nothing is merged to `main` automatically.
