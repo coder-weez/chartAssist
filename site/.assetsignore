@@ -1,0 +1,2 @@
+# Files in this folder that should NOT be served as static assets.
+wrangler.toml
