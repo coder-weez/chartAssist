@@ -66,11 +66,11 @@ shared the extension:
 The source is proprietary (see [LICENSE.txt](LICENSE.txt)); these steps are for
 authorized crews running their own build and for contributors.
 
-1. `git clone https://github.com/coder-weez/emsChartsAssist.git`
+1. `git clone https://github.com/coder-weez/chartAssist.git`
 2. Open `chrome://extensions/` in your browser
 3. Enable `Developer Mode` in the upper-right corner
 4. Select `Load Unpacked` in the upper-left corner
-5. Find the `emsChartsAssist` folder from the `git clone` step, and open the `src` directory
+5. Find the `chartAssist` folder from the `git clone` step, and open the `src` directory
 
 After loading, click the extension icon and sign in, then use the **Open Options**
 button in the popup to fill in your default values. These are saved to

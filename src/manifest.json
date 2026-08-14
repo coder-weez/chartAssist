@@ -4,7 +4,7 @@
     "version": "1.7.0.0",
     "version_name": "1.7.0.0 (Manifest V3)",
     "description": "Auto-fill and clear EMSCharts PCR defaults in one click. Requires an approved crew account to sign in.",
-    "homepage_url": "https://github.com/coder-weez/emsChartsAssist",
+    "homepage_url": "https://github.com/coder-weez/chartAssist",
     "manifest_version": 3,
     "minimum_chrome_version": "88",
     "icons": {
