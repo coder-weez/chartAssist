@@ -305,17 +305,48 @@ function removeEmail(email) {
     );
 }
 
-// Remove a member's account but KEEP their pre-approval (allowed_emails), so they
-// can re-register. Goes through the remove_member RPC (SECURITY DEFINER, which
-// checks the caller is an admin and the target is in their org).
+// Remove a member's account via the remove_member RPC (SECURITY DEFINER: checks the
+// caller is an admin and the target is in their org). The RPC deletes only the
+// account (its profiles row cascades) and never touches the allow-lists — so whether
+// the person can simply sign up again depends on whether they are still pre-approved:
+// their exact email on allowed_emails, OR their domain on allowed_domains. That is NOT
+// the same as "is this a member" — someone approved from the pending queue has no
+// pre-approval at all. We ask the server authoritatively (email_preapproved covers
+// both email and domain) so the confirm/success copy tells the truth for THIS member
+// instead of always claiming "kept pre-approved".
 function removeMember(userId, email) {
-    if (
-        !window.confirm(
-            'Remove ' + email + '? This deletes their account but keeps them pre-approved.',
-        )
-    ) {
-        return;
+    admin_fetch(
+        '/rest/v1/rpc/email_preapproved',
+        { method: 'POST', body: JSON.stringify({ p_email: email }) },
+        function (err, data) {
+            // data is a bare boolean; on any error, pre-approval state is UNKNOWN.
+            confirmAndRemoveMember(userId, email, !err, data === true);
+        },
+    );
+}
+
+function confirmAndRemoveMember(userId, email, known, preapproved) {
+    var prompt;
+    if (!known) {
+        prompt =
+            'Remove ' +
+            email +
+            '? This deletes their account. It does not remove any pre-approval — a ' +
+            'pre-approved user can sign up again; anyone else would need to request access.';
+    } else if (preapproved) {
+        prompt =
+            'Remove ' +
+            email +
+            '? This deletes their account but keeps their pre-approval, so they can ' +
+            'sign up again and get back in automatically.';
+    } else {
+        prompt =
+            'Remove ' +
+            email +
+            '? This deletes their account. They are NOT pre-approved, so to return they ' +
+            'would have to request access again and be re-approved.';
     }
+    if (!window.confirm(prompt)) return;
     admin_fetch(
         '/rest/v1/rpc/remove_member',
         { method: 'POST', body: JSON.stringify({ p_user_id: userId }) },
@@ -324,7 +355,16 @@ function removeMember(userId, email) {
                 showMembersMsg(err, 'err');
                 return;
             }
-            showMembersMsg('Removed ' + email + '. They remain pre-approved.', 'ok');
+            var okMsg = 'Removed ' + email + '.';
+            if (known && preapproved) {
+                okMsg = 'Removed ' + email + '. They remain pre-approved and can sign up again.';
+            } else if (known && !preapproved) {
+                okMsg =
+                    'Removed ' +
+                    email +
+                    '. They are not pre-approved — they would need to request access again.';
+            }
+            showMembersMsg(okMsg, 'ok');
             loadMembers();
         },
     );

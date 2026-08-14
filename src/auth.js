@@ -291,7 +291,7 @@ function caSignInError(data) {
         return 'Incorrect email or password. If you do not have an account, use "Create an account" above.';
     }
     if (low.indexOf('not confirmed') !== -1) {
-        return 'Your email is not confirmed yet — check your inbox for the confirmation link.';
+        return 'Your email is not confirmed yet — click "Confirm your email" below and enter the 6-digit code we emailed you.';
     }
     return msg || 'Sign-in failed. Check your email and password.';
 }
@@ -357,7 +357,7 @@ function caSignUpError(data) {
     var msg = (data && (data.msg || data.error_description || data.error || data.message)) || '';
     var low = msg.toLowerCase();
     if (low.indexOf('domain') !== -1) {
-        return 'The email domain entered is not approved. Please check the spelling or file a support case.';
+        return 'That email address does not look right — please check the spelling. If it is correct, select your crew above to request access.';
     }
     if (low.indexOf('crew') !== -1 || low.indexOf('select your crew') !== -1) {
         return 'Select your crew above so your request can be sent to its admin for approval.';

@@ -13,10 +13,10 @@ publishes a single build, not each version separately.
 
 ## What's new — 1.7.0.0 — unreleased
 
-**New name — now GRTech ChartAssist.**
+**ChartAssist, a Gardner Responder Technologies product.**
 
-- **Fresh branding.** The extension is now **GRTech ChartAssist**, from Gardner
-  Responder Technologies (GRTech). Same toolbar, same one-click defaults, same
+- **Fresh branding.** The extension is now **ChartAssist**, a Gardner Responder
+  Technologies (GRTech) product. Same toolbar, same one-click defaults, same
   sign-in — only the name has changed. Your saved defaults and your account carry
   over automatically; there's nothing to reconfigure.
 
