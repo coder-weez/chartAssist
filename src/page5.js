@@ -33,6 +33,11 @@ $(document).ready(function () {
 
     function fillPage5(prefix) {
         chrome.storage.sync.get(null, function (s) {
+            if (chrome.runtime.lastError || !s) {
+                caToast('Could not read your saved defaults — please try again.');
+                return;
+            }
+            if (caNoDefaultsHint(s)) return;
             caFill('input[name=head_comments]', s[prefix + 'head_comments'], 'Head Findings');
             caFill('input[name=neck_comments]', s[prefix + 'neck_comments'], 'Neck Findings');
             caFill('select[name=trachea]', s[prefix + 'trachea'], 'Trachea');

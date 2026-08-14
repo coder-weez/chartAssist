@@ -15,6 +15,7 @@ const caHelpers = {
     caClrPopup: 'readonly',
     caClrPertNeg: 'readonly',
     caToast: 'readonly',
+    caNoDefaultsHint: 'readonly',
     caFlash: 'readonly',
     caToolbar: 'readonly',
     caOnPage: 'readonly',
@@ -34,13 +35,18 @@ const caAuthHelpers = {
     caSignUp: 'readonly',
     caRequestPasswordReset: 'readonly',
     caConfirmPasswordReset: 'readonly',
+    caConfirmSignup: 'readonly',
+    caResendConfirmation: 'readonly',
     caRefreshSession: 'readonly',
     caRedeemCode: 'readonly',
+    caListOrgs: 'readonly',
+    caEmailPreapproved: 'readonly',
     caSignOut: 'readonly',
     caSetRememberedEmail: 'readonly',
     caGetRememberedEmail: 'readonly',
     caGetProfile: 'readonly',
     caIsAdminRole: 'readonly',
+    caCanUseQa: 'readonly',
 };
 
 module.exports = [

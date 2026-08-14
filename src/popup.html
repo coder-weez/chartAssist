@@ -18,6 +18,8 @@
                 --pop-field-border: #cfd6df;
                 --pop-error: #c0392b;
                 --pop-success: #1a7f37;
+                --pop-success-bg: #e7f6ec;
+                --pop-success-border: #b7e0c4;
             }
             :root[data-theme='dark'] {
                 color-scheme: dark;
@@ -34,6 +36,8 @@
                 --pop-field-border: #2b3543;
                 --pop-error: #ff8a80;
                 --pop-success: #5bd07f;
+                --pop-success-bg: #16301f;
+                --pop-success-border: #2f6a45;
             }
             body {
                 width: 280px;
@@ -183,7 +187,14 @@
                 color: var(--pop-muted);
                 margin-bottom: 3px;
             }
-            .field input {
+            .field-hint {
+                margin: 4px 0 0;
+                font-size: 11px;
+                line-height: 1.35;
+                color: var(--pop-muted);
+            }
+            .field input,
+            .field select {
                 width: 100%;
                 box-sizing: border-box;
                 padding: 7px 9px;
@@ -194,7 +205,8 @@
                 border: 1px solid var(--pop-field-border);
                 border-radius: 6px;
             }
-            .field input:focus {
+            .field input:focus,
+            .field select:focus {
                 outline: none;
                 border-color: var(--accent);
             }
@@ -258,13 +270,22 @@
                 color: var(--pop-error);
                 font-size: 12px;
                 line-height: 1.35;
-                margin: 10px 0 0;
+                margin: 20px 0 0;
             }
             .auth-error:empty {
                 margin: 0;
             }
             .auth-error.is-success {
                 color: var(--pop-success);
+                background: var(--pop-success-bg);
+                border: 1px solid var(--pop-success-border);
+                border-radius: 8px;
+                padding: 10px 12px;
+                margin-top: 20px;
+                font-weight: bold;
+            }
+            .auth-error.is-success::before {
+                content: '✓ ';
             }
             .signed-in-row {
                 display: flex;
@@ -330,8 +351,9 @@
             /* Forgot password? / Create an account sit side by side under Sign in. */
             .auth-links {
                 display: flex;
+                flex-wrap: wrap;
                 justify-content: center;
-                gap: 16px;
+                gap: 8px 16px;
                 margin-top: 12px;
             }
             .auth-links .link-btn {
@@ -400,6 +422,9 @@
             <div class="auth-links" id="auth_alt_links">
                 <button type="button" id="reset_toggle" class="link-btn">Forgot password?</button>
                 <button type="button" id="signup_toggle" class="link-btn">Create an account</button>
+                <button type="button" id="confirm_toggle" class="link-btn">
+                    Confirm your email
+                </button>
             </div>
 
             <form id="signup_form" autocomplete="off" hidden>
@@ -431,6 +456,16 @@
                         autocomplete="new-password"
                         required
                     />
+                </div>
+                <div class="field" id="signup_org_field" hidden>
+                    <label for="signup_org">Your crew</label>
+                    <select id="signup_org">
+                        <option value="">Select your crew…</option>
+                    </select>
+                    <p class="field-hint" id="signup_org_hint">
+                        Your email isn't pre-approved yet — choose your crew and we'll send your
+                        request to its admin.
+                    </p>
                 </div>
                 <button type="submit" id="btn_signup" class="btn-primary">Create account</button>
                 <button type="button" id="signup_cancel" class="link-btn">Back to sign in</button>
@@ -478,6 +513,32 @@
                 <button type="button" id="reset_cancel" class="link-btn">Back to sign in</button>
             </form>
 
+            <form id="confirm_form" autocomplete="off" hidden>
+                <p class="auth-intro">Confirm your email with the 6-digit code we emailed you.</p>
+                <div class="field">
+                    <label for="confirm_email">Email</label>
+                    <input
+                        type="email"
+                        id="confirm_email"
+                        autocomplete="username"
+                        placeholder="you@example.com"
+                    />
+                </div>
+                <div class="field">
+                    <label for="confirm_code">Confirmation code</label>
+                    <input
+                        type="text"
+                        id="confirm_code"
+                        inputmode="numeric"
+                        autocomplete="one-time-code"
+                        placeholder="6-digit code"
+                    />
+                </div>
+                <button type="button" id="btn_confirm" class="btn-primary">Confirm email</button>
+                <button type="button" id="confirm_resend" class="link-btn">Resend code</button>
+                <button type="button" id="confirm_cancel" class="link-btn">Back to sign in</button>
+            </form>
+
             <div class="divider" id="auth_divider">or</div>
 
             <button type="button" id="code_toggle" class="link-btn">
@@ -504,7 +565,7 @@
                 </div>
                 <button type="button" id="btn_signout" class="btn-text">Sign out</button>
             </div>
-            <div class="qa-row">
+            <div class="qa-row" id="qa_row" hidden>
                 <label>
                     <input type="checkbox" id="qa_mode" />
                     QA Mode

@@ -3,8 +3,14 @@ import { describe, it, expect } from 'vitest';
 // Pure helpers from the auth module — no chrome/fetch needed (those are only
 // touched inside the network functions, which these tests don't call).
 const auth = require('../src/auth.js');
-const { caSessionValid, caEmailDomain, caEmailDomainAllowed, caIsAdminRole, SESSION_TTL_HOURS } =
-    auth.default || auth;
+const {
+    caSessionValid,
+    caEmailDomain,
+    caEmailDomainAllowed,
+    caIsAdminRole,
+    caCanUseQa,
+    SESSION_TTL_HOURS,
+} = auth.default || auth;
 
 describe('caSessionValid', () => {
     it('is false for a missing or empty session', () => {
@@ -69,6 +75,20 @@ describe('caIsAdminRole', () => {
         expect(caIsAdminRole('member')).toBe(false);
         expect(caIsAdminRole('')).toBe(false);
         expect(caIsAdminRole(undefined)).toBe(false);
+    });
+});
+
+describe('caCanUseQa', () => {
+    it('is true for qa_auditor, crew_admin, and super_admin', () => {
+        expect(caCanUseQa('qa_auditor')).toBe(true);
+        expect(caCanUseQa('crew_admin')).toBe(true);
+        expect(caCanUseQa('super_admin')).toBe(true);
+    });
+
+    it('is false for member, empty, or unknown roles', () => {
+        expect(caCanUseQa('member')).toBe(false);
+        expect(caCanUseQa('')).toBe(false);
+        expect(caCanUseQa(undefined)).toBe(false);
     });
 });
 

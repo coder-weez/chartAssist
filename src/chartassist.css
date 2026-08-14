@@ -133,9 +133,17 @@
 .ca-btn:active {
     background: #176d92;
 }
+.ca-btn:focus-visible,
+#ca-reset:focus-visible,
+#ca-drag:focus-visible {
+    outline: 2px solid #1b7aa3;
+    outline-offset: 2px;
+}
 .ca-btn-danger {
     background: #facc15;
-    color: #fff;
+    /* Dark brown on amber — white failed WCAG AA (~1.5:1) on this destructive
+       button. This matches the toast text colour and clears AA comfortably. */
+    color: #713f12;
 }
 .ca-btn-danger:hover {
     background: #eab308;

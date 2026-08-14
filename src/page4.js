@@ -33,6 +33,11 @@ $(document).ready(function () {
     $('.chartfiller').click(function () {
         if (!caActive(4)) return;
         chrome.storage.sync.get(null, function (s) {
+            if (chrome.runtime.lastError || !s) {
+                caToast('Could not read your saved defaults — please try again.');
+                return;
+            }
+            if (caNoDefaultsHint(s)) return;
             caFill('select[name=cv_resp_effort]', s['pg4_resp_effort'], 'Respiratory Effort');
             caFill('textarea[name=RESP_COMMENTS]', s['pg4_resp_comments'], 'Comments');
             caFill(

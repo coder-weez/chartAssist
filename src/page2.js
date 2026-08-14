@@ -33,6 +33,11 @@ $(document).ready(function () {
     $('.chartfiller').click(function () {
         if (!caActive(2)) return;
         chrome.storage.sync.get(null, function (s) {
+            if (chrome.runtime.lastError || !s) {
+                caToast('Could not read your saved defaults — please try again.');
+                return;
+            }
+            if (caNoDefaultsHint(s)) return;
             caFill('textarea[name=PRMAIN_cc]', s['pg2_chief_complaint'], 'Chief Complaint');
             caFill('input[name=PRMAIN_ccduration]', s['pg2_duration'], 'Duration');
             caFill('select[name=PRMAIN_ccdurunits]', s['pg2_duration_units'], 'Duration Units');

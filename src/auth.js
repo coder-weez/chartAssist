@@ -65,9 +65,9 @@ function caSessionValid(session) {
 
 function caSignOut(cb) {
     try {
-        // Also drop the cached admin flag (popup Admin-button shortcut) so a
-        // different user signing in next can't briefly inherit it.
-        chrome.storage.local.remove(['ca_session', 'ca_admin'], function () {
+        // Also drop the cached admin + QA-eligibility flags (popup shortcuts) so a
+        // different user signing in next can't briefly inherit them.
+        chrome.storage.local.remove(['ca_session', 'ca_admin', 'ca_qa_eligible'], function () {
             if (cb) cb();
         });
     } catch {
@@ -126,7 +126,9 @@ function caEmailDomainAllowed(email, allowed) {
     );
 }
 
-// Read a fetch Response as JSON, tolerating an empty/non-JSON body.
+// Read a fetch Response as JSON, tolerating an empty/non-JSON body. `status` is
+// surfaced so callers can tell an explicit auth failure (400/401 with a JSON error
+// body) apart from an ambiguous 200 that didn't parse (e.g. a captive-portal page).
 function caReadJson(res) {
     return res
         .json()
@@ -134,13 +136,77 @@ function caReadJson(res) {
             return {};
         })
         .then(function (data) {
-            return { ok: res.ok, data: data };
+            return { ok: res.ok, status: res.status, data: data };
         });
 }
 
 // ---- Network: Supabase Auth + redeem-code -----------------------------------
-// Sign in with email + password. On success, stores a session that stays valid
-// for SESSION_TTL_HOURS. cb(err, session): err is a human-readable string or null.
+
+// Friendly message when an account exists but a crew admin hasn't approved it yet.
+// Shared by sign-in and sign-up (a self-registered, non-pre-approved account is
+// pending until approved).
+function caPendingApprovalMessage() {
+    return (
+        'Your account is waiting for your crew admin to approve it. ' +
+        "You'll be able to sign in once they do."
+    );
+}
+
+// Fetch just the approval status of the account owning `accessToken`, via the
+// my_profile RPC. cb(status): 'approved' | 'pending' | null (unknown). Only an
+// explicit 'pending' blocks the gate; an unknown result (e.g. a transient error)
+// fails OPEN — my_profile is a reliable self-read right after authenticating and
+// the vast majority of accounts are approved, so a hiccup must not lock everyone
+// out.
+function caFetchProfileStatus(accessToken, cb) {
+    fetch(SUPABASE_URL + '/rest/v1/rpc/my_profile', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            apikey: SUPABASE_PUBLISHABLE_KEY,
+            Authorization: 'Bearer ' + accessToken,
+        },
+        body: '{}',
+    })
+        .then(caReadJson)
+        .then(function (r) {
+            var row = r.data && (Array.isArray(r.data) ? r.data[0] : r.data);
+            cb((row && row.status) || null);
+        })
+        .catch(function () {
+            cb(null);
+        });
+}
+
+// Turn a Supabase token response for a user login into a STORED session — but only
+// if the account is approved. cb(err, session):
+//   * session set          → approved; a working session was stored (signed in)
+//   * session null (no err) → the account is pending admin approval; nothing stored
+// Centralizing the approval check here means every path that could establish a
+// session (sign-in, and the auto-login after sign-up) enforces it, so the PCR-page
+// gate stays simple: no ca_session is ever written for a pending account.
+function caFinalizeUserSession(tokenData, email, cb) {
+    caFetchProfileStatus(tokenData.access_token, function (status) {
+        if (status === 'pending') {
+            cb(null, null);
+            return;
+        }
+        var session = {
+            access_token: tokenData.access_token,
+            refresh_token: tokenData.refresh_token,
+            session_expires_at: Date.now() + SESSION_TTL_HOURS * 3600 * 1000,
+            email: (tokenData.user && tokenData.user.email) || email,
+            source: 'user',
+        };
+        caStoreSession(session, function () {
+            cb(null, session);
+        });
+    });
+}
+
+// Sign in with email + password. On success with an APPROVED account, stores a
+// session valid for SESSION_TTL_HOURS; a pending account is reported (no session).
+// cb(err, session): err is a human-readable string or null.
 function caSignIn(email, password, cb) {
     fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
         method: 'POST',
@@ -153,19 +219,59 @@ function caSignIn(email, password, cb) {
                 cb(caSignInError(r.data), null);
                 return;
             }
-            var session = {
-                access_token: r.data.access_token,
-                refresh_token: r.data.refresh_token,
-                session_expires_at: Date.now() + SESSION_TTL_HOURS * 3600 * 1000,
-                email: (r.data.user && r.data.user.email) || email,
-                source: 'user',
-            };
-            caStoreSession(session, function () {
+            // Credentials are valid, but a pending account isn't approved yet — only
+            // store a session once approved, otherwise report it as awaiting approval.
+            caFinalizeUserSession(r.data, email, function (err, session) {
+                if (err) {
+                    cb(err, null);
+                    return;
+                }
+                if (!session) {
+                    cb(caPendingApprovalMessage(), null);
+                    return;
+                }
                 cb(null, session);
             });
         })
         .catch(function () {
             cb('Network error — could not reach the sign-in server.', null);
+        });
+}
+
+// List crews (id + name) for the sign-up "select your crew" dropdown. Works while
+// signed OUT (the list_orgs RPC is granted to anon). cb(err, orgs): orgs is an
+// array of { id, name } (empty on error).
+function caListOrgs(cb) {
+    fetch(SUPABASE_URL + '/rest/v1/rpc/list_orgs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_PUBLISHABLE_KEY },
+        body: '{}',
+    })
+        .then(caReadJson)
+        .then(function (r) {
+            cb(r.ok ? null : 'Could not load crews', Array.isArray(r.data) ? r.data : []);
+        })
+        .catch(function () {
+            cb('Network error — could not reach the sign-in server.', []);
+        });
+}
+
+// Is this email already pre-approved — on allowed_emails OR by its domain on
+// allowed_domains? Anon-callable; used by the sign-up form to keep the crew dropdown
+// hidden for someone who doesn't need to request access. cb(approved): boolean,
+// false on any error.
+function caEmailPreapproved(email, cb) {
+    fetch(SUPABASE_URL + '/rest/v1/rpc/email_preapproved', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_PUBLISHABLE_KEY },
+        body: JSON.stringify({ p_email: email }),
+    })
+        .then(caReadJson)
+        .then(function (r) {
+            cb(r.ok && r.data === true);
+        })
+        .catch(function () {
+            cb(false);
         });
 }
 
@@ -190,49 +296,57 @@ function caSignInError(data) {
     return msg || 'Sign-in failed. Check your email and password.';
 }
 
-// Create a new account with email + password, then (when the project has email
-// confirmation OFF) sign in immediately. The email domain is enforced server-side
-// by the enforce_allowed_domain trigger; ALLOWED_EMAIL_DOMAINS is only a local
-// pre-check. cb(err, pending): err is a string or null; pending is true when the
-// account was created but needs email confirmation before it can sign in.
-function caSignUp(email, password, cb) {
+// Create a new account with email + password. `orgId` is the crew the user picked
+// in the sign-up form; it rides along as sign-up metadata (requested_org_id) so the
+// server can route a NON-pre-approved sign-up to that crew's admins as a pending
+// request. The email domain is enforced server-side by enforce_allowed_domain;
+// ALLOWED_EMAIL_DOMAINS is only a local pre-check. cb(err, outcome): err is a
+// string or null; outcome is one of
+//   'signedin' → pre-approved (email/domain) and signed in immediately
+//   'confirm'  → account created, but email confirmation is required first
+//   'approval' → account created, awaiting a crew admin's approval (not signed in)
+function caSignUp(email, password, orgId, cb) {
     if (!caEmailDomainAllowed(email, ALLOWED_EMAIL_DOMAINS)) {
         cb(
             'The email domain entered is not approved. Please check the spelling or file a support case.',
-            false,
+            null,
         );
         return;
     }
     fetch(SUPABASE_URL + '/auth/v1/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', apikey: SUPABASE_PUBLISHABLE_KEY },
-        body: JSON.stringify({ email: email, password: password }),
+        body: JSON.stringify({
+            email: email,
+            password: password,
+            data: orgId ? { requested_org_id: orgId } : {},
+        }),
     })
         .then(caReadJson)
         .then(function (r) {
             if (!r.ok) {
-                cb(caSignUpError(r.data), false);
+                cb(caSignUpError(r.data), null);
                 return;
             }
-            // Confirmation OFF → signup returns a session; store it (signed in).
+            // Confirmation OFF → signup returns a session. Finalize through the
+            // approval check: a pre-approved account is signed in; a non-pre-approved
+            // one is pending, so no session is stored and the user is told it's
+            // awaiting approval.
             if (r.data.access_token) {
-                var session = {
-                    access_token: r.data.access_token,
-                    refresh_token: r.data.refresh_token,
-                    session_expires_at: Date.now() + SESSION_TTL_HOURS * 3600 * 1000,
-                    email: (r.data.user && r.data.user.email) || email,
-                    source: 'user',
-                };
-                caStoreSession(session, function () {
-                    cb(null, false);
+                caFinalizeUserSession(r.data, email, function (err, session) {
+                    if (err) {
+                        cb(err, null);
+                        return;
+                    }
+                    cb(null, session ? 'signedin' : 'approval');
                 });
                 return;
             }
             // Confirmation ON → account created, but must be verified first.
-            cb(null, true);
+            cb(null, 'confirm');
         })
         .catch(function () {
-            cb('Network error — could not reach the sign-in server.', false);
+            cb('Network error — could not reach the sign-in server.', null);
         });
 }
 
@@ -245,13 +359,79 @@ function caSignUpError(data) {
     if (low.indexOf('domain') !== -1) {
         return 'The email domain entered is not approved. Please check the spelling or file a support case.';
     }
+    if (low.indexOf('crew') !== -1 || low.indexOf('select your crew') !== -1) {
+        return 'Select your crew above so your request can be sent to its admin for approval.';
+    }
     if (low.indexOf('database error') !== -1) {
-        return 'Could not create your account — check that you are using an approved work email address.';
+        return 'Could not create your account — select your crew above and check your email is spelled correctly.';
     }
     if (low.indexOf('already registered') !== -1 || low.indexOf('already exists') !== -1) {
         return 'An account with that email already exists — try signing in instead.';
     }
     return msg || 'Could not create your account. Please try again.';
+}
+
+// ---- Email confirmation (self-service, via an emailed 6-digit code) ----------
+// Like the password-reset flow, we use the signup OTP rather than a magic link, so
+// the email carries no clickable URL (nothing for a spam filter to flag as a
+// domain mismatch, and no hosted page needed). Supabase prerequisite: the
+// "Confirm signup" template must send {{ .Token }} (the 6-digit code) instead of
+// {{ .ConfirmationURL }} — see supabase/README.md.
+
+// Verify the emailed signup code, confirming the address. On success the account's
+// email is confirmed and a session is returned; we finalize it through the SAME
+// approval gate as sign-in, so a pending account is confirmed but NOT signed in
+// until approved. cb(err, outcome): outcome is 'signedin' | 'approval'.
+function caConfirmSignup(email, code, cb) {
+    fetch(SUPABASE_URL + '/auth/v1/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_PUBLISHABLE_KEY },
+        body: JSON.stringify({ type: 'signup', email: email, token: code }),
+    })
+        .then(caReadJson)
+        .then(function (r) {
+            if (!r.ok || !r.data.access_token) {
+                cb(
+                    (r.data && (r.data.error_description || r.data.msg || r.data.error)) ||
+                        'That code is incorrect or has expired. Request a new one.',
+                    null,
+                );
+                return;
+            }
+            caFinalizeUserSession(r.data, email, function (err, session) {
+                if (err) {
+                    cb(err, null);
+                    return;
+                }
+                cb(null, session ? 'signedin' : 'approval');
+            });
+        })
+        .catch(function () {
+            cb('Network error — could not reach the sign-in server.', null);
+        });
+}
+
+// Re-send the signup confirmation code (e.g. it expired or never arrived). cb(err).
+function caResendConfirmation(email, cb) {
+    fetch(SUPABASE_URL + '/auth/v1/resend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_PUBLISHABLE_KEY },
+        body: JSON.stringify({ type: 'signup', email: email }),
+    })
+        .then(caReadJson)
+        .then(function (r) {
+            if (!r.ok) {
+                cb(
+                    (r.data && (r.data.error_description || r.data.msg || r.data.error)) ||
+                        'Could not resend the code. Please try again in a moment.',
+                );
+                return;
+            }
+            cb(null);
+        })
+        .catch(function () {
+            cb('Network error — could not reach the sign-in server.');
+        });
 }
 
 // Refresh the Supabase access token WITHOUT moving session_expires_at (the
@@ -271,17 +451,27 @@ function caRefreshSession(cb) {
         })
             .then(caReadJson)
             .then(function (r) {
-                if (!r.ok || !r.data.access_token) {
+                if (r.ok && r.data.access_token) {
+                    session.access_token = r.data.access_token;
+                    if (r.data.refresh_token) session.refresh_token = r.data.refresh_token;
+                    caStoreSession(session, function () {
+                        if (cb) cb(null, session);
+                    });
+                    return;
+                }
+                // Only an explicit auth failure (revoked/expired refresh token →
+                // 400/401) signs the user out — that's how deactivation takes effect.
+                // A 200 with an unparseable/HTML body (a captive portal or proxy
+                // interstitial on venue/hospital Wi-Fi), or any other non-auth status
+                // (5xx gateway), is NOT proof the account is gone: keep the session
+                // and report a soft error so field users aren't kicked out.
+                if (r.status === 400 || r.status === 401) {
                     caSignOut(function () {
                         if (cb) cb('Session ended', null);
                     });
                     return;
                 }
-                session.access_token = r.data.access_token;
-                if (r.data.refresh_token) session.refresh_token = r.data.refresh_token;
-                caStoreSession(session, function () {
-                    if (cb) cb(null, session);
-                });
+                if (cb) cb('Network error', null);
             })
             .catch(function () {
                 if (cb) cb('Network error', null);
@@ -361,9 +551,10 @@ function caRequestPasswordReset(email, cb) {
         });
 }
 
-// Step 2 — verify the code and set the new password. Verifying the recovery OTP
-// returns a session; we use its access token to update the password, then store
-// the session so the user is signed straight in. cb(err, session).
+// Step 2 — verify the recovery code and set the new password. On success the
+// password is changed but NO session is stored: the user then signs in with the
+// new password, so the approval gate applies normally (a pending account can't
+// bypass it via "Forgot password?"). cb(err): a string on failure, null on success.
 function caConfirmPasswordReset(email, code, newPassword, cb) {
     fetch(SUPABASE_URL + '/auth/v1/verify', {
         method: 'POST',
@@ -400,16 +591,11 @@ function caConfirmPasswordReset(email, code, newPassword, cb) {
                         );
                         return;
                     }
-                    var session = {
-                        access_token: r.data.access_token,
-                        refresh_token: r.data.refresh_token,
-                        session_expires_at: Date.now() + SESSION_TTL_HOURS * 3600 * 1000,
-                        email: (r.data.user && r.data.user.email) || email,
-                        source: 'user',
-                    };
-                    caStoreSession(session, function () {
-                        cb(null, session);
-                    });
+                    // Password changed. Deliberately store NO session — the user
+                    // signs in afterward with their new password, so the approval
+                    // gate applies normally (a pending account still can't get in via
+                    // "Forgot password?"). cb(null) = the reset succeeded.
+                    cb(null);
                 })
                 .catch(function () {
                     cb('Network error — could not reach the sign-in server.', null);
@@ -423,12 +609,21 @@ function caConfirmPasswordReset(email, code, newPassword, cb) {
 // ---- Profile / role --------------------------------------------------------
 // The signed-in user's own profile (role, org_id, email) via the my_profile()
 // RPC — RLS-safe and needs no user id client-side. Used by the popup to decide
-// whether to show the Admin button and by admin.js's role gate. Returns null when
-// signed out, on an access-code session, or on any error (fail-closed).
+// whether to show the Admin button and by admin.js's role gate.
+//
+// cb(profile, determined):
+//   * determined=true  → the read was AUTHORITATIVE. profile is the row, or null
+//                        when the account genuinely has no profile. Callers may act
+//                        on it (reveal/hide, cache).
+//   * determined=false → the read could NOT be completed (no user session/token, a
+//                        network error, an expired token, or a non-OK response).
+//                        profile is null; callers should KEEP their cached state
+//                        rather than revoke, so a transient blip doesn't strip a
+//                        user's Admin/QA access.
 function caGetProfile(cb) {
     caGetSession(function (session) {
         if (!session || !session.access_token) {
-            cb(null);
+            cb(null, false);
             return;
         }
         fetch(SUPABASE_URL + '/rest/v1/rpc/my_profile', {
@@ -443,14 +638,14 @@ function caGetProfile(cb) {
             .then(caReadJson)
             .then(function (r) {
                 if (!r.ok || !r.data) {
-                    cb(null);
+                    cb(null, false);
                     return;
                 }
                 // my_profile() returns setof → an array of 0 or 1 rows.
-                cb((Array.isArray(r.data) ? r.data[0] : r.data) || null);
+                cb((Array.isArray(r.data) ? r.data[0] : r.data) || null, true);
             })
             .catch(function () {
-                cb(null);
+                cb(null, false);
             });
     });
 }
@@ -458,6 +653,13 @@ function caGetProfile(cb) {
 // True when a profile role grants admin access. Pure; exported for tests.
 function caIsAdminRole(role) {
     return role === 'crew_admin' || role === 'super_admin';
+}
+
+// True when a profile role may use QA Mode (the popup toggle): the dedicated
+// qa_auditor role and crew_admin, plus super_admin as the superset admin. Pure;
+// exported for tests.
+function caCanUseQa(role) {
+    return role === 'crew_admin' || role === 'qa_auditor' || role === 'super_admin';
 }
 
 // Exported for unit tests (Node/CommonJS). No-op in the browser popup context,
@@ -468,6 +670,14 @@ if (typeof module !== 'undefined' && module.exports) {
         caEmailDomain,
         caEmailDomainAllowed,
         caIsAdminRole,
+        caCanUseQa,
         SESSION_TTL_HOURS,
+        // Network flows (tested with a mocked global.fetch + chrome.storage.local).
+        caSignIn,
+        caRefreshSession,
+        caGetProfile,
+        caRedeemCode,
+        caConfirmPasswordReset,
+        caConfirmSignup,
     };
 }

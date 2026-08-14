@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="noindex" />
+        <title>Email confirmed — Gardner Responder Technologies</title>
+        <style>
+            :root {
+                --bg: #f4f6f8;
+                --card: #ffffff;
+                --text: #1f2933;
+                --muted: #667085;
+                --accent: #2191c0;
+                --ok: #12805c;
+                --ok-bg: #e6f6ef;
+                --border: #e5e7eb;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --bg: #0f141a;
+                    --card: #1a212b;
+                    --text: #e6edf3;
+                    --muted: #9aa7b4;
+                    --accent: #4bb3dd;
+                    --ok: #4ade80;
+                    --ok-bg: #16241d;
+                    --border: #2a333f;
+                }
+            }
+            * {
+                box-sizing: border-box;
+            }
+            html,
+            body {
+                margin: 0;
+                height: 100%;
+            }
+            body {
+                background: var(--bg);
+                color: var(--text);
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    Segoe UI,
+                    Roboto,
+                    Helvetica,
+                    Arial,
+                    sans-serif;
+                line-height: 1.55;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 24px;
+            }
+            .card {
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                max-width: 460px;
+                width: 100%;
+                padding: 32px 28px;
+                text-align: center;
+                box-shadow: 0 6px 24px rgba(16, 24, 40, 0.08);
+            }
+            .badge {
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                background: var(--ok-bg);
+                color: var(--ok);
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 16px;
+            }
+            .badge svg {
+                width: 30px;
+                height: 30px;
+            }
+            h1 {
+                font-size: 22px;
+                margin: 0 0 10px;
+            }
+            p {
+                margin: 0 0 14px;
+                color: var(--muted);
+                font-size: 15px;
+            }
+            p.lead {
+                color: var(--text);
+            }
+            .brand {
+                margin-top: 22px;
+                padding-top: 16px;
+                border-top: 1px solid var(--border);
+                font-size: 13px;
+                color: var(--muted);
+            }
+            .brand strong {
+                color: var(--text);
+            }
+        </style>
+    </head>
+    <body>
+        <main class="card">
+            <div class="badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M20 6 9 17l-5-5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+            <h1>Email confirmed</h1>
+            <p class="lead">Thanks — your email address is verified.</p>
+            <p>
+                Open the <strong>ChartsAssist</strong> extension (click its icon in Chrome) and sign
+                in to get started.
+            </p>
+            <p>
+                If your crew admin still needs to approve your access, you'll see a note when you
+                sign in — you'll be able to get in as soon as they approve you.
+            </p>
+            <p class="brand">
+                <strong>Gardner Responder Technologies</strong><br />
+                You can close this tab.
+            </p>
+        </main>
+    </body>
+</html>

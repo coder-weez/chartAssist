@@ -11,9 +11,14 @@
 // The SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY env vars are provided
 // automatically by the Supabase platform to deployed functions.
 //
+// Brute-force protection: the SQL function logs every attempt per caller IP and
+// locks an IP out after too many recent FAILURES (see redeem_access_code in
+// schema.sql). The IP is taken from the x-forwarded-for header the platform sets.
+//
 // Request:  POST { "code": "ABC12345" }
 // Response: 200 { "expires_at": "2026-08-12T14:00:00Z" }   on success
 //           400 { "error": "..." }                          invalid/expired/used-up
+//           429 { "error": "..." }                          too many attempts (locked)
 
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
@@ -43,14 +48,23 @@ Deno.serve(async (req: Request) => {
     }
     if (!code) return json({ error: 'Missing code' }, 400);
 
+    // Caller IP for per-IP rate limiting. x-forwarded-for may hold a list
+    // ("client, proxy1, proxy2"); the first entry is the originating client.
+    const ip = (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || null;
+
     const supabase = createClient(
         Deno.env.get('SUPABASE_URL') ?? '',
         Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     );
 
-    const { data, error } = await supabase.rpc('redeem_access_code', { p_code: code });
+    const { data, error } = await supabase.rpc('redeem_access_code', {
+        p_code: code,
+        p_ip: ip,
+    });
     if (error) return json({ error: 'Server error' }, 500);
-    if (!data) return json({ error: 'That code is invalid, expired, or used up.' }, 400);
-
-    return json({ expires_at: data }, 200);
+    if (data?.ok) return json({ expires_at: data.expires_at }, 200);
+    if (data?.locked) {
+        return json({ error: 'Too many attempts. Please wait a few minutes and try again.' }, 429);
+    }
+    return json({ error: 'That code is invalid, expired, or used up.' }, 400);
 });

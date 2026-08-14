@@ -13,9 +13,9 @@
     },
     "scripts": {
         "test": "vitest run",
-        "lint": "eslint src",
+        "lint": "eslint src --max-warnings 0",
         "format": "prettier --write .",
         "format:check": "prettier --check .",
-        "release": "webstore upload --source=src --auto-publish"
+        "release": "webstore upload --source=src"
     }
 }

@@ -7,9 +7,12 @@
 --   * access_codes     — time-limited codes that unlock the extension
 --   * code_redemptions — audit trail of code use
 --   * orgs / profiles  — crews + per-user role & org (admin console multi-tenancy)
---   * enforce_allowed_domain() trigger — rejects a sign-up unless its domain OR
---       its full email address is allow-listed
---   * handle_new_user() trigger — provisions a profiles row for each new user
+--   * enforce_allowed_domain() trigger — admits a sign-up whose domain OR full
+--       email is allow-listed, OR (with a crew selected) as a PENDING access request
+--   * handle_new_user() trigger — provisions a profiles row for each new user,
+--       'approved' when pre-approved else 'pending' (awaiting a crew admin)
+--   * approve_signup / deny_signup / set_member_role — crew-admin console actions
+--   * list_orgs() function — the crew list for the sign-up dropdown (anon-callable)
 --   * redeem_access_code() function — atomic validate-and-increment for a code
 --
 -- Individual user accounts + passwords live in Supabase's built-in auth.users
@@ -62,9 +65,14 @@ alter table public.code_redemptions enable row level security;
 
 -- ---------------------------------------------------------------------------
 -- Allow-list enforcement
--- Rejects a sign-up unless EITHER the full email is individually allow-listed in
--- allowed_emails (one-off), OR the email's domain is in allowed_domains. Runs as
--- the table owner (security definer) so it can read both despite RLS.
+-- Admits a sign-up when EITHER the full email is individually allow-listed in
+-- allowed_emails (one-off), OR the email's domain is in allowed_domains — those
+-- become 'approved' accounts (handle_new_user sets the status). Otherwise the
+-- sign-up is still admitted, but ONLY when the client selected a real crew (org)
+-- to route the request to; handle_new_user marks it 'pending' so a crew admin of
+-- that org must approve it before the account can sign in. A sign-up with no
+-- pre-approval AND no valid crew is rejected (there is nobody to review it). Runs
+-- as the table owner (security definer) so it can read the allow-lists despite RLS.
 -- ---------------------------------------------------------------------------
 create or replace function public.enforce_allowed_domain()
 returns trigger
@@ -72,6 +80,8 @@ language plpgsql
 security definer
 set search_path = public
 as $$
+declare
+    v_requested uuid;
 begin
     -- One-off individual address (matched case-insensitively).
     if exists (
@@ -80,14 +90,27 @@ begin
     ) then
         return new;
     end if;
-    -- Otherwise the email's domain must be approved.
+    -- Pre-approved domain.
     if exists (
         select 1 from public.allowed_domains
         where domain = lower(split_part(new.email, '@', 2))
     ) then
         return new;
     end if;
-    raise exception 'Email domain not allowed';
+    -- Not pre-approved: admit as a PENDING request, but only if a real crew was
+    -- selected so an admin of that crew can approve/deny it. The requested crew id
+    -- rides along in the sign-up metadata (options.data.requested_org_id).
+    begin
+        v_requested := nullif(new.raw_user_meta_data ->> 'requested_org_id', '')::uuid;
+    exception
+        when others then
+            v_requested := null; -- malformed value → treat as no crew selected
+    end;
+    if v_requested is not null
+       and exists (select 1 from public.orgs where id = v_requested) then
+        return new;
+    end if;
+    raise exception 'Select your crew to request access';
 end;
 $$;
 
@@ -97,37 +120,84 @@ create trigger enforce_allowed_domain
     for each row execute function public.enforce_allowed_domain();
 
 -- ---------------------------------------------------------------------------
--- Atomic access-code redemption
--- Locks the code row, validates (exists / not revoked / not expired / uses left),
--- increments the use count, records the redemption, and returns the code's
--- expires_at (or NULL when the code is not usable). Called by the redeem-code
--- Edge Function with the service-role key. SECURITY DEFINER + row lock make two
--- simultaneous redemptions of the last remaining use safe.
+-- Access-code brute-force protection
+-- The redeem-code Edge Function is anonymous and public, so a guessed 8-char code
+-- must not be cheap to brute-force. Every attempt (pass or fail) is logged per
+-- caller IP; redeem_access_code() locks the IP out after too many recent FAILURES.
+-- RLS on with no policies: only the SECURITY DEFINER function (and the service-role
+-- Edge Function) ever touch it. Rows are pruned opportunistically inside the
+-- function, so the table stays small without a separate cron.
 -- ---------------------------------------------------------------------------
-create or replace function public.redeem_access_code(p_code text)
-returns timestamptz
+create table if not exists public.redeem_attempts (
+    id           bigint generated always as identity primary key,
+    ip           text not null,
+    success      boolean not null default false,
+    attempted_at timestamptz not null default now()
+);
+create index if not exists redeem_attempts_ip_time
+    on public.redeem_attempts (ip, attempted_at);
+alter table public.redeem_attempts enable row level security;
+
+-- ---------------------------------------------------------------------------
+-- Atomic access-code redemption (with per-IP rate limiting)
+-- Locks the code row, validates (exists / not revoked / not expired / uses left),
+-- increments the use count, records the redemption, and returns a JSON result.
+-- Called by the redeem-code Edge Function with the service-role key. SECURITY
+-- DEFINER + row lock make two simultaneous redemptions of the last remaining use
+-- safe. p_ip is the caller's IP (from the Edge Function); when non-null, more than
+-- REDEEM_MAX_FAILS failed attempts within REDEEM_WINDOW locks that IP out. Only
+-- FAILED guesses count toward the lockout, so a legitimate user with a valid code
+-- is unaffected. Returns:
+--   { "ok": true,  "expires_at": <ts> }   success
+--   { "ok": false, "locked": true }       too many recent failures from this IP
+--   { "ok": false, "locked": false }      invalid / expired / used-up / revoked
+-- ---------------------------------------------------------------------------
+drop function if exists public.redeem_access_code(text);
+drop function if exists public.redeem_access_code(text, text);
+create or replace function public.redeem_access_code(p_code text, p_ip text default null)
+returns jsonb
 language plpgsql
 security definer
 set search_path = public
 as $$
 declare
-    v_row public.access_codes%rowtype;
+    v_row       public.access_codes%rowtype;
+    v_fails     integer;
+    v_window    constant interval := interval '15 minutes';
+    v_max_fails constant integer  := 5;
 begin
+    -- Rate limit by IP: block once recent FAILED attempts hit the ceiling.
+    if p_ip is not null then
+        select count(*) into v_fails
+        from public.redeem_attempts
+        where ip = p_ip and success = false and attempted_at > now() - v_window;
+        if v_fails >= v_max_fails then
+            return jsonb_build_object('ok', false, 'locked', true);
+        end if;
+    end if;
+
     select * into v_row
     from public.access_codes
     where code = p_code
     for update;
 
-    if not found then return null; end if;
-    if v_row.revoked then return null; end if;
-    if v_row.expires_at <= now() then return null; end if;
-    if v_row.max_uses is not null and v_row.uses >= v_row.max_uses then
-        return null;
+    if found and not v_row.revoked and v_row.expires_at > now()
+       and (v_row.max_uses is null or v_row.uses < v_row.max_uses) then
+        update public.access_codes set uses = uses + 1 where code = p_code;
+        insert into public.code_redemptions (code) values (p_code);
+        if p_ip is not null then
+            insert into public.redeem_attempts (ip, success) values (p_ip, true);
+            -- Opportunistic prune so the log can't grow without bound.
+            delete from public.redeem_attempts where attempted_at < now() - interval '1 day';
+        end if;
+        return jsonb_build_object('ok', true, 'expires_at', v_row.expires_at);
     end if;
 
-    update public.access_codes set uses = uses + 1 where code = p_code;
-    insert into public.code_redemptions (code) values (p_code);
-    return v_row.expires_at;
+    -- Failure (missing / revoked / expired / used up): count it against the IP.
+    if p_ip is not null then
+        insert into public.redeem_attempts (ip, success) values (p_ip, false);
+    end if;
+    return jsonb_build_object('ok', false, 'locked', false);
 end;
 $$;
 
@@ -147,8 +217,14 @@ create table if not exists public.orgs (
 create table if not exists public.profiles (
     user_id    uuid primary key references auth.users(id) on delete cascade,
     org_id     uuid references public.orgs(id),
+    -- 'qa_auditor' is a QA-review role: it may use the popup's QA Mode toggle but
+    -- has no admin powers (not an auth_is_admin() role).
     role       text not null default 'member'
-               check (role in ('member', 'crew_admin', 'super_admin')),
+               check (role in ('member', 'crew_admin', 'qa_auditor', 'super_admin')),
+    -- 'approved' accounts can sign in; 'pending' ones self-registered without a
+    -- pre-approved email/domain and await a crew admin's approve/deny.
+    status     text not null default 'approved'
+               check (status in ('pending', 'approved')),
     email      text,                      -- copied at sign-up so admins can list members
     created_at timestamptz not null default now()
 );
@@ -157,6 +233,29 @@ create table if not exists public.profiles (
 -- manages their own. Existing rows stay org_id = NULL (global) until assigned.
 alter table public.allowed_emails  add column if not exists org_id uuid references public.orgs(id);
 alter table public.allowed_domains add column if not exists org_id uuid references public.orgs(id);
+
+-- Approval status, for installs created before the approve/deny flow. Existing
+-- rows backfill to 'approved' via the default (they predate pending sign-ups). The
+-- CHECK is added separately and guarded, since a fresh create-table already added
+-- it as profiles_status_check (Postgres names the inline column check that).
+alter table public.profiles add column if not exists status text not null default 'approved';
+do $$
+begin
+    if not exists (
+        select 1 from pg_constraint
+        where conrelid = 'public.profiles'::regclass and conname = 'profiles_status_check'
+    ) then
+        alter table public.profiles
+            add constraint profiles_status_check check (status in ('pending', 'approved'));
+    end if;
+end $$;
+
+-- Widen the role check to include qa_auditor (a QA-review role) for installs
+-- created before it existed. Drop + re-add so the constraint definition updates.
+alter table public.profiles drop constraint if exists profiles_role_check;
+alter table public.profiles
+    add constraint profiles_role_check
+    check (role in ('member', 'crew_admin', 'qa_auditor', 'super_admin'));
 
 alter table public.orgs     enable row level security;
 alter table public.profiles enable row level security;
@@ -189,24 +288,57 @@ grant execute on function public.auth_org_id(), public.auth_is_admin(),
 
 -- ---------------------------------------------------------------------------
 -- Provision a profile for every new user. AFTER INSERT, so enforce_allowed_domain
--- (BEFORE INSERT) has already admitted them. Best-effort org: the org that
--- pre-approved their exact email, else the org that owns their domain, else NULL.
+-- (BEFORE INSERT) has already admitted them.
+--   * Pre-approved (exact email or domain) → status 'approved'; org = the
+--     allow-list row's org ONLY. A global (org_id NULL) pre-approval yields a NULL
+--     org until a super-admin assigns one — it deliberately does NOT fall back to
+--     the crew the user picked, so a pre-approved account can never self-assign
+--     (approved, unreviewed) into an arbitrary crew's roster.
+--   * Not pre-approved → status 'pending'; org = the selected crew (guaranteed
+--     present, since enforce_allowed_domain rejected the sign-up otherwise), so
+--     that crew's admins see the request in their approve/deny bucket.
 -- Role always starts as 'member' (a super-admin promotes crew admins by hand).
 -- ---------------------------------------------------------------------------
 create or replace function public.handle_new_user()
 returns trigger language plpgsql security definer set search_path = public
 as $$
 declare
-    v_org uuid;
+    v_org       uuid;
+    v_requested uuid;
+    v_status    text;
 begin
-    select org_id into v_org from public.allowed_emails
-    where lower(email) = lower(new.email) limit 1;
-    if v_org is null then
+    -- The crew the user picked at sign-up (options.data.requested_org_id).
+    begin
+        v_requested := nullif(new.raw_user_meta_data ->> 'requested_org_id', '')::uuid;
+    exception
+        when others then
+            v_requested := null;
+    end;
+
+    if exists (
+        select 1 from public.allowed_emails where lower(email) = lower(new.email)
+    ) then
+        -- Approved: org comes ONLY from the allow-list row (NULL until assigned) —
+        -- never from the user-supplied requested_org_id, so a pre-approved account
+        -- can't self-assign into a crew it picked.
+        select org_id into v_org from public.allowed_emails
+        where lower(email) = lower(new.email) limit 1;
+        v_status := 'approved';
+    elsif exists (
+        select 1 from public.allowed_domains
+        where domain = lower(split_part(new.email, '@', 2))
+    ) then
         select org_id into v_org from public.allowed_domains
         where domain = lower(split_part(new.email, '@', 2)) limit 1;
+        v_status := 'approved';
+    else
+        -- Not pre-approved: this is a request routed to the crew the user selected.
+        v_status := 'pending';
+        v_org := v_requested;
     end if;
-    insert into public.profiles (user_id, org_id, email)
-    values (new.id, v_org, new.email)
+
+    insert into public.profiles (user_id, org_id, email, status)
+    values (new.id, v_org, new.email, v_status)
     on conflict (user_id) do nothing;
     return new;
 end;
@@ -226,8 +358,10 @@ on conflict (user_id) do nothing;
 -- ---------------------------------------------------------------------------
 -- RLS policies
 -- profiles: a user reads their own row; a crew admin also reads their org's rows
--- (to list members). No client writes — roles/orgs are set by a super-admin (see
--- bootstrap) or the handle_new_user trigger.
+-- (to list members AND pending sign-up requests — the console filters by status).
+-- No client writes — status/role are changed only through the SECURITY DEFINER
+-- console functions (approve_signup / set_member_role / …), a super-admin (see
+-- bootstrap), or the handle_new_user trigger.
 -- ---------------------------------------------------------------------------
 drop policy if exists profiles_self_read on public.profiles;
 create policy profiles_self_read on public.profiles
@@ -263,6 +397,14 @@ create policy allowed_emails_admin_delete on public.allowed_emails
 grant select, insert, delete on public.allowed_emails to authenticated;
 grant select on public.profiles to authenticated;
 grant select on public.orgs to authenticated;
+
+-- The notify-approved Edge Function reads these two tables DIRECTLY with the
+-- service-role key (recipient email/org/status + crew name) rather than via a
+-- SECURITY DEFINER RPC, so service_role needs its own SELECT — it isn't granted
+-- one automatically here. (RLS doesn't apply to service_role; this is just the
+-- base table privilege.)
+grant select on public.profiles to service_role;
+grant select on public.orgs to service_role;
 
 -- ---------------------------------------------------------------------------
 -- Removing a pre-approval revokes the person. When an allowed_emails row is
@@ -311,9 +453,85 @@ create trigger remove_user_on_allowed_email_delete
 -- row cascades away) but leaves the allowed_emails pre-approval, so the person
 -- can re-register. Called by the admin console via POST /rest/v1/rpc/remove_member.
 -- SECURITY DEFINER, so it does its OWN authorization: the caller must be an admin
--- and the target must be in the caller's org.
+-- and the target must be in the caller's org. Guards mirror set_member_role so the
+-- console gate is not the only boundary — an admin cannot delete THEIR OWN account
+-- (self-lockout), cannot delete a super_admin (a SQL-only role), and cannot delete
+-- the org's LAST remaining admin (which would leave the crew with nobody able to
+-- approve sign-ups or manage members).
 -- ---------------------------------------------------------------------------
 create or replace function public.remove_member(p_user_id uuid)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+    v_role text;
+begin
+    if not auth_is_admin() then
+        raise exception 'Not authorized';
+    end if;
+    if p_user_id = auth.uid() then
+        raise exception 'You cannot remove your own account';
+    end if;
+    -- Target must be in the caller's org; capture its role for the guards below.
+    select role into v_role from public.profiles
+    where user_id = p_user_id and org_id = auth_org_id();
+    if not found then
+        raise exception 'Member is not in your organization';
+    end if;
+    if v_role = 'super_admin' then
+        raise exception 'You cannot remove a super admin';
+    end if;
+    if v_role = 'crew_admin' and (
+        select count(*) from public.profiles
+        where org_id = auth_org_id()
+          and role in ('crew_admin', 'super_admin')
+    ) <= 1 then
+        raise exception 'You cannot remove the last admin in your organization';
+    end if;
+    delete from auth.users where id = p_user_id;
+end;
+$$;
+
+grant execute on function public.remove_member(uuid) to authenticated;
+
+-- ---------------------------------------------------------------------------
+-- Account-approval console (crew admins)
+-- Self-registered users whose email/domain isn't pre-approved land as 'pending'
+-- profiles in the crew they selected. A crew admin sees them by reading their org's
+-- profiles (the profiles_org_read policy already permits this — the console just
+-- filters status=eq.pending) and acts via these SECURITY DEFINER functions, which
+-- do their OWN authorization (caller must be an admin; target must be in the
+-- caller's org). auth.uid() reflects the CALLER even inside a definer function.
+-- ---------------------------------------------------------------------------
+
+-- Approve a pending sign-up: flip its status to 'approved' so it can sign in. The
+-- user already set their password at sign-up, so they just sign in afterwards.
+create or replace function public.approve_signup(p_user_id uuid)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+    if not auth_is_admin() then
+        raise exception 'Not authorized';
+    end if;
+    update public.profiles set status = 'approved'
+    where user_id = p_user_id
+      and org_id = auth_org_id()
+      and status = 'pending';
+    if not found then
+        raise exception 'No pending request for that user in your organization';
+    end if;
+end;
+$$;
+
+-- Deny a pending sign-up: delete the account (its profiles row cascades away). Only
+-- a PENDING request in the caller's org may be denied here — deleting an already-
+-- approved member is the Members-list Remove (remove_member), a separate action.
+create or replace function public.deny_signup(p_user_id uuid)
 returns void
 language plpgsql
 security definer
@@ -325,15 +543,98 @@ begin
     end if;
     if not exists (
         select 1 from public.profiles
-        where user_id = p_user_id and org_id = auth_org_id()
+        where user_id = p_user_id and org_id = auth_org_id() and status = 'pending'
     ) then
-        raise exception 'Member is not in your organization';
+        raise exception 'No pending request for that user in your organization';
     end if;
     delete from auth.users where id = p_user_id;
 end;
 $$;
 
-grant execute on function public.remove_member(uuid) to authenticated;
+grant execute on function public.approve_signup(uuid), public.deny_signup(uuid)
+    to authenticated;
+
+-- ---------------------------------------------------------------------------
+-- Change an approved member's role (crew admins). A crew admin may set a member's
+-- role to 'member' or 'crew_admin' within their own org. Guards, so the console
+-- gate is not the only boundary: the caller must be an admin; 'super_admin' cannot
+-- be assigned here (that stays a SQL-only, super-admin task) and a super_admin
+-- member cannot be demoted here; and an admin cannot change their OWN role (no
+-- accidental self-lockout). Pending users are not members yet, so they are excluded.
+-- ---------------------------------------------------------------------------
+create or replace function public.set_member_role(p_user_id uuid, p_role text)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+    if not auth_is_admin() then
+        raise exception 'Not authorized';
+    end if;
+    if p_user_id = auth.uid() then
+        raise exception 'You cannot change your own role';
+    end if;
+    if p_role not in ('member', 'crew_admin', 'qa_auditor') then
+        raise exception 'Invalid role';
+    end if;
+    update public.profiles set role = p_role
+    where user_id = p_user_id
+      and org_id = auth_org_id()
+      and status = 'approved'
+      and role <> 'super_admin';
+    if not found then
+        raise exception 'Member is not in your organization';
+    end if;
+end;
+$$;
+
+grant execute on function public.set_member_role(uuid, text) to authenticated;
+
+-- ---------------------------------------------------------------------------
+-- Crew list for the sign-up "select your crew" dropdown. Returns just id + name,
+-- and is granted to anon so the SIGNED-OUT popup can populate it. SECURITY DEFINER
+-- so it reads orgs despite RLS. (Crew names are low-sensitivity; exposing the list
+-- to the publishable key is an accepted trade-off, consistent with the cooperative
+-- gate.) Approval still gates who can actually get in.
+-- ---------------------------------------------------------------------------
+create or replace function public.list_orgs()
+returns table (id uuid, name text)
+language sql
+security definer
+set search_path = public
+stable
+as $$
+    select id, name from public.orgs order by name
+$$;
+
+grant execute on function public.list_orgs() to anon, authenticated;
+
+-- ---------------------------------------------------------------------------
+-- Is an email pre-approved — either individually on allowed_emails OR by its domain
+-- on allowed_domains? Anon-callable so the SIGNED-OUT sign-up form can keep the
+-- "select your crew" dropdown hidden for anyone already pre-approved (they don't
+-- need to request access; only an un-pre-approved sign-up picks a crew to route to).
+-- Returns only a boolean for the exact address asked about, so it can't enumerate
+-- the lists.
+-- ---------------------------------------------------------------------------
+drop function if exists public.email_individually_approved(text);
+create or replace function public.email_preapproved(p_email text)
+returns boolean
+language sql
+security definer
+set search_path = public
+stable
+as $$
+    select exists (
+        select 1 from public.allowed_emails where lower(email) = lower(p_email)
+    ) or exists (
+        select 1 from public.allowed_domains
+        where domain = lower(split_part(p_email, '@', 2))
+    )
+$$;
+
+grant execute on function public.email_preapproved(text) to anon, authenticated;
 
 -- ---------------------------------------------------------------------------
 -- Bootstrap (super-admin, once per crew) — create an org, promote its admin, and

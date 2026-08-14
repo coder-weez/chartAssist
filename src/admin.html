@@ -107,8 +107,9 @@
             }
             .appbar-org {
                 margin-left: auto;
-                font-size: 12px;
-                opacity: 0.85;
+                font-size: 18px;
+                font-weight: 600;
+                opacity: 0.95;
             }
             .appbar-btn {
                 display: inline-flex;
@@ -200,6 +201,27 @@
                 color: var(--err-fg);
                 font: inherit;
                 cursor: pointer;
+            }
+            .btn-approve {
+                padding: 4px 10px;
+                border: none;
+                border-radius: 6px;
+                background: var(--accent);
+                color: #fff;
+                font: inherit;
+                cursor: pointer;
+                margin-right: 6px;
+            }
+            .btn-approve:hover {
+                background: var(--accent-600);
+            }
+            select {
+                padding: 6px 8px;
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                background: var(--field);
+                color: var(--text);
+                font: inherit;
             }
             .msg {
                 font-size: 13px;
@@ -333,8 +355,33 @@
             </section>
 
             <section class="card">
+                <h2>Pending requests</h2>
+                <p class="muted">
+                    People who created an account for your crew but whose email or domain isn't
+                    pre-approved. Approve to let them sign in, or deny to remove the request and its
+                    account.
+                </p>
+                <p id="pending_msg" class="msg" role="status" aria-live="polite"></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Requested</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="pending_body"></tbody>
+                </table>
+                <p id="pending_empty" class="empty" hidden>No pending requests.</p>
+            </section>
+
+            <section class="card">
                 <h2>Members</h2>
-                <p class="muted">People from your crew who have created an account.</p>
+                <p class="muted">
+                    People from your crew who have created an account. Change a member's role to
+                    grant or remove admin access.
+                </p>
+                <p id="members_msg" class="msg" role="status" aria-live="polite"></p>
                 <table>
                     <thead>
                         <tr>

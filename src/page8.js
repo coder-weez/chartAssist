@@ -54,38 +54,41 @@ $(document).ready(function () {
         caClrField(caCommentTarget());
     });
 
+    // Each page-8 preset fills one comment field from a single stored key. Shared
+    // read path so the storage-error guard and first-run hint live in one place.
+    function fillPage8(key, friendly) {
+        chrome.storage.sync.get(null, function (s) {
+            if (chrome.runtime.lastError || !s) {
+                caToast('Could not read your saved defaults — please try again.');
+                return;
+            }
+            if (caNoDefaultsHint(s)) return;
+            caFill(caCommentTarget(), s[key], friendly);
+        });
+    }
+
     $('.atref').click(function () {
         if (!caActive(8)) return;
-        chrome.storage.sync.get(null, function (s) {
-            caFill(caCommentTarget(), s['pg8_at_ref'], 'On Scene Comment');
-        });
+        fillPage8('pg8_at_ref', 'On Scene Comment');
     });
 
     $('.lvref').click(function () {
         if (!caActive(8)) return;
-        chrome.storage.sync.get(null, function (s) {
-            caFill(caCommentTarget(), s['pg8_lv_ref'], 'Transport Comment');
-        });
+        fillPage8('pg8_lv_ref', 'Transport Comment');
     });
 
     $('.atrec').click(function () {
         if (!caActive(8)) return;
-        chrome.storage.sync.get(null, function (s) {
-            caFill(caCommentTarget(), s['pg8_at_rec'], 'At Hospital Comment');
-        });
+        fillPage8('pg8_at_rec', 'At Hospital Comment');
     });
 
     $('.can1').click(function () {
         if (!caActive(8)) return;
-        chrome.storage.sync.get(null, function (s) {
-            caFill(caCommentTarget(), s['pg8_can_1'], 'Refusal Comment');
-        });
+        fillPage8('pg8_can_1', 'Refusal Comment');
     });
 
     $('.can2').click(function () {
         if (!caActive(8)) return;
-        chrome.storage.sync.get(null, function (s) {
-            caFill(caCommentTarget(), s['pg8_can_2'], 'Custom Comment');
-        });
+        fillPage8('pg8_can_2', 'Custom Comment');
     });
 });
