@@ -124,9 +124,13 @@ Deno.serve(async (req: Request) => {
 
     // 3. Render + send via Resend.
     if (!resendKey) return json({ error: 'Email is not configured' }, 502);
+    // The template ships as a bundled static file — declared in supabase/config.toml
+    // under [functions.notify-approved].static_files. Read it by a path relative to
+    // the function directory; `new URL(..., import.meta.url)` does NOT resolve in the
+    // deployed runtime (that path fails even when the file is bundled).
     let html: string;
     try {
-        html = await Deno.readTextFile(new URL('./access-approved.html', import.meta.url));
+        html = await Deno.readTextFile('./access-approved.html');
     } catch (e) {
         console.error('notify-approved: template read failed', e);
         return json({ error: 'Email template unavailable' }, 502);

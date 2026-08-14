@@ -51,12 +51,26 @@ is no server code to run beyond one Edge Function.
 
     Also deploy the **approval-notification** function — this one **keeps JWT
     verification** (only a signed-in admin may call it) and needs your Resend API
-    key so it can send the "you've been approved" email:
+    key so it can send the "you've been approved" email. Its email body is a bundled
+    **static file** (`access-approved.html`), which the CLI only ships when it's
+    declared in `supabase/config.toml` — add this **before** deploying:
+
+    ```toml
+    [functions.notify-approved]
+    static_files = ["./functions/notify-approved/access-approved.html"]
+    ```
+
+    Then deploy and set the key:
 
     ```bash
     supabase functions deploy notify-approved --project-ref YOUR-PROJECT-REF
     supabase secrets set RESEND_API_KEY=re_your_key --project-ref YOUR-PROJECT-REF
     ```
+
+    (The function reads the template with `Deno.readTextFile('./access-approved.html')`
+    — a path relative to the function dir; `new URL(..., import.meta.url)` does not
+    resolve in the deployed runtime. If you see `Email template unavailable` in the
+    console, the `static_files` line above is missing.)
 
     It re-checks the caller is a crew admin (via `my_profile()`), derives the
     recipient's email **server-side** from the user id, and sends via the Resend API.
