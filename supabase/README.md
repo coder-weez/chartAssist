@@ -64,6 +64,16 @@ is no server code to run beyond one Edge Function.
     never blocks the approval. (The `RESEND_API_KEY` is the same key used as the
     custom-SMTP password — see _Email delivery_ below.)
 
+    This function reads `profiles`/`orgs` **directly** with the service-role key, so
+    `service_role` needs `SELECT` on them — `schema.sql` grants this, so just make
+    sure you've (re-)run it. If you see `permission denied for table profiles` in the
+    function logs, apply the grant on its own:
+
+    ```sql
+    grant select on public.profiles to service_role;
+    grant select on public.orgs to service_role;
+    ```
+
 5. **Wire the extension to your project.** From Dashboard → **Project Settings**,
    copy the **Project URL** (under **API**) and the **Publishable** key (it starts
    with `sb_publishable_`, under **API Keys**), then set them in two places:

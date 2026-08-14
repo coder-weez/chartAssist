@@ -85,13 +85,26 @@ Deno.serve(async (req: Request) => {
     // 2. Read the TARGET server-side (service role). The recipient email is taken
     //    from here, never from the client, and must be in the caller's org (a
     //    super_admin may act across orgs) and actually approved.
-    const admin = createClient(url, serviceKey);
+    if (!serviceKey) {
+        console.error('notify-approved: SUPABASE_SERVICE_ROLE_KEY is not set');
+        return json({ error: 'Server not configured' }, 500);
+    }
+    const admin = createClient(url, serviceKey, { auth: { persistSession: false } });
     const { data: target, error: targetErr } = await admin
         .from('profiles')
         .select('email, org_id, status')
         .eq('user_id', userId)
         .maybeSingle();
-    if (targetErr || !target) return json({ error: 'User not found' }, 404);
+    if (targetErr) {
+        // A query error (e.g. the service-role key can't read profiles) — log the
+        // real reason instead of masking it as "User not found".
+        console.error('notify-approved: profiles read failed for', userId, targetErr);
+        return json({ error: 'Directory lookup failed', detail: targetErr.message }, 500);
+    }
+    if (!target) {
+        console.error('notify-approved: no profile row for user_id', userId);
+        return json({ error: 'User not found' }, 404);
+    }
     if (!isSuper && target.org_id !== callerProfile.org_id) {
         return json({ error: 'Not in your organization' }, 403);
     }

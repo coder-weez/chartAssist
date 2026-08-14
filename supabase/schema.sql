@@ -398,6 +398,14 @@ grant select, insert, delete on public.allowed_emails to authenticated;
 grant select on public.profiles to authenticated;
 grant select on public.orgs to authenticated;
 
+-- The notify-approved Edge Function reads these two tables DIRECTLY with the
+-- service-role key (recipient email/org/status + crew name) rather than via a
+-- SECURITY DEFINER RPC, so service_role needs its own SELECT — it isn't granted
+-- one automatically here. (RLS doesn't apply to service_role; this is just the
+-- base table privilege.)
+grant select on public.profiles to service_role;
+grant select on public.orgs to service_role;
+
 -- ---------------------------------------------------------------------------
 -- Removing a pre-approval revokes the person. When an allowed_emails row is
 -- deleted, delete the matching account too — their profiles row then cascades
