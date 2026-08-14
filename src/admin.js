@@ -627,3 +627,14 @@ try {
 } catch {
     /* not an extension context */
 }
+
+// Footer: append the running version from the manifest so it never drifts.
+try {
+    if (window.chrome && chrome.runtime && chrome.runtime.getManifest) {
+        var verEl = document.getElementById('app-version');
+        var ver = chrome.runtime.getManifest().version;
+        if (verEl && ver) verEl.textContent = ' · v' + ver;
+    }
+} catch {
+    /* not an extension context */
+}

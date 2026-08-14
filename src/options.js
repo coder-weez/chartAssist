@@ -374,7 +374,7 @@ function export_options() {
         var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
         a.href = url;
-        a.download = 'emscharts-assist-defaults.json';
+        a.download = 'chartassist-defaults.json';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -641,4 +641,15 @@ if (typeof module !== 'undefined' && module.exports) {
     });
     document.querySelector('#import-file').addEventListener('change', import_options);
     document.querySelector('#reset').addEventListener('click', reset_options);
+    // Footer: append the running version from the manifest so it never drifts.
+    // No-op (the brand line stands alone) when opened outside the extension.
+    try {
+        if (window.chrome && chrome.runtime && chrome.runtime.getManifest) {
+            var verEl = document.getElementById('app-version');
+            var ver = chrome.runtime.getManifest().version;
+            if (verEl && ver) verEl.textContent = ' · v' + ver;
+        }
+    } catch {
+        /* not an extension context */
+    }
 }

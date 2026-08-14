@@ -1,7 +1,7 @@
-EMSCharts Assist
-================
+GRTech ChartAssist
+==================
 
-EMSCharts Assist is a Chrome browser extension that lets you store defaults for emscharts.com patient care reports and fill them in with one click. Access is gated: the tools are disabled until you sign in with an **approved crew account** (or a time-limited access code). The source in this repository is proprietary — see [LICENSE.txt](LICENSE.txt) — and is published here for authorized crews and contributors, not as open-source software.
+GRTech ChartAssist is a Chrome browser extension that lets you store defaults for emscharts.com patient care reports and fill them in with one click. Access is gated: the tools are disabled until you sign in with an **approved crew account** (or a time-limited access code). The source in this repository is proprietary — see [LICENSE.txt](LICENSE.txt) — and is published here for authorized crews and contributors, not as open-source software.
 
 ## Disclaimer
 
@@ -52,8 +52,8 @@ shared the extension:
 
 1. **Add it to Chrome** — from the Chrome Web Store listing your admin gives you,
    click **Add to Chrome**. (Pin it: click the puzzle-piece icon in the toolbar and
-   the pin next to EMSCharts Assist so its icon stays visible.)
-2. **Sign in** — click the EMSCharts Assist icon and sign in with your approved
+   the pin next to GRTech ChartAssist so its icon stays visible.)
+2. **Sign in** — click the GRTech ChartAssist icon and sign in with your approved
    crew email and password, or an access code your admin gave you. If your email
    isn't pre-approved, use **Create account**, pick your crew, and your request goes
    to your crew admin — you'll sign in once they approve it.
@@ -127,7 +127,7 @@ A normal sign-in keeps you authorized for **1 month** (across browser restarts);
 after that you sign in again. You can sign out any time from the popup. No patient
 data is involved in signing in — only your account credentials.
 
-**When you'll get an email.** ChartsAssist only emails you about your own account:
+**When you'll get an email.** ChartAssist only emails you about your own account:
 a **code to confirm your email** when you create an account, a **password-reset
 code** if you use "Forgot password?", a **notice if your password is changed**, and
 a **"you've been approved" notice** once a crew admin approves your access (so you
@@ -196,7 +196,7 @@ from `chrome.storage.sync` when an AutoComplete button is clicked.
 The Options page's action bar has **Export** and **Import** buttons:
 
 - **Export** downloads all of your saved settings as a single
-  `emscharts-assist-defaults.json` file.
+  `chartassist-defaults.json` file.
 - **Import** loads settings from a previously exported file and saves
   them. Only keys the extension recognizes are imported, so an unrelated or
   malformed file is rejected with an error message. Importing overwrites any
@@ -227,7 +227,7 @@ form fields. When the extension loads a PCR page it quietly checks that the
 fields it fills still exist; if some are missing it shows a yellow warning toast
 and AutoComplete may not work correctly on that page. The specific missing field
 selectors are also logged to the page's DevTools console (a
-`EMSCharts Assist: … Missing selectors:` warning), so you can see exactly which
+`GRTech ChartAssist: … Missing selectors:` warning), so you can see exactly which
 ones failed. If you see this, the page likely changed on Zoll's end — please
 open an Issue noting which page it was (and the logged selectors, if handy) so
 the selectors can be updated. (A weekly CI job also watches Zoll's public

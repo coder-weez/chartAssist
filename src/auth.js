@@ -1,4 +1,4 @@
-// Supabase-backed login for EMSCharts Assist.
+// Supabase-backed login for GRTech ChartAssist.
 //
 // Loaded ONLY by the extension popup (popup.html) — the sign-in surface. The
 // injected PCR toolbar never calls the network; it only reads the resulting

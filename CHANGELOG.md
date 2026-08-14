@@ -1,6 +1,6 @@
 # Changelog
 
-User-facing changes to EMSCharts Assist, newest first.
+User-facing changes to GRTech ChartAssist, newest first.
 
 **On each release:** copy the top entry into the Chrome Web Store listing's
 "What's new" block. The store has no separate changelog field, so that block
@@ -10,6 +10,15 @@ full history stays here. Write entries short and for EMS crews (no code or
 selector details). When several unreleased versions ship in one store package
 (as below), use the combined "What's new" block as the store copy — the store
 publishes a single build, not each version separately.
+
+## What's new — 1.7.0.0 — unreleased
+
+**New name — now GRTech ChartAssist.**
+
+- **Fresh branding.** The extension is now **GRTech ChartAssist**, from Gardner
+  Responder Technologies (GRTech). Same toolbar, same one-click defaults, same
+  sign-in — only the name has changed. Your saved defaults and your account carry
+  over automatically; there's nothing to reconfigure.
 
 ## What's new — 1.6.0.0 — unreleased
 

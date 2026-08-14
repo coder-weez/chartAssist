@@ -1,4 +1,4 @@
--- EMSCharts Assist — login backend schema (Supabase / Postgres)
+-- GRTech ChartAssist — login backend schema (Supabase / Postgres)
 -- Run this once in your Supabase project's SQL editor.
 --
 -- What it sets up:

@@ -1,4 +1,4 @@
-// Shared UI helpers for EMSCharts Assist content scripts.
+// Shared UI helpers for GRTech ChartAssist content scripts.
 // Loaded after jQuery and before each page script.
 
 function caApplyInitialState(bar) {
@@ -608,7 +608,7 @@ function caHealthCheck(page, anchors) {
     // storage the page console can't read.
     if (missing.length) {
         console.warn(
-            'EMSCharts Assist: ' +
+            'GRTech ChartAssist: ' +
                 missing.length +
                 ' expected field(s) not found on page ' +
                 page +

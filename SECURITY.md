@@ -1,6 +1,6 @@
 # Security Policy
 
-EMSCharts Assist gates a toolbar behind a login and stores user accounts (email, crew, role) in a Supabase backend, with Row-Level Security as the real boundary between crews. If you believe you've found a vulnerability — for example a way to read or change another crew's data, bypass the approval gate, or escalate a role — we want to hear about it **privately**, not in a public issue.
+GRTech ChartAssist gates a toolbar behind a login and stores user accounts (email, crew, role) in a Supabase backend, with Row-Level Security as the real boundary between crews. If you believe you've found a vulnerability — for example a way to read or change another crew's data, bypass the approval gate, or escalate a role — we want to hear about it **privately**, not in a public issue.
 
 ## Reporting a vulnerability
 
