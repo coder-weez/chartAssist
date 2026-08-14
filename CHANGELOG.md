@@ -1,6 +1,6 @@
 # Changelog
 
-User-facing changes to GRTech ChartAssist, newest first.
+User-facing changes to ChartAssist, newest first.
 
 **On each release:** copy the top entry into the Chrome Web Store listing's
 "What's new" block. The store has no separate changelog field, so that block
@@ -10,6 +10,53 @@ full history stays here. Write entries short and for EMS crews (no code or
 selector details). When several unreleased versions ship in one store package
 (as below), use the combined "What's new" block as the store copy — the store
 publishes a single build, not each version separately.
+
+## What's new — store release 0.9.0.2 → 1.7.0.0 — unreleased
+
+_Paste the block below into the Chrome Web Store "What's new". It covers
+everything since the last published version (0.9.0.2), which all ships as one
+update. The per-version detail is kept in the entries further down._
+
+**ChartAssist — now a Gardner Responder Technologies product** (formerly
+EMSCharts Assist). Same one-click toolbar for your EMSCharts defaults —
+refreshed, more reliable, and renamed.
+
+**Important: signing in is now required.** The toolbar on EMSCharts stays locked
+until you sign in from the extension popup with an approved crew account (or a
+temporary access code). Once you're in you stay signed in for a month — and
+signing in sends only your login details, never any patient data.
+
+**Getting access**
+
+- **Create your own account** in the popup with your work email. If your email
+  or its domain is already approved, you're in right away.
+- **Not pre-approved? Request access.** Pick your crew and your request goes
+  straight to that crew's admin — sign in as soon as they approve it.
+- **Temporary access codes** unlock the extension for a set time (like a 24-hour
+  ride-along), no account needed.
+- **Self-service email confirmation and password reset**, each with a 6-digit
+  code sent to your inbox — no links to chase.
+
+**For crew admins**
+
+- A new **Admin console** to approve or deny access requests, manage who's
+  pre-approved, and set member roles (Member, QA auditor, Crew admin) — no IT or
+  database needed. Each crew only ever sees and manages its own people.
+
+**Everyday improvements**
+
+- **Dark mode** across the popup, Options, and the on-chart toolbar — follows
+  your system light/dark theme.
+- **A refreshed, easier-to-read interface** — collapsible Options sections, a
+  simpler popup, and a toolbar reset button to snap it back into place.
+- **A new Respiratory Effort default** on the Cardiac/Respiratory page.
+- **Your saved defaults now survive updates** automatically — updating no longer
+  clears your Options.
+- **Page 8 vitals comments** now fill the Edit Vitals popup's own comment box
+  when it's open.
+- **More dependable in the field** — no surprise sign-outs on hospital or venue
+  Wi-Fi, clearer on-screen messages, and keyboard- and screen-reader-friendly
+  controls.
 
 ## What's new — 1.7.0.0 — unreleased
 
@@ -86,31 +133,6 @@ authorized crews can use it:
 
 Signing in sends only your login details to the sign-in service — never any
 patient data. See the Privacy Policy for details.
-
-## What's new — combined 1.0.0.0 + 1.1.0.0 + 1.1.0.1 + 1.2.0.0 store release — unreleased
-
-`1.0.0.0`, `1.1.0.0`, `1.1.0.1`, and `1.2.0.0` publish together as one Chrome Web
-Store update (crews move straight from `0.9.0.2` to `1.2.0.0`), so this is the
-block to paste into the listing's "What's new". Highlights:
-
-- **New Respiratory Effort default on the Cardiac/Respiratory page.** Pick your
-  usual effort value in Options and AutoComplete fills it for you; the respiratory
-  fields are now grouped under a clear "Respiratory" heading.
-- **Your saved defaults now carry over when the extension updates.** Settings
-  saved in older versions are kept and moved to their new spots automatically, so
-  updating no longer clears your Options.
-- **Dark mode** across the popup, Options page, and the toolbar on EMSCharts — one
-  toggle that follows your system light/dark theme by default.
-- **A refreshed interface** — a cleaner Options page with collapsible sections and
-  a fixed Save / Export / Import / Reset bar, a simpler popup with a direct
-  "Open Options" button, and a restyled, easier-to-read toolbar.
-- **Page 8 vitals comments** now fill the Edit Vitals popup's own comment box when
-  that popup is open (instead of the comment field behind it).
-- **A toolbar reset button (↺)** — snap the toolbar back to the top-right corner if
-  you've dragged it out of the way.
-- **A "Report a Problem" link and the version number** in the popup footer.
-
-The per-version detail for each of these is in the entries below.
 
 ## 1.4.0.0 — unreleased
 
