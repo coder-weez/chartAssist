@@ -1,0 +1,19 @@
+# Cloudflare Workers deploy for the brand site.
+#
+# Cloudflare "Workers Builds" is connected to this repo with its Root Directory
+# set to `site`, so the build runs from this folder and reads this config.
+#
+# This is a static-assets-only Worker (no server code): `wrangler deploy`
+# uploads the contents of this folder — the brand pages plus
+# chartassist-logo.png, which the transactional email templates link to — and
+# serves them. Without this file the Workers Builds check had nothing to deploy
+# and failed.
+#
+# `directory = "."` is this site/ folder. `name` must match the connected
+# Worker service. Custom-domain routing (gardnerrespondertechnologies.com) is
+# configured in the Cloudflare dashboard, not here.
+name = "dawn-haze-9305"
+compatibility_date = "2025-06-01"
+
+[assets]
+directory = "."

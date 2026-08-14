@@ -1,4 +1,4 @@
-# EMSCharts Assist — login backend (Supabase)
+# GRTech ChartAssist — login backend (Supabase)
 
 This folder holds everything the extension's login needs on the server side. The
 extension itself talks to Supabase over plain `fetch` (see `src/auth.js`); there
@@ -14,7 +14,7 @@ is no server code to run beyond one Edge Function.
 ## One-time setup
 
 1. **Create a project** at [supabase.com](https://supabase.com) (the free tier is
-   fine). Name the project **`emscharts-assist`**.
+   fine). Name the project **`chartassist`**.
 
 2. **Run the schema.** Open the project's **SQL Editor**, paste all of
    `schema.sql`, and run it.

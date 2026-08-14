@@ -1,10 +1,10 @@
-# Privacy Policy — EMSCharts Assist
+# Privacy Policy — GRTech ChartAssist
 
 _Last updated: August 2026_
 
 ## What this extension does
 
-EMSCharts Assist is a Chrome browser extension that fills in fields on EMSCharts patient care reports (PCRs) with default values you configure. To restrict use to authorized personnel, it requires you to sign in before the tools are enabled.
+GRTech ChartAssist is a Chrome browser extension that fills in fields on EMSCharts patient care reports (PCRs) with default values you configure. To restrict use to authorized personnel, it requires you to sign in before the tools are enabled.
 
 ## Data we collect
 

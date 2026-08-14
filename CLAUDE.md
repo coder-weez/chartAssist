@@ -1,4 +1,4 @@
-# EMSCharts Assist — Claude Code Guide
+# GRTech ChartAssist — Claude Code Guide
 
 > **Keep this file and `README.md` up to date.** When behaviour, architecture, or helper APIs change, update both documents in the same commit. CLAUDE.md is the technical reference for contributors and AI assistants; README.md is the user-facing reference. Neither should drift from the actual code.
 

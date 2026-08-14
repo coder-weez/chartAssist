@@ -31,7 +31,7 @@ const cors = {
 };
 
 const FROM = 'Gardner Responder Technologies <noreply@grtechsupport.com>';
-const SUBJECT = "You've been approved for ChartsAssist";
+const SUBJECT = "You've been approved for ChartAssist";
 
 function json(body: unknown, status: number): Response {
     return new Response(JSON.stringify(body), {

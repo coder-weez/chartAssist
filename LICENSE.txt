@@ -1,4 +1,4 @@
-EMSCharts Assist — Proprietary Software License
+GRTech ChartAssist — Proprietary Software License
 Copyright (c) 2026 coder-weez, Louise Gardner. All rights reserved.
 
 This software, including its source code, assets, and documentation (the
