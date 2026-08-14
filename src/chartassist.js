@@ -608,7 +608,7 @@ function caHealthCheck(page, anchors) {
     // storage the page console can't read.
     if (missing.length) {
         console.warn(
-            'GRTech ChartAssist: ' +
+            'ChartAssist: ' +
                 missing.length +
                 ' expected field(s) not found on page ' +
                 page +
