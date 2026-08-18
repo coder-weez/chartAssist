@@ -38,7 +38,11 @@ supabase/            — Login backend (deployed separately; see supabase/README
   functions/notify-approved/ — Edge Function that emails a user on approval (Resend API)
   email-templates/   — HTML bodies for the Supabase auth emails (confirm/reset/changed)
 
-site/                — Static pages hosted on Cloudflare Pages (brand + /email-confirmed)
+site/                — Static marketing site (Cloudflare Workers static assets)
+  index.html         — Company home: brand hero + "Our tools" grid (ChartAssist featured)
+  chartAssist.html   — ChartAssist product page, served at the clean URL /chartAssist
+  styles.css         — Shared design system for index.html + chartAssist.html
+  chartassist-logo.png — 128px logo (also the favicon); reused by the email templates
 ```
 
 ### Page 1 (`page1.js`)
@@ -116,7 +120,7 @@ Beyond the Chrome extension itself, the login gate depends on three hosted servi
 - **Cloudflare** — DNS + web hosting across the three domains:
     - **DNS / email-auth records** for the sending domain `grtechsupport.com` — SPF/DKIM/DMARC that make Resend mail pass authentication and stay out of spam.
     - **Email Routing** — receives `support@grtechsupport.com` (forwarding), independent of Resend's `send.` sending subdomain.
-    - **Pages** — hosts `site/` on `gardnerrespondertechnologies.com`: the brand `index.html` at `/`, and `email-confirmed.html` at `/email-confirmed` (a fallback landing page for link-based confirmation; the default flow confirms with the in-popup code instead).
+    - **Workers static assets** — hosts `site/` on `gardnerrespondertechnologies.com` (config in `site/wrangler.toml`, `[assets] directory = "."`; Workers Builds auto-deploys on push). Pages: the company home `index.html` at `/`, the ChartAssist product page `chartAssist.html` at the clean URL `/chartAssist` (Workers `html_handling` drops the `.html`; the file is mixed-case, so links must use `/chartAssist` exactly). Both pages share `styles.css`. (The former `email-confirmed.html` fallback was removed once email confirmation moved fully to the in-popup 6-digit code; Supabase's **Site URL** now points at `/chartAssist` so any stray auth redirect lands on a live page instead of a 404.)
     - **Redirect Rule** — `grteches.com` 301-redirects to the brand domain.
 
 **Domain roles:** `gardnerrespondertechnologies.com` = brand + site + Supabase Site URL; `grtechsupport.com` = email sending + support; `grteches.com` = short alias / redirect. The gate stays **cooperative** regardless of hosting — these services enforce email delivery and (via RLS) data isolation, not a bypass-proof client.

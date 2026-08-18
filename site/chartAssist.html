@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>ChartAssist — Gardner Responder Technologies</title>
+        <meta
+            name="description"
+            content="ChartAssist is a Chrome extension for EMS crews that auto-fills your emsCharts PCR defaults in one click, clears them for the next chart, and never stores patient data."
+        />
+        <link rel="icon" href="/chartassist-logo.png" />
+        <link rel="stylesheet" href="/styles.css" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="ChartAssist for emsCharts" />
+        <meta
+            property="og:description"
+            content="One-click autofill for your emsCharts PCR defaults. Built for EMS crews. No patient data stored."
+        />
+        <meta property="og:image" content="/chartassist-logo.png" />
+    </head>
+    <body>
+        <header class="site-header">
+            <div class="container site-nav">
+                <a class="brand-lockup" href="/">
+                    <img src="/chartassist-logo.png" alt="" />
+                    <span class="brand-name">ChartAssist</span>
+                </a>
+                <nav class="nav-links">
+                    <a class="nav-back nav-hide" href="/">← All tools</a>
+                    <!-- STORE LINK: update to the full Chrome Web Store install URL before launch. -->
+                    <a
+                        class="btn btn-primary"
+                        href="https://chromewebstore.google.com/detail/emscharts-assist"
+                    >
+                        Add to Chrome
+                    </a>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+            <section class="hero">
+                <div class="container hero-split">
+                    <div>
+                        <p class="eyebrow">Chrome extension for EMS crews</p>
+                        <h1>Fill an entire PCR before you touch the keyboard.</h1>
+                        <p class="lead">
+                            ChartAssist drops your pre-configured defaults into emsCharts in one
+                            click, then clears them for the next call. No patient data stored, ever.
+                        </p>
+                        <div class="cta-row">
+                            <!-- STORE LINK: update to the full Chrome Web Store install URL before launch. -->
+                            <a
+                                class="btn btn-primary btn-lg"
+                                href="https://chromewebstore.google.com/detail/emscharts-assist"
+                            >
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                >
+                                    <circle cx="12" cy="12" r="9" />
+                                    <circle cx="12" cy="12" r="3.4" />
+                                    <line x1="12" y1="8.6" x2="21" y2="8.6" />
+                                    <line x1="9" y1="13.7" x2="4.5" y2="5.9" />
+                                    <line x1="15" y1="13.7" x2="10.5" y2="21.5" />
+                                </svg>
+                                Add to Chrome — free
+                            </a>
+                            <span class="cta-note">Available to approved EMS crews</span>
+                        </div>
+                    </div>
+                    <div class="shot">
+                        <div class="shot-bar">
+                            <span></span><span></span><span></span>
+                            <span class="shot-url">emscharts.com / pr / page2.cfm</span>
+                        </div>
+                        <img
+                            src="/screenshots/page2.png"
+                            alt="The ChartAssist toolbar floating on an emsCharts PCR page, showing AutoComplete, Clear Fields, and Page Defaults buttons."
+                        />
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="container">
+                    <div class="section-head">
+                        <h2>What it does</h2>
+                    </div>
+                    <div class="features">
+                        <div class="feature-card">
+                            <span class="feature-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M13 2 3 14h7l-1 8 11-13h-7l1-7z" />
+                                </svg>
+                            </span>
+                            <h3>One-click AutoComplete</h3>
+                            <p>
+                                Fills your configured defaults across every PCR page — dispatch,
+                                exam, billing, and more.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                >
+                                    <path
+                                        d="M20 6H10l-6 6 6 6h10a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1z"
+                                        stroke-linejoin="round"
+                                    />
+                                    <path d="m13 10 4 4M17 10l-4 4" stroke-linecap="round" />
+                                </svg>
+                            </span>
+                            <h3>Clear Fields</h3>
+                            <p>
+                                Reset those same fields for the next chart in one tap, behind a
+                                quick confirmation.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                >
+                                    <rect x="6" y="4" width="12" height="17" rx="2" />
+                                    <path d="M9 4V3h6v1" />
+                                    <path
+                                        d="m9 13 2 2 4-4"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                </svg>
+                            </span>
+                            <h3>QA Mode</h3>
+                            <p>
+                                Freeze the toolbar during chart review so nothing can be changed by
+                                accident.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                >
+                                    <rect x="5" y="11" width="14" height="9" rx="2" />
+                                    <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+                                </svg>
+                            </span>
+                            <h3>Crew login gate</h3>
+                            <p>
+                                Approved accounts only. The toolbar stays locked until an authorized
+                                user signs in.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-tight" style="background: var(--surface-2)">
+                <div class="container">
+                    <div class="section-head">
+                        <h2>How it works</h2>
+                    </div>
+                    <div class="steps">
+                        <div class="step">
+                            <span class="step-num">1</span>
+                            <h3>Set your defaults</h3>
+                            <p>
+                                Enter the values you chart the same way every time on the Options
+                                page — once.
+                            </p>
+                        </div>
+                        <div class="step">
+                            <span class="step-num">2</span>
+                            <h3>Click AutoComplete</h3>
+                            <p>
+                                Open a PCR and let ChartAssist fill the matching fields across the
+                                pages.
+                            </p>
+                        </div>
+                        <div class="step">
+                            <span class="step-num">3</span>
+                            <h3>Clear for the next</h3>
+                            <p>
+                                Hit Clear Fields to reset those fields and start the next chart
+                                clean.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="container">
+                    <div class="section-head">
+                        <h2>A closer look</h2>
+                    </div>
+                    <div class="gallery">
+                        <figure>
+                            <div class="shot">
+                                <div class="shot-bar"><span></span><span></span><span></span></div>
+                                <img
+                                    src="/screenshots/options_settings.png"
+                                    alt="The ChartAssist Options page, where crews set the default values that AutoComplete fills in."
+                                />
+                            </div>
+                            <figcaption>Configure your defaults, organized by page.</figcaption>
+                        </figure>
+                        <figure>
+                            <div class="shot">
+                                <div class="shot-bar"><span></span><span></span><span></span></div>
+                                <img
+                                    src="/screenshots/page8.png"
+                                    alt="An emsCharts activity-log page with the ChartAssist toolbar and its preset buttons."
+                                />
+                            </div>
+                            <figcaption>Preset buttons speed up repetitive pages.</figcaption>
+                        </figure>
+                        <figure>
+                            <div class="shot">
+                                <div class="shot-bar"><span></span><span></span><span></span></div>
+                                <img
+                                    src="/screenshots/qa_mode.png"
+                                    alt="QA Mode enabled in the ChartAssist popup, showing the toolbar frozen with a QA MODE overlay."
+                                />
+                            </div>
+                            <figcaption>QA Mode freezes the toolbar for review.</figcaption>
+                        </figure>
+                    </div>
+                </div>
+            </section>
+
+            <section class="band">
+                <div class="container">
+                    <h2>No patient data. Ever.</h2>
+                    <p class="lead">
+                        ChartAssist is built so patient information never leaves your browser. It
+                        only handles the template defaults you enter and your login — nothing about
+                        any patient or chart is read, stored, or transmitted.
+                    </p>
+                    <ul class="trust-list">
+                        <li>
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            >
+                                <path d="M12 3 5 6v5c0 4 3 7 7 8 4-1 7-4 7-8V6l-7-3z" />
+                                <path
+                                    d="m9 12 2 2 4-4"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
+                            <span>
+                                <strong>No PHI handled.</strong> Only your saved defaults and
+                                sign-in are stored.
+                            </span>
+                        </li>
+                        <li>
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            >
+                                <rect x="5" y="11" width="14" height="9" rx="2" />
+                                <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+                            </svg>
+                            <span>
+                                <strong>Crew login gate.</strong> The tools stay disabled until an
+                                approved user signs in.
+                            </span>
+                        </li>
+                        <li>
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            >
+                                <rect x="6" y="4" width="12" height="17" rx="2" />
+                                <path d="M9 4V3h6v1" />
+                                <path
+                                    d="m9 13 2 2 4-4"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
+                            <span>
+                                <strong>QA Mode.</strong> Freeze the toolbar so nothing changes mid
+                                review.
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="container" style="max-width: 720px">
+                    <div class="access">
+                        <h2>Getting access</h2>
+                        <p class="lead">
+                            ChartAssist is available to approved EMS crews. If your service is
+                            already set up, sign in from the extension. If not, reach out and we'll
+                            get your crew added.
+                        </p>
+                        <div class="cta-row" style="justify-content: center">
+                            <!-- STORE LINK: update to the full Chrome Web Store install URL before launch. -->
+                            <a
+                                class="btn btn-primary btn-lg"
+                                href="https://chromewebstore.google.com/detail/emscharts-assist"
+                            >
+                                Add to Chrome
+                            </a>
+                            <a
+                                class="btn btn-secondary btn-lg"
+                                href="mailto:support@grtechsupport.com"
+                            >
+                                Contact us
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <div class="container footer-inner">
+                <a class="foot-brand" href="/">
+                    <img src="/chartassist-logo.png" alt="" />
+                    Gardner Responder Technologies
+                </a>
+                <span class="footer-meta">
+                    <a href="/">All tools</a>
+                    <a href="mailto:support@grtechsupport.com">support@grtechsupport.com</a>
+                    <span>© Gardner Responder Technologies</span>
+                </span>
+            </div>
+            <p class="disclaimer container">
+                ChartAssist is an independent tool — not affiliated with or endorsed by emsCharts,
+                Inc.
+            </p>
+        </footer>
+    </body>
+</html>

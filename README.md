@@ -156,7 +156,8 @@ hosted services — none of which ship inside the extension; they're configured 
   `grtechsupport.com`.
 - **Cloudflare** — runs DNS for the domains — including the SPF/DKIM/DMARC records
   that keep those emails out of spam — receives `support@grtechsupport.com`, and
-  hosts the small landing pages under `site/` (on `gardnerrespondertechnologies.com`).
+  hosts the marketing site under `site/` (on `gardnerrespondertechnologies.com`) —
+  the company home page plus the ChartAssist product page at `/chartAssist`.
 
 The three domains split by purpose: `gardnerrespondertechnologies.com` is the brand
 site, `grtechsupport.com` sends the email and receives support, and `grteches.com`
