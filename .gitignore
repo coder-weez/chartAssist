@@ -13,6 +13,9 @@
 node_modules/
 npm-debug.log*
 
+# Cloudflare Wrangler local dev scratch (created by `wrangler dev` in site/)
+.wrangler/
+
 # Supabase CLI local state (created by `supabase link` / local dev — never commit)
 supabase/.temp/
 supabase/.branches/

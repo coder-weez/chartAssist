@@ -6,105 +6,215 @@
         <title>Gardner Responder Technologies</title>
         <meta
             name="description"
-            content="Gardner Responder Technologies builds focused software tools for EMS crews and responders."
+            content="Gardner Responder Technologies builds focused software tools for EMS crews and responders — starting with ChartAssist, a one-click autofill assistant for emsCharts."
         />
-        <style>
-            :root {
-                --bg: #f4f6f8;
-                --card: #ffffff;
-                --text: #1f2933;
-                --muted: #667085;
-                --accent: #2191c0;
-                --border: #e5e7eb;
-            }
-            @media (prefers-color-scheme: dark) {
-                :root {
-                    --bg: #0f141a;
-                    --card: #1a212b;
-                    --text: #e6edf3;
-                    --muted: #9aa7b4;
-                    --accent: #4bb3dd;
-                    --border: #2a333f;
-                }
-            }
-            * {
-                box-sizing: border-box;
-            }
-            html,
-            body {
-                margin: 0;
-                height: 100%;
-            }
-            body {
-                background: var(--bg);
-                color: var(--text);
-                font-family:
-                    system-ui,
-                    -apple-system,
-                    Segoe UI,
-                    Roboto,
-                    Helvetica,
-                    Arial,
-                    sans-serif;
-                line-height: 1.6;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 24px;
-            }
-            .card {
-                background: var(--card);
-                border: 1px solid var(--border);
-                border-radius: 14px;
-                max-width: 520px;
-                width: 100%;
-                padding: 40px 32px;
-                box-shadow: 0 6px 24px rgba(16, 24, 40, 0.08);
-            }
-            h1 {
-                font-size: 26px;
-                margin: 0 0 6px;
-            }
-            .tagline {
-                color: var(--accent);
-                font-weight: 600;
-                margin: 0 0 18px;
-            }
-            p {
-                margin: 0 0 14px;
-                color: var(--muted);
-                font-size: 15px;
-            }
-            a {
-                color: var(--accent);
-                font-weight: 600;
-                text-decoration: none;
-            }
-            a:hover {
-                text-decoration: underline;
-            }
-            .foot {
-                margin-top: 24px;
-                padding-top: 16px;
-                border-top: 1px solid var(--border);
-                font-size: 13px;
-                color: var(--muted);
-            }
-        </style>
+        <link rel="icon" href="/chartassist-logo.png" />
+        <link rel="stylesheet" href="/styles.css" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Gardner Responder Technologies" />
+        <meta
+            property="og:description"
+            content="Focused software tools for EMS crews and responders. Less paperwork, more patient care."
+        />
+        <meta property="og:image" content="/chartassist-logo.png" />
     </head>
     <body>
-        <main class="card">
-            <h1>Gardner Responder Technologies</h1>
-            <p class="tagline">Software tools for EMS crews and responders.</p>
-            <p>
-                We build focused tools that cut the busywork out of EMS documentation, so crews can
-                spend less time on paperwork and more on patient care.
-            </p>
-            <p>
-                Questions or support:
-                <a href="mailto:support@grtechsupport.com">support@grtechsupport.com</a>
-            </p>
-            <p class="foot">© Gardner Responder Technologies</p>
+        <header class="site-header">
+            <div class="container site-nav">
+                <a class="brand-lockup" href="/">
+                    <img src="/chartassist-logo.png" alt="" />
+                    <span class="brand-name">Gardner Responder Technologies</span>
+                </a>
+                <nav class="nav-links">
+                    <a class="nav-hide" href="#tools">Tools</a>
+                    <a class="nav-hide" href="#about">About</a>
+                    <a href="mailto:support@grtechsupport.com">Contact</a>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+            <section class="hero">
+                <div class="container hero-center">
+                    <p class="eyebrow">Software for those who respond</p>
+                    <h1>Focused tools that cut the busywork out of EMS documentation.</h1>
+                    <p class="lead">
+                        We build software for EMS crews and responders — so more of the shift goes
+                        to patients, not paperwork.
+                    </p>
+                    <div class="cta-row" style="justify-content: center">
+                        <a class="btn btn-primary btn-lg" href="#tools">Explore our tools</a>
+                        <a class="btn btn-secondary btn-lg" href="/chartAssist">Meet ChartAssist</a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="tools">
+                <div class="container">
+                    <div class="section-head">
+                        <h2>Our tools</h2>
+                        <span class="section-note">More on the way</span>
+                    </div>
+                    <div class="tools-grid">
+                        <article class="tool-card">
+                            <div class="tool-head">
+                                <img src="/chartassist-logo.png" alt="ChartAssist logo" />
+                                <div style="flex: 1">
+                                    <div class="tool-title">ChartAssist</div>
+                                    <div class="tool-sub">Chrome extension · for emsCharts</div>
+                                </div>
+                                <span class="pill pill-ok">
+                                    <span class="pill-dot"></span>Available now
+                                </span>
+                            </div>
+                            <p>
+                                One-click autofill for your emsCharts PCR defaults, plus a Clear
+                                Fields button and a QA review mode. Built for EMS crews — no patient
+                                data is ever stored or transmitted.
+                            </p>
+                            <div class="cta-row">
+                                <!-- STORE LINK: update to the full Chrome Web Store install URL (…/detail/<slug>/<id>) before launch. Same href appears on /chartAssist. -->
+                                <a
+                                    class="btn btn-primary"
+                                    href="https://chromewebstore.google.com/detail/emscharts-assist"
+                                >
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.7"
+                                    >
+                                        <circle cx="12" cy="12" r="9" />
+                                        <circle cx="12" cy="12" r="3.4" />
+                                        <line x1="12" y1="8.6" x2="21" y2="8.6" />
+                                        <line x1="9" y1="13.7" x2="4.5" y2="5.9" />
+                                        <line x1="15" y1="13.7" x2="10.5" y2="21.5" />
+                                    </svg>
+                                    Add to Chrome
+                                </a>
+                                <a class="btn btn-secondary" href="/chartAssist">Learn more →</a>
+                            </div>
+                        </article>
+
+                        <aside class="tool-soon">
+                            <span class="soon-icon">
+                                <svg
+                                    width="30"
+                                    height="30"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.6"
+                                >
+                                    <path
+                                        d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17v3h3l5.3-5.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-2.4 2.6-2.8z"
+                                    />
+                                </svg>
+                            </span>
+                            <strong>The next tool</strong>
+                            <span>More responder software<br />in development</span>
+                        </aside>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-tight">
+                <div class="container">
+                    <div class="features">
+                        <div class="feature-card">
+                            <span class="feature-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M13 2 3 14h7l-1 8 11-13h-7l1-7z" />
+                                </svg>
+                            </span>
+                            <h3>Built for the field</h3>
+                            <p>
+                                Tools shaped around how crews actually work — fast, focused, and out
+                                of the way.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                >
+                                    <path d="M12 3 5 6v5c0 4 3 7 7 8 4-1 7-4 7-8V6l-7-3z" />
+                                    <path
+                                        d="m9 12 2 2 4-4"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                </svg>
+                            </span>
+                            <h3>Privacy first</h3>
+                            <p>
+                                No patient data is ever stored or transmitted. That's a hard line.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                >
+                                    <circle cx="9" cy="8" r="3.2" />
+                                    <path
+                                        d="M3.5 20a5.5 5.5 0 0 1 11 0M15.5 5.2a3.2 3.2 0 0 1 0 5.6M17 20a5.5 5.5 0 0 0-3-4.9"
+                                        stroke-linecap="round"
+                                    />
+                                </svg>
+                            </span>
+                            <h3>Made with crews</h3>
+                            <p>
+                                Shaped by feedback from working responders, and improved release by
+                                release.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="about">
+                <div class="container" style="max-width: 720px">
+                    <p class="eyebrow">About us</p>
+                    <h2 style="font-size: 24px; margin-bottom: 14px">
+                        Small tools, big time savings.
+                    </h2>
+                    <p class="lead" style="max-width: none; margin-bottom: 16px">
+                        Gardner Responder Technologies builds focused software for EMS. Every tool
+                        we ship has one job: remove a piece of repetitive busywork so crews can
+                        spend less time charting and more time on patient care. We start narrow,
+                        listen to the field, and keep patient privacy non-negotiable.
+                    </p>
+                    <div class="cta-row" style="margin-top: 20px">
+                        <a class="btn btn-secondary" href="mailto:support@grtechsupport.com">
+                            Get in touch
+                        </a>
+                    </div>
+                </div>
+            </section>
         </main>
+
+        <footer class="site-footer">
+            <div class="container footer-inner">
+                <span class="foot-brand">
+                    <img src="/chartassist-logo.png" alt="" />
+                    Gardner Responder Technologies
+                </span>
+                <span class="footer-meta">
+                    <a href="mailto:support@grtechsupport.com">support@grtechsupport.com</a>
+                    <span>© Gardner Responder Technologies</span>
+                </span>
+            </div>
+            <p class="disclaimer container">
+                ChartAssist is an independent tool — not affiliated with or endorsed by emsCharts,
+                Inc.
+            </p>
+        </footer>
     </body>
 </html>

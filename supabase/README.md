@@ -232,11 +232,11 @@ built-in sender is **testing only** (a few per hour, and it only delivers to you
 Supabase org/team), so production uses **Resend** for sending and **Cloudflare**
 for DNS + inbound routing. Domain roles:
 
-| Domain                             | Role                                                                     |
-| ---------------------------------- | ------------------------------------------------------------------------ |
-| `gardnerrespondertechnologies.com` | Brand site + the email-confirmation landing page + Supabase **Site URL** |
-| `grtechsupport.com`                | **Sending domain** (Resend) — `noreply@` sends, `support@` receives      |
-| `grteches.com`                     | Short alias, **301-redirects** to the brand domain (no email)            |
+| Domain                             | Role                                                                             |
+| ---------------------------------- | -------------------------------------------------------------------------------- |
+| `gardnerrespondertechnologies.com` | Brand site + ChartAssist product page + Supabase **Site URL** (→ `/chartAssist`) |
+| `grtechsupport.com`                | **Sending domain** (Resend) — `noreply@` sends, `support@` receives              |
+| `grteches.com`                     | Short alias, **301-redirects** to the brand domain (no email)                    |
 
 Setup:
 
@@ -269,12 +269,15 @@ Setup:
    (a minimal version is just `{{ .Token }}` with no `{{ .ConfirmationURL }}`).
 
     The user enters the code on the popup's confirmation step (or the **Confirm your
-    email** link). No hosted page or Site URL is required for this flow.
-    _(Optional)_ the repo's `site/` folder still deploys a brand
-    [`site/index.html`](site/index.html) and an
-    [`site/email-confirmed.html`](site/email-confirmed.html) landing page — useful if
-    you ever switch confirmation back to a link (`{{ .ConfirmationURL }}` +
-    Site URL `https://gardnerrespondertechnologies.com/email-confirmed`).
+    email** link). No hosted landing page is required for this flow, so the old
+    `email-confirmed.html` page was removed. Still set Supabase's **Site URL** to a
+    live page so any stray auth redirect (or a template reverting to Supabase's link
+    defaults) lands somewhere real rather than 404-ing — use
+    `https://gardnerrespondertechnologies.com/chartAssist` (its "Getting access"
+    section tells a just-confirmed user to open the extension and sign in), or the
+    brand root `https://gardnerrespondertechnologies.com`. If you ever switch
+    confirmation back to a magic link (`{{ .ConfirmationURL }}`), add a dedicated
+    landing page again and point the Site URL at it.
 
 6. **`grteches.com` → brand (301).** Cloudflare → grteches.com: add a **proxied**
    placeholder `A @ 192.0.2.1` (and `A www 192.0.2.1`), then **Rules → Redirect
