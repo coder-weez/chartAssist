@@ -141,9 +141,10 @@
 }
 .ca-btn-danger {
     background: #facc15;
-    /* Dark brown on amber — white failed WCAG AA (~1.5:1) on this destructive
-       button. This matches the toast text colour and clears AA comfortably. */
-    color: #713f12;
+    /* White text on amber, restoring the v1.2.0.0 styling by request. Note: this
+       is lower contrast than the dark-brown (#713f12) it replaces, which was
+       chosen for WCAG AA — see git history if revisiting. */
+    color: #fff;
 }
 .ca-btn-danger:hover {
     background: #eab308;
