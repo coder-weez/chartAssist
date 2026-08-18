@@ -88,7 +88,7 @@ Open a patient care report on `emscharts.com`. On the supported pages
 - **AutoComplete** (teal) — fills form fields with the defaults you saved in Options.
 - **Clear Fields** (red) — blanks out any fields the extension manages on that page. Asks for confirmation before clearing.
 - **Page Defaults** — opens the Options page scrolled to the section for the current page.
-- **Preset buttons** (pages 5 and 8) — page 5 has Trauma / Medical / Refusal; page 8 has On Scene / Transport / At Hospital / Refusal / Custom. On page 8, if the **Edit Vitals** popup is open, the chosen comment is written into that popup's own comment box instead of the main narrative field; with the popup closed it fills the main field as usual.
+- **Preset buttons** (pages 5 and 8) — page 5 has Trauma / Medical / Refusal; page 8 has four built-in presets (On Scene / Transport / At Hospital / Refusal) plus **four custom slots** for your own titled buttons. On page 8 you choose which presets appear: in **Options → Page 8 Settings**, tick the **Show** box next to each preset to show its button, and untick it to hide it (e.g. hide **Refusal** if you never use it). The four custom slots each take a **Button** label (e.g. `test`) and its **Comment text** — fill both and tick **Show** and your titled button appears on page 8. A preset with an empty label or comment is skipped even when it is ticked. On page 8, if the **Edit Vitals** popup is open, the chosen comment is written into that popup's own comment box instead of the main narrative field; with the popup closed it fills the main field as usual.
 
 Drag the toolbar by the **⠿** handle to move it out of the way; the **↺** button next to it snaps it back to the top-right corner.
 
