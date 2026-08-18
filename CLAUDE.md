@@ -8,6 +8,8 @@
 
 > **Before pushing:** run `npm run format:check` (not a path-scoped `prettier --check`). The `lint` CI job runs both ESLint _and_ Prettier over the **whole tree**, so Markdown files like this one count — an unformatted `CLAUDE.md` or `README.md` will fail CI just like unformatted JS. Run `npm run format` to auto-fix.
 
+> **After a PR merges:** clean up local branches so dead ones don't accumulate. From `main`, run `git checkout main && git pull --ff-only && git fetch --prune`, then delete every local branch already merged into `main` — e.g. `git branch --merged origin/main | grep -vE '^\*|^ *main$' | while read b; do git branch -d "$b"; done`. `git branch -d` refuses to drop an unmerged branch, so nothing in progress is lost. (This is also when you tag `main` per the Versioning note above.)
+
 ## What this project is
 
 A Chrome MV3 extension that injects an **AutoComplete** toolbar and a **Clear Fields** button into EMSCharts PCR pages. AutoComplete reads user-configured defaults from `chrome.storage.sync` and fills in matching form fields. Clear Fields blanks those same fields after a confirmation prompt. A **QA Mode** toggle (in the extension popup) freezes the toolbar so no buttons can be clicked during chart review. A **login gate** (email+password or a time-limited access code, backed by Supabase) disables the toolbar until an authorized user signs in — see [Authentication / login gate](#authentication--login-gate). No patient data is ever stored or transmitted — only login credentials, at sign-in.
