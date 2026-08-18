@@ -36,59 +36,111 @@ function caCommentTarget() {
     return caVitalsCommentBox() || 'textarea[name=vs_comment]';
 }
 
-$(document).ready(function () {
-    caToolbar().append('<button class="atref ca-btn">On Scene</button>');
-    caToolbar().append('<button class="lvref ca-btn">Transport</button>');
-    caToolbar().append('<button class="atrec ca-btn">At Hospital</button>');
-    caToolbar().append('<button class="can1 ca-btn">Refusal</button>');
-    caToolbar().append('<button class="can2 ca-btn">Custom</button>');
-    caToolbar().append('<button class="ca-clear ca-btn ca-btn-danger">Clear Fields</button>');
+// Built-in page-8 presets: fixed labels, toggle-only. Each fills the vitals comment
+// box from its own stored textarea key. Order here is the on-toolbar order.
+var CA_PG8_BUILTINS = [
+    { id: 'at_ref', label: 'On Scene', key: 'pg8_at_ref' },
+    { id: 'lv_ref', label: 'Transport', key: 'pg8_lv_ref' },
+    { id: 'at_rec', label: 'At Hospital', key: 'pg8_at_rec' },
+    { id: 'can_1', label: 'Refusal', key: 'pg8_can_1' },
+];
+// Four spare "custom" slots. Each carries a user-defined label (pg8_customN_label)
+// and comment text (pg8_customN_text) configured on the Options page.
+var CA_PG8_CUSTOM_IDS = ['custom1', 'custom2', 'custom3', 'custom4'];
+
+// Build the ordered list of page-8 preset buttons to render, from the full
+// chrome.storage.sync object `s`. A preset renders only when it is enabled AND
+// has non-blank content: a built-in needs non-blank text; a custom slot needs
+// BOTH a non-blank label and non-blank text. "Blank" means empty or whitespace-
+// only (so a toggled-on but empty preset still shows no button). Visibility comes
+// from the `pg8_enabled` checkgroup (a pipe-joined list of enabled ids). When
+// `pg8_enabled` has never been saved (undefined — the user hasn't opened Options
+// since updating) the built-ins default ON and the custom slots default OFF, so
+// the toolbar keeps working before the first Options visit. This is the page-8
+// analogue of page 1's caBaseOptions. Returns [{ id, label, text, friendly }];
+// `friendly` is the toast name shown by caFill.
+function caPage8Presets(s) {
+    s = s || {};
+    function blank(v) {
+        return typeof v !== 'string' || v.trim() === '';
+    }
+    var raw = s.pg8_enabled;
+    var seeded = typeof raw === 'undefined';
+    var enabled = seeded ? [] : ('' + raw).split('|');
+    function on(id, defaultOn) {
+        return seeded ? defaultOn : enabled.indexOf(id) !== -1;
+    }
+
+    var out = [];
+    CA_PG8_BUILTINS.forEach(function (b) {
+        if (!on(b.id, true)) return;
+        var text = s[b.key];
+        if (blank(text)) return;
+        out.push({ id: b.id, label: b.label, text: text, friendly: b.label + ' Comment' });
+    });
+    CA_PG8_CUSTOM_IDS.forEach(function (id) {
+        if (!on(id, false)) return;
+        var label = s['pg8_' + id + '_label'];
+        var text = s['pg8_' + id + '_text'];
+        if (blank(label) || blank(text)) return;
+        label = label.trim();
+        out.push({ id: id, label: label, text: text, friendly: label + ' Comment' });
+    });
+    return out;
+}
+
+function caInitPage8() {
+    var bar = caToolbar();
+    // Clear is appended synchronously so it is always present (even if the async
+    // storage read below fails); preset buttons are inserted before it.
+    bar.append('<button class="ca-clear ca-btn ca-btn-danger">Clear Fields</button>');
 
     // Canary selector — flags EMSCharts DOM changes (all buttons target this field).
     caHealthCheck(8, ['textarea[name=vs_comment]']);
 
-    $('.ca-clear').click(function () {
+    bar.on('click', '.ca-clear', function () {
         if (!caActive(8)) return;
         if (!window.confirm('Clear all auto-filled fields on this page? This cannot be undone.'))
             return;
         caClrField(caCommentTarget());
     });
 
-    // Each page-8 preset fills one comment field from a single stored key. Shared
-    // read path so the storage-error guard and first-run hint live in one place.
-    function fillPage8(key, friendly) {
+    // Preset buttons are generated from the user's saved config (see
+    // caPage8Presets). A single DELEGATED handler covers them because the buttons
+    // are added dynamically — a direct .click() would miss them. It re-reads
+    // storage on click so the latest text is used, matching the old behaviour.
+    bar.on('click', '.ca-preset', function () {
+        if (!caActive(8)) return;
+        var id = $(this).attr('data-preset-id');
         chrome.storage.sync.get(null, function (s) {
             if (chrome.runtime.lastError || !s) {
                 caToast('Could not read your saved defaults — please try again.');
                 return;
             }
             if (caNoDefaultsHint(s)) return;
-            caFill(caCommentTarget(), s[key], friendly);
+            var match = caPage8Presets(s).filter(function (p) {
+                return p.id === id;
+            })[0];
+            if (!match) return;
+            caFill(caCommentTarget(), match.text, match.friendly);
         });
-    }
-
-    $('.atref').click(function () {
-        if (!caActive(8)) return;
-        fillPage8('pg8_at_ref', 'On Scene Comment');
     });
 
-    $('.lvref').click(function () {
-        if (!caActive(8)) return;
-        fillPage8('pg8_lv_ref', 'Transport Comment');
+    // Render the enabled, non-blank preset buttons ahead of the Clear button.
+    chrome.storage.sync.get(null, function (s) {
+        if (chrome.runtime.lastError || !s) return;
+        caPage8Presets(s).forEach(function (p) {
+            var $btn = $('<button class="ca-preset ca-btn"></button>');
+            $btn.attr('data-preset-id', p.id).text(p.label);
+            $btn.insertBefore(bar.find('.ca-clear'));
+        });
     });
+}
 
-    $('.atrec').click(function () {
-        if (!caActive(8)) return;
-        fillPage8('pg8_at_rec', 'At Hospital Comment');
-    });
-
-    $('.can1').click(function () {
-        if (!caActive(8)) return;
-        fillPage8('pg8_can_1', 'Refusal Comment');
-    });
-
-    $('.can2').click(function () {
-        if (!caActive(8)) return;
-        fillPage8('pg8_can_2', 'Custom Comment');
-    });
-});
+// Under Node/CommonJS (unit tests) export the pure helper and skip DOM wiring; in
+// the browser `module` is undefined, so page 8 initialises on ready.
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { caPage8Presets };
+} else {
+    $(document).ready(caInitPage8);
+}

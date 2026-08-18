@@ -282,6 +282,22 @@
                 padding: 8px;
                 text-align: left;
             }
+            .ca-show {
+                width: 52px;
+                padding: 8px;
+                text-align: center;
+                vertical-align: middle;
+            }
+            /* Centre these sections' tables: shrink each to its content width and
+               auto-margin it so the fields sit balanced on the page rather than
+               left-aligned with empty space on the right. */
+            #section-page2 > table,
+            #section-page3 > table,
+            #section-page4 > table,
+            #section-page8 > table {
+                width: auto;
+                margin: 8px auto 16px;
+            }
             input[type='checkbox'] {
                 accent-color: var(--accent);
                 cursor: pointer;
@@ -2390,36 +2406,102 @@
             </details>
             <details id="section-page8">
                 <summary>Page 8 Settings</summary>
+                <p style="margin: 8px 12px 0; color: var(--muted-strong); font-size: 13px">
+                    Check a preset to show its button on page 8. The four custom slots let you add
+                    your own titled buttons. A preset with an empty label or comment is skipped even
+                    when it is checked.
+                </p>
                 <table>
                     <tr>
-                        <td class="l">"On Scene" Comment</td>
-                        <td class="r">
-                            <textarea id="pg8_at_ref"></textarea>
+                        <td class="ca-show" style="font-weight: bold">Show</td>
+                        <td class="l" style="font-weight: bold; color: var(--muted-strong)">
+                            Button
                         </td>
+                        <td class="r" style="font-weight: bold">Comment text</td>
                     </tr>
                     <tr>
-                        <td class="l">"Transporting" Comment</td>
-                        <td class="r">
-                            <textarea id="pg8_lv_ref"></textarea>
+                        <td class="ca-show">
+                            <input type="checkbox" data-group="pg8_enabled" value="at_ref" />
                         </td>
+                        <td class="l">On Scene</td>
+                        <td class="r"><textarea id="pg8_at_ref"></textarea></td>
                     </tr>
                     <tr>
-                        <td class="l">"At Hospital" Comment</td>
-                        <td class="r">
-                            <textarea id="pg8_at_rec"></textarea>
+                        <td class="ca-show">
+                            <input type="checkbox" data-group="pg8_enabled" value="lv_ref" />
                         </td>
+                        <td class="l">Transport</td>
+                        <td class="r"><textarea id="pg8_lv_ref"></textarea></td>
                     </tr>
                     <tr>
-                        <td class="l">"Refusal" Comment</td>
-                        <td class="r">
-                            <textarea id="pg8_can_1"></textarea>
+                        <td class="ca-show">
+                            <input type="checkbox" data-group="pg8_enabled" value="at_rec" />
                         </td>
+                        <td class="l">At Hospital</td>
+                        <td class="r"><textarea id="pg8_at_rec"></textarea></td>
                     </tr>
                     <tr>
-                        <td class="l">"Custom" Comment</td>
-                        <td class="r">
-                            <textarea id="pg8_can_2"></textarea>
+                        <td class="ca-show">
+                            <input type="checkbox" data-group="pg8_enabled" value="can_1" />
                         </td>
+                        <td class="l">Refusal</td>
+                        <td class="r"><textarea id="pg8_can_1"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td class="ca-show">
+                            <input type="checkbox" data-group="pg8_enabled" value="custom1" />
+                        </td>
+                        <td class="l">
+                            <input
+                                type="text"
+                                id="pg8_custom1_label"
+                                placeholder="Button label"
+                                style="width: 170px"
+                            />
+                        </td>
+                        <td class="r"><textarea id="pg8_custom1_text"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td class="ca-show">
+                            <input type="checkbox" data-group="pg8_enabled" value="custom2" />
+                        </td>
+                        <td class="l">
+                            <input
+                                type="text"
+                                id="pg8_custom2_label"
+                                placeholder="Button label"
+                                style="width: 170px"
+                            />
+                        </td>
+                        <td class="r"><textarea id="pg8_custom2_text"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td class="ca-show">
+                            <input type="checkbox" data-group="pg8_enabled" value="custom3" />
+                        </td>
+                        <td class="l">
+                            <input
+                                type="text"
+                                id="pg8_custom3_label"
+                                placeholder="Button label"
+                                style="width: 170px"
+                            />
+                        </td>
+                        <td class="r"><textarea id="pg8_custom3_text"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td class="ca-show">
+                            <input type="checkbox" data-group="pg8_enabled" value="custom4" />
+                        </td>
+                        <td class="l">
+                            <input
+                                type="text"
+                                id="pg8_custom4_label"
+                                placeholder="Button label"
+                                style="width: 170px"
+                            />
+                        </td>
+                        <td class="r"><textarea id="pg8_custom4_text"></textarea></td>
                     </tr>
                 </table>
             </details>

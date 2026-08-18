@@ -44,6 +44,11 @@ var txtInputs = [
     'pg5_refusal_ex_comments',
     'pg5_refusal_ex_restraints',
     'pg5_refusal_ex_skin_findings',
+    // Page-8 custom-preset button labels (the four spare slots).
+    'pg8_custom1_label',
+    'pg8_custom2_label',
+    'pg8_custom3_label',
+    'pg8_custom4_label',
 ];
 var pertNegGroups = [
     'pg3_mental_present',
@@ -51,6 +56,14 @@ var pertNegGroups = [
     'pg3_neuro_present',
     'pg3_neuro_not_present',
 ];
+// Generic checkbox groups (a set of checkboxes sharing a data-group, saved as a
+// pipe-joined string of the checked values). Unlike pertNegGroups these get no
+// mutex behaviour. pg8_enabled drives which page-8 preset buttons are shown.
+var checkGroups = ['pg8_enabled'];
+// The page-8 preset ids that are ON by default (the four built-ins). Used to seed
+// pg8_enabled for users who predate the toggle, and to restore default visibility
+// on Reset. Custom slots default off.
+var PG8_DEFAULT_ENABLED = ['at_ref', 'lv_ref', 'at_rec', 'can_1'];
 var txtAreas = [
     'pg2_chief_complaint',
     'pg2_hpi',
@@ -61,7 +74,11 @@ var txtAreas = [
     'pg8_lv_ref',
     'pg8_at_rec',
     'pg8_can_1',
-    'pg8_can_2',
+    // Page-8 custom-preset comment text (the four spare slots).
+    'pg8_custom1_text',
+    'pg8_custom2_text',
+    'pg8_custom3_text',
+    'pg8_custom4_text',
 ];
 var selBoxes = [
     'pg2_duration_units',
@@ -119,6 +136,9 @@ function _all_opts() {
     }
     for (i = 0; i < pertNegGroups.length; i++) {
         opts[pertNegGroups[i]] = 'checkgroup';
+    }
+    for (i = 0; i < checkGroups.length; i++) {
+        opts[checkGroups[i]] = 'checkgroup';
     }
     return opts;
 }
@@ -182,7 +202,19 @@ function reset_options() {
             el.value = '';
         }
     });
+    // Restore default page-8 button visibility (the five built-ins) rather than
+    // leaving every preset hidden after a reset.
+    pg8_check_default_enabled();
     show_status('ALL FIELDS CLEARED — click Save to apply');
+}
+
+// Tick the pg8_enabled checkboxes for the default-on presets (the built-ins) and
+// untick the rest. Used on Reset so the page-8 buttons return to their defaults.
+function pg8_check_default_enabled() {
+    var boxes = document.querySelectorAll('[data-group="pg8_enabled"]');
+    for (var i = 0; i < boxes.length; i++) {
+        boxes[i].checked = PG8_DEFAULT_ENABLED.indexOf(boxes[i].value) !== -1;
+    }
 }
 
 function show_status(msg, isError) {
@@ -363,6 +395,84 @@ function migrate_legacy_keys(done) {
         } else {
             finish();
         }
+    });
+}
+
+// Seed the page-8 visibility toggle for users who predate it: if pg8_enabled has
+// never been stored, default the five built-in buttons ON (custom slots stay off)
+// so the toolbar looks unchanged after updating. Runs before restore so the
+// checkboxes render ticked. A read/write failure is non-fatal — we just skip the
+// seed and continue loading. `done` is invoked when finished.
+function pg8_seed_enabled(done) {
+    chrome.storage.sync.get('pg8_enabled', function (items) {
+        if (chrome.runtime.lastError || (items && 'pg8_enabled' in items)) {
+            if (done) done();
+            return;
+        }
+        chrome.storage.sync.set({ pg8_enabled: PG8_DEFAULT_ENABLED.join('|') }, function () {
+            if (chrome.runtime.lastError) {
+                console.warn('pg8_seed_enabled: set failed —', chrome.runtime.lastError.message);
+            }
+            if (done) done();
+        });
+    });
+}
+
+// One-time migration for the removed built-in "Custom" preset. Older versions
+// stored a free-text "Custom" comment under pg8_can_2; that built-in button was
+// dropped in favour of the four custom slots. To avoid losing the user's saved
+// Custom text, copy it into custom slot 1 — titled "Custom", and toggled ON so its
+// button keeps appearing — the first time Options loads after the update. Skipped
+// when pg8_can_2 is blank (nothing to carry over) or when slot 1 is already in use
+// (so we never clobber a custom button the user set up themselves). Runs after
+// pg8_seed_enabled so it can append custom1 to the seeded pg8_enabled list. `done`
+// is invoked when finished.
+function pg8_migrate_custom(done) {
+    var keys = ['pg8_can_2', 'pg8_custom1_label', 'pg8_custom1_text', 'pg8_enabled'];
+    chrome.storage.sync.get(keys, function (items) {
+        items = items || {};
+        function blank(v) {
+            return v === undefined || v === null || ('' + v).trim() === '';
+        }
+        var legacy = items.pg8_can_2;
+        var slot1Used = !blank(items.pg8_custom1_label) || !blank(items.pg8_custom1_text);
+        // Nothing to migrate (blank old field) or slot 1 already taken → leave as-is.
+        if (chrome.runtime.lastError || blank(legacy) || slot1Used) {
+            if (done) done();
+            return;
+        }
+        // Toggle custom1 on alongside whatever is already enabled (the seeded
+        // built-ins), since the migrated text should show as a button.
+        var enabled =
+            'pg8_enabled' in items
+                ? ('' + items.pg8_enabled).split('|')
+                : PG8_DEFAULT_ENABLED.slice();
+        enabled = enabled.filter(function (id) {
+            return id !== '';
+        });
+        if (enabled.indexOf('custom1') === -1) enabled.push('custom1');
+        var toSet = {
+            pg8_custom1_label: 'Custom',
+            pg8_custom1_text: legacy,
+            pg8_enabled: enabled.join('|'),
+        };
+        chrome.storage.sync.set(toSet, function () {
+            if (chrome.runtime.lastError) {
+                console.warn('pg8_migrate_custom: set failed —', chrome.runtime.lastError.message);
+                if (done) done();
+                return;
+            }
+            // The old built-in is now preserved as custom slot 1; drop the dead key.
+            chrome.storage.sync.remove('pg8_can_2', function () {
+                if (chrome.runtime.lastError) {
+                    console.warn(
+                        'pg8_migrate_custom: remove failed —',
+                        chrome.runtime.lastError.message,
+                    );
+                }
+                if (done) done();
+            });
+        });
     });
 }
 
@@ -610,6 +720,8 @@ if (typeof module !== 'undefined' && module.exports) {
         reset_options,
         legacy_key_map,
         migrate_legacy_keys,
+        pg8_seed_enabled,
+        pg8_migrate_custom,
     };
 } else {
     document.addEventListener('DOMContentLoaded', init_theme_toggle);
@@ -630,7 +742,11 @@ if (typeof module !== 'undefined' && module.exports) {
     // (The old destructive prune_stale_keys was removed — it was deleting these
     // very keys on update, which is how saved options were being lost.)
     document.addEventListener('DOMContentLoaded', function () {
-        migrate_legacy_keys(restore_options);
+        migrate_legacy_keys(function () {
+            pg8_seed_enabled(function () {
+                pg8_migrate_custom(restore_options);
+            });
+        });
     });
     document.addEventListener('DOMContentLoaded', open_section_from_hash);
     document.addEventListener('DOMContentLoaded', wire_pertneg_mutex);

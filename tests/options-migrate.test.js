@@ -83,3 +83,53 @@ describe('options.js legacy key migration', () => {
         });
     });
 });
+
+describe('options.js page-8 removed-Custom migration (pg8_migrate_custom)', () => {
+    it('carries a saved pg8_can_2 into custom slot 1, titled Custom and toggled on', async () => {
+        chrome.storage.sync._data = {
+            pg8_can_2: 'My custom narrative',
+            pg8_enabled: 'at_ref|lv_ref|at_rec|can_1',
+        };
+
+        await new Promise((res) => opts.pg8_migrate_custom(res));
+
+        expect(chrome.storage.sync._data.pg8_custom1_label).toBe('Custom');
+        expect(chrome.storage.sync._data.pg8_custom1_text).toBe('My custom narrative');
+        expect(chrome.storage.sync._data.pg8_enabled.split('|')).toContain('custom1');
+        // Legacy key removed once its value is preserved in the slot.
+        expect('pg8_can_2' in chrome.storage.sync._data).toBe(false);
+    });
+
+    it('defaults pg8_enabled to the four built-ins plus custom1 when it is unset', async () => {
+        chrome.storage.sync._data = { pg8_can_2: 'text' };
+
+        await new Promise((res) => opts.pg8_migrate_custom(res));
+
+        expect(chrome.storage.sync._data.pg8_enabled).toBe('at_ref|lv_ref|at_rec|can_1|custom1');
+    });
+
+    it('does NOT carry over when the old Custom field is empty/whitespace', async () => {
+        chrome.storage.sync._data = { pg8_can_2: '   ', pg8_enabled: 'at_ref' };
+
+        await new Promise((res) => opts.pg8_migrate_custom(res));
+
+        expect('pg8_custom1_label' in chrome.storage.sync._data).toBe(false);
+        expect('pg8_custom1_text' in chrome.storage.sync._data).toBe(false);
+        expect(chrome.storage.sync._data.pg8_enabled).toBe('at_ref'); // untouched
+    });
+
+    it('never clobbers a custom slot 1 the user already set up', async () => {
+        chrome.storage.sync._data = {
+            pg8_can_2: 'old custom',
+            pg8_custom1_label: 'My Button',
+            pg8_custom1_text: 'already here',
+        };
+
+        await new Promise((res) => opts.pg8_migrate_custom(res));
+
+        expect(chrome.storage.sync._data.pg8_custom1_label).toBe('My Button');
+        expect(chrome.storage.sync._data.pg8_custom1_text).toBe('already here');
+        // Legacy value left in place (not migrated, not removed) so nothing is lost.
+        expect(chrome.storage.sync._data.pg8_can_2).toBe('old custom');
+    });
+});
