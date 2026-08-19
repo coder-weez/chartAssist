@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Privacy Policy — GRTech ChartAssist</title>
+        <meta
+            name="description"
+            content="Privacy policy for GRTech ChartAssist, the Chrome extension for EMS providers. It stores no patient data; sign-in sends only your login credentials."
+        />
+        <link rel="icon" href="/chartassist-logo.png" />
+        <link rel="stylesheet" href="/styles.css" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Privacy Policy — GRTech ChartAssist" />
+        <meta
+            property="og:description"
+            content="How GRTech ChartAssist handles data: no patient data, ever. Sign-in sends only your login credentials."
+        />
+        <meta property="og:image" content="/chartassist-logo.png" />
+        <style>
+            /* Scoped legal-prose styles — tokens come from styles.css. */
+            .legal {
+                max-width: 72ch;
+            }
+            .legal h1 {
+                font-size: 2rem;
+                margin-bottom: 8px;
+            }
+            .legal .updated {
+                color: var(--muted);
+                margin: 0 0 32px;
+            }
+            .legal h2 {
+                font-size: 1.25rem;
+                margin: 40px 0 10px;
+                padding-top: 8px;
+                border-top: 1px solid var(--border);
+            }
+            .legal p,
+            .legal ul {
+                color: var(--text-2);
+                margin: 0 0 14px;
+            }
+            .legal ul {
+                padding-left: 20px;
+            }
+            .legal li {
+                margin: 6px 0;
+            }
+            .legal strong {
+                color: var(--text);
+            }
+            .legal code {
+                background: var(--surface-2);
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                padding: 1px 6px;
+                font-size: 0.9em;
+            }
+        </style>
+    </head>
+    <body>
+        <header class="site-header">
+            <div class="container site-nav">
+                <a class="brand-lockup" href="/">
+                    <img src="/chartassist-logo.png" alt="" />
+                    <span class="brand-name">ChartAssist</span>
+                </a>
+                <nav class="nav-links">
+                    <a class="nav-back nav-hide" href="/chartAssist">← ChartAssist</a>
+                    <!-- STORE LINK: Chrome Web Store listing (item id dimeepofgkhhhpmiflbaikaomommgfaa). -->
+                    <a
+                        class="btn btn-primary"
+                        href="https://chromewebstore.google.com/detail/emscharts-assist/dimeepofgkhhhpmiflbaikaomommgfaa"
+                    >
+                        Add to Chrome
+                    </a>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+            <section class="section">
+                <div class="container legal">
+                    <p class="eyebrow">Legal</p>
+                    <h1>Privacy Policy — GRTech ChartAssist</h1>
+                    <p class="updated">Last updated: August 2026</p>
+
+                    <h2>What this extension does</h2>
+                    <p>
+                        GRTech ChartAssist is a Chrome browser extension that fills in fields on
+                        EMSCharts patient care reports (PCRs) with default values you configure. To
+                        restrict use to authorized personnel, it requires you to sign in before the
+                        tools are enabled.
+                    </p>
+
+                    <h2>Data we collect</h2>
+                    <p>
+                        To verify that you're authorized to use the extension, signing in sends the
+                        following to the extension's authentication service (hosted on
+                        <a href="https://supabase.com" rel="noopener">Supabase</a>) over HTTPS:
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Your email address and password</strong>, when you create an
+                            account or sign in; or
+                        </li>
+                        <li>
+                            <strong>A temporary access code</strong>, if you sign in with one
+                            instead.
+                        </li>
+                    </ul>
+                    <p>That is the only data transmitted, and only at sign-in.</p>
+                    <ul>
+                        <li>
+                            <strong>No patient data.</strong> No PCR field values, report content,
+                            or protected health information (PHI) is ever read, recorded, or
+                            transmitted. The login carries only your account credentials — never
+                            anything from any report.
+                        </li>
+                        <li>
+                            <strong>Passwords are never stored by the extension.</strong> Your
+                            password is sent to the authentication service (which hashes it) and is
+                            not kept on your device. After a successful sign-in, only a session
+                            token — and, if you tick "Remember my email", your email address — are
+                            stored locally in your browser (<code>chrome.storage.local</code>).
+                        </li>
+                        <li>
+                            <strong>Sessions.</strong> A successful sign-in keeps you authorized for
+                            1 month (or, for an access code, until the code expires), after which
+                            you sign in again.
+                        </li>
+                    </ul>
+
+                    <h2>Account data, retention, and deletion</h2>
+                    <p>
+                        Your account record — email address, the crew (organization) you belong to,
+                        your role, and approval status — is held in the extension's authentication
+                        backend (Supabase). It is the minimum needed to run the sign-in gate and the
+                        crew-admin approval workflow;
+                        <strong>no patient data and no PCR content is ever part of it.</strong>
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Who controls it.</strong> The account data is administered by
+                            the crew/organization that operates this deployment of the extension;
+                            the maintainer operates the shared backend on their behalf.
+                        </li>
+                        <li>
+                            <strong>Retention.</strong> Account data is kept while your account is
+                            active. It is removed when a crew admin removes you as a member or
+                            deletes your pre-approval, or when you ask for deletion (below).
+                            Access-code sessions store no account record at all — only a local
+                            session token that expires on its own.
+                        </li>
+                        <li>
+                            <strong>How to request deletion.</strong> Ask your crew admin to remove
+                            your account from the crew-admin console, or contact the maintainer
+                            through the channel in <strong>Contact</strong> below. Removing your
+                            account deletes the associated login record.
+                        </li>
+                        <li>
+                            <strong>Local data</strong> (session token, remembered email, and your
+                            saved template defaults) is cleared when you sign out, remove the
+                            extension, or clear your browser data.
+                        </li>
+                    </ul>
+
+                    <h2>Permissions this extension requests</h2>
+                    <ul>
+                        <li>
+                            <strong><code>storage</code></strong> — to save your template defaults
+                            and your session/theme preferences in your own browser. Nothing in this
+                            storage is transmitted anywhere except through Chrome's own optional
+                            sync.
+                        </li>
+                        <li>
+                            <strong>Host access to <code>*.emscharts.com/pr/*</code></strong> — so
+                            the toolbar can read and fill fields on EMSCharts PCR pages. This is the
+                            only site the content scripts run on.
+                        </li>
+                        <li>
+                            <strong>Host access to the Supabase project URL</strong> — so the popup
+                            can perform sign-in and (for admins) the crew console. Only the
+                            popup/admin pages talk to it; PCR pages never make network calls.
+                        </li>
+                    </ul>
+
+                    <h2>Data you store locally</h2>
+                    <p>
+                        The only data saved by this extension is the
+                        <strong>default template values you manually enter</strong> on the Options
+                        page (e.g. a default chief complaint or physical exam finding). These are
+                        stored using Chrome's built-in <code>chrome.storage.sync</code>, which keeps
+                        them in your Chrome profile and optionally syncs them across your signed-in
+                        Chrome devices. This data never leaves your Chrome profile except through
+                        Chrome's own sync mechanism, which is governed by
+                        <a href="https://policies.google.com/privacy" rel="noopener"
+                            >Google's Privacy Policy</a
+                        >.
+                    </p>
+                    <p>
+                        These stored defaults contain no patient information — they are generic
+                        template text you choose to pre-fill, not data from any actual report.
+                    </p>
+
+                    <h2>HIPAA</h2>
+                    <p>
+                        This extension is not a covered entity or business associate under HIPAA. It
+                        does not access, store, transmit, or process protected health information
+                        (PHI). Compliance with HIPAA and your organization's privacy policies when
+                        using EMSCharts remains your responsibility.
+                    </p>
+
+                    <h2>Changes to this policy</h2>
+                    <p>
+                        If this policy changes, the updated version will be posted on this page with
+                        a revised date above.
+                    </p>
+
+                    <h2>Contact</h2>
+                    <p>
+                        For questions, privacy requests, or account deletion, email
+                        <a href="mailto:support@grtechsupport.com">support@grtechsupport.com</a>.
+                        For a <strong>security or privacy vulnerability</strong>, email the same
+                        address and please report it privately rather than publicly.
+                    </p>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <div class="container footer-inner">
+                <a class="foot-brand" href="/">
+                    <img src="/chartassist-logo.png" alt="" />
+                    Gardner Responder Technologies
+                </a>
+                <span class="footer-meta">
+                    <a href="/">All tools</a>
+                    <a href="mailto:support@grtechsupport.com">support@grtechsupport.com</a>
+                    <span>© Gardner Responder Technologies</span>
+                </span>
+            </div>
+            <p class="disclaimer container">
+                ChartAssist is an independent tool — not affiliated with or endorsed by emsCharts,
+                Inc.
+            </p>
+        </footer>
+    </body>
+</html>
