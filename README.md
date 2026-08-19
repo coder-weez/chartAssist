@@ -168,7 +168,7 @@ only account credentials at sign-in.
 
 Your defaults are saved with Chrome's built-in
 [`chrome.storage.sync`](https://developer.chrome.com/docs/extensions/reference/api/storage)
-(the `storage` permission in the manifest). Notes for users and contributors:
+(the `storage` permission in the manifest). Notes for users and developers:
 
 - **Defaults only.** Only the template values you enter on the Options page are
   stored, and they never leave your browser except through Chrome's own sync. No
