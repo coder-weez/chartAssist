@@ -1,7 +1,7 @@
 GRTech ChartAssist
 ==================
 
-GRTech ChartAssist is a Chrome browser extension that lets you store defaults for emscharts.com patient care reports and fill them in with one click. Access is gated: the tools are disabled until you sign in with an **approved crew account** (or a time-limited access code). The source in this repository is proprietary — see [LICENSE.txt](LICENSE.txt) — and is published here for authorized crews and contributors, not as open-source software.
+GRTech ChartAssist is a Chrome browser extension that lets you store defaults for emscharts.com patient care reports and fill them in with one click. Access is gated: the tools are disabled until you sign in with an **approved crew account** (or a time-limited access code). The source in this repository is proprietary — see [LICENSE.txt](LICENSE.txt) — and is available to authorized crews, not as open-source software.
 
 ## Disclaimer
 
