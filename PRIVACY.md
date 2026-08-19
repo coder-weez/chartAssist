@@ -2,6 +2,12 @@
 
 _Last updated: August 2026_
 
+> **Canonical public copy:** <https://gardnerrespondertechnologies.com/privacy>
+> (served from `site/privacy.html`). This file is the source of truth — when it
+> changes, update `site/privacy.html` in the same commit. The extension popup and
+> the Chrome Web Store listing both link to the site URL, not to this file, so the
+> policy stays reachable even when this repository is private.
+
 ## What this extension does
 
 GRTech ChartAssist is a Chrome browser extension that fills in fields on EMSCharts patient care reports (PCRs) with default values you configure. To restrict use to authorized personnel, it requires you to sign in before the tools are enabled.
