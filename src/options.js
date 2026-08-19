@@ -229,7 +229,6 @@ function show_status(msg, isError) {
 
 function save_options() {
     var values = get_user_values();
-    console.info('Saving Values');
 
     chrome.storage.sync.set(values, function () {
         // chrome.storage.sync enforces a per-item (~8 KB) and total quota. A long
@@ -244,7 +243,6 @@ function save_options() {
 }
 
 function restore_options() {
-    console.info('Restoring Options');
     var opts = _all_opts();
     var opt_keys = Object.keys(opts);
 
@@ -374,9 +372,6 @@ function migrate_legacy_keys(done) {
             }
         }
 
-        if (toRemove.length) {
-            console.info('Migrating legacy option keys:', toRemove);
-        }
         if (Object.keys(toSet).length) {
             chrome.storage.sync.set(toSet, function () {
                 if (chrome.runtime.lastError) {
