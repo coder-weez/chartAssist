@@ -64,7 +64,7 @@ shared the extension:
 ## Install from Source (authorized crews / developers)
 
 The source is proprietary (see [LICENSE.txt](LICENSE.txt)); these steps are for
-authorized crews running their own build and for contributors.
+authorized crews running their own build.
 
 1. `git clone https://github.com/coder-weez/chartAssist.git`
 2. Open `chrome://extensions/` in your browser
