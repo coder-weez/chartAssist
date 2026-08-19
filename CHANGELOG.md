@@ -11,7 +11,7 @@ selector details). When several unreleased versions ship in one store package
 (as below), use the combined "What's new" block as the store copy — the store
 publishes a single build, not each version separately.
 
-## What's new — store release 1.2.0.0 → 1.8.0.0 — unreleased
+## What's new — store release 1.2.0.0 → 1.8.0.1 — unreleased
 
 _Paste the block below into the Chrome Web Store "What's new". It covers
 everything since the last published version (**1.2.0.0**, the build currently
@@ -52,6 +52,12 @@ signing in sends only your login details, never any patient data.
 - **More dependable in the field** — no surprise sign-outs on hospital or venue
   Wi-Fi, clearer on-screen messages, and keyboard- and screen-reader-friendly
   controls.
+
+## 1.8.0.1 — unreleased
+
+Maintenance release. No changes to features or your saved defaults — internal
+tidy-up only (removed some developer console logging). Bundled into the same
+store update as everything above.
 
 ## 1.8.0.0 — unreleased
 
