@@ -11,11 +11,12 @@ selector details). When several unreleased versions ship in one store package
 (as below), use the combined "What's new" block as the store copy — the store
 publishes a single build, not each version separately.
 
-## What's new — store release 0.9.0.2 → 1.7.0.0 — unreleased
+## What's new — store release 1.2.0.0 → 1.8.0.0 — unreleased
 
 _Paste the block below into the Chrome Web Store "What's new". It covers
-everything since the last published version (0.9.0.2), which all ships as one
-update. The per-version detail is kept in the entries further down._
+everything since the last published version (**1.2.0.0**, the build currently
+live in the store), which all ships as one update. The per-version detail is
+kept in the entries further down._
 
 **ChartAssist — now a Gardner Responder Technologies product** (formerly
 EMSCharts Assist). Same one-click toolbar for your EMSCharts defaults —
@@ -45,20 +46,32 @@ signing in sends only your login details, never any patient data.
 
 **Everyday improvements**
 
-- **Dark mode** across the popup, Options, and the on-chart toolbar — follows
-  your system light/dark theme.
-- **A refreshed, easier-to-read interface** — collapsible Options sections, a
-  simpler popup, and a toolbar reset button to snap it back into place.
-- **A new Respiratory Effort default** on the Cardiac/Respiratory page.
-- **Your saved defaults now survive updates** automatically — updating no longer
-  clears your Options.
-- **Page 8 vitals comments** now fill the Edit Vitals popup's own comment box
-  when it's open.
+- **Customizable Page 8 buttons.** Choose which quick-fill presets (On Scene,
+  Transport, At Hospital, Refusal) appear on the billing/narrative page, and add
+  up to four of your own titled presets.
 - **More dependable in the field** — no surprise sign-outs on hospital or venue
   Wi-Fi, clearer on-screen messages, and keyboard- and screen-reader-friendly
   controls.
 
-## What's new — 1.7.0.0 — unreleased
+## 1.8.0.0 — unreleased
+
+### Added
+
+- **Customizable Page 8 presets.** The billing/narrative page's quick-fill
+  buttons are now configurable in Options: tick which of the built-in presets
+  (On Scene, Transport, At Hospital, Refusal) appear on the toolbar, and add up
+  to **four of your own** titled presets with your own comment text. A preset
+  only shows when it's turned on and actually has text, so empty buttons stay
+  hidden.
+
+### Changed
+
+- Existing setups are unaffected — the four built-in buttons stay on by default,
+  and any old "Custom" button you'd saved moves into a custom slot automatically.
+- The **Clear Fields** button now uses white text on amber for readability, and
+  the Options tables are centered.
+
+## 1.7.0.0 — unreleased
 
 **ChartAssist, a Gardner Responder Technologies product.**
 
@@ -67,7 +80,7 @@ signing in sends only your login details, never any patient data.
   sign-in — only the name has changed. Your saved defaults and your account carry
   over automatically; there's nothing to reconfigure.
 
-## What's new — 1.6.0.0 — unreleased
+## 1.6.0.0 — unreleased
 
 **Reliability, clearer feedback, and safer admin controls.**
 
@@ -98,7 +111,7 @@ signing in sends only your login details, never any patient data.
   Clear Fields button is easier to read, and the toolbar controls are keyboard- and
   screen-reader-friendly.
 
-## What's new — 1.5.0.0 — unreleased
+## 1.5.0.0 — unreleased
 
 **Request access if you're not pre-approved, and let crew admins run their own
 crew.**
@@ -116,23 +129,6 @@ crew.**
 - **QA Mode is now limited to who needs it.** The **QA Mode** toggle in the popup
   shows only for crew admins and the new **QA auditor** role, so a regular crew
   member can't freeze the toolbar by accident.
-
-## What's new — 1.3.0.0 — unreleased
-
-**Sign-in now required.** ChartAssist keeps your tools behind a login so only your
-authorized crews can use it:
-
-- **Sign in with your work email and password** from the extension popup. Until
-  you do, the toolbar on EMSCharts stays locked. You stay signed in for 1 month.
-- **Create your own account** right in the popup with your work email — anyone at
-  an approved domain can register, so there is no per-person admin setup.
-- **Temporary access codes** let an admin grant time-limited access (e.g. a
-  24-hour ride-along) without creating an account — just enter the code.
-- **Remember my email** pre-fills your address next time; your password is never
-  stored.
-
-Signing in sends only your login details to the sign-in service — never any
-patient data. See the Privacy Policy for details.
 
 ## 1.4.0.0 — unreleased
 
@@ -158,6 +154,9 @@ patient data. See the Privacy Policy for details.
   Admins can still add one-off outside addresses that match no approved domain.
 
 ## 1.3.0.0 — unreleased
+
+**Sign-in now required.** ChartAssist keeps your tools behind a login so only your
+authorized crews can use it.
 
 ### Added
 
@@ -192,7 +191,7 @@ patient data. See the Privacy Policy for details.
   sign-in. No patient data is transmitted — only login credentials. See the
   updated Privacy Policy and README.
 
-## 1.2.0.0 — unreleased
+## 1.2.0.0 — released (Chrome Web Store build 1.2.0.0)
 
 ### Added
 
@@ -208,7 +207,7 @@ patient data. See the Privacy Policy for details.
   under the new Respiratory heading. Anything you'd already saved there carries
   over unchanged.
 
-## 1.1.0.1 — unreleased
+## 1.1.0.1 — released in store build 1.2.0.0
 
 ### Fixed
 
@@ -219,7 +218,7 @@ patient data. See the Privacy Policy for details.
   your defaults survive updates. (Fields that were removed or replaced entirely in
   past releases can't be recovered, but nothing you've saved is deleted anymore.)
 
-## 1.1.0.0 — unreleased
+## 1.1.0.0 — released in store build 1.2.0.0
 
 ### Added
 
@@ -238,7 +237,7 @@ patient data. See the Privacy Policy for details.
 - **The popup footer now has a "Report a Problem" link** for sending feedback,
   and shows the extension version. (The old Source link was removed.)
 
-## 1.0.0.0 — unreleased
+## 1.0.0.0 — released in store build 1.2.0.0
 
 First stable release — an interface refresh across the whole extension.
 
